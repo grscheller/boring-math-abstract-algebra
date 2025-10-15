@@ -1,18 +1,13 @@
 [project]
-name = "pythonic-fp-typing"
+name = "pythonic-fp-protocols"
 version = "0.1.0"
 readme = "README.rst"
 requires-python = ">=3.13"
 license = { file = "LICENSE" }
 authors = [{ name = "Geoffrey R. Scheller", email = "geoffrey@scheller.com" }]
 keywords = [
-  "auto resizing",
-  "circular array",
-  "circulararray",
-  "dequeue",
-  "indexable",
-  "pop",
-  "push",
+  "protocols",
+  "algebraic",
 ]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
@@ -23,16 +18,14 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Typing :: Typed",
 ]
-dependencies = [
-  "pythonic-fp-gadgets>=3.1.0",
-]
+dependencies = []
 dynamic = ["description"]
 
 [project.urls]
-Changelog = "https://github.com/grscheller/pythonic-fp-typing/blob/main/CHANGELOG.md"
-Documentation = "https://grscheller.github.io/pythonic-fp/typing/development/build/html"
+Changelog = "https://github.com/grscheller/pythonic-fp-protocols/blob/main/CHANGELOG.md"
+Documentation = "https://grscheller.github.io/pythonic-fp/protocols"
 Homepage = "https://grscheller.github.io/pythonic-fp/homepage"
-Source = "https://github.com/grscheller/pythonic-fp-typing"
+Source = "https://github.com/grscheller/pythonic-fp-protocols"
 
 [project.optional-dependencies]
 test = [

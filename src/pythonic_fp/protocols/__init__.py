@@ -13,21 +13,13 @@
 # limitations under the License.
 
 """
-Typing tools
-============
+**Protocols useful for Functional Programming.**
 
-Package implementing stateful circular array data structures.
-
-
-Typing modules
---------------
-
-=============================== ======================
-Module                          Description         
-=============================== ======================
-**pythonic_fp.typing.abstract** Abstract types
-**pythonic_fp.typing.wrapped**  Wrapped builtins types
-=============================== ======================
+=================================== ==========================
+Module                              Description
+=================================== ==========================
+``pythonic_fp.protocols.algebraic`` Abstract algebra datatypes
+=================================== ==========================
 
 """
 

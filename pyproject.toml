@@ -1,5 +1,5 @@
 [project]
-name = "pythonic-fp-protocols"
+name = "boring-math-abstract-algebra"
 version = "0.1.0"
 readme = "README.rst"
 requires-python = ">=3.13"
@@ -7,7 +7,8 @@ license = { file = "LICENSE" }
 authors = [{ name = "Geoffrey R. Scheller", email = "geoffrey@scheller.com" }]
 keywords = [
   "protocols",
-  "algebraic",
+  "algebra",
+  "abstract algebra",
 ]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
@@ -22,10 +23,10 @@ dependencies = []
 dynamic = ["description"]
 
 [project.urls]
-Changelog = "https://github.com/grscheller/pythonic-fp-protocols/blob/main/CHANGELOG.md"
-Documentation = "https://grscheller.github.io/pythonic-fp/protocols"
-Homepage = "https://grscheller.github.io/pythonic-fp/homepage"
-Source = "https://github.com/grscheller/pythonic-fp-protocols"
+Changelog = "https://github.com/grscheller/boring-math-abstract-algebra/blob/main/CHANGELOG.md"
+Documentation = "https://grscheller.github.io/boring-math/abstract-algebra"
+Homepage = "https://grscheller.github.io/boring-math"
+Source = "https://github.com/grscheller/boring-math-abstract-algebra"
 
 [project.optional-dependencies]
 test = [

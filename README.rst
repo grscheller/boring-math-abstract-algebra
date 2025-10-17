@@ -1,15 +1,15 @@
-Pythonic FP - Protocols
-=======================
+Boring Math - Abstract Algebra
+==============================
 
 PyPI project
-`pythonic-fp-protocols
-<https://pypi.org/project/pythonic-fp-protocols>`_.
+`boring-math-abstract-algebra
+<https://pypi.org/project/boring-math-abstract-algebra>`_.
 
-Various functional programming oriented typing protocols.
+Creating an abstract algebra library.
 
 Part of the
-`pythonic-fp
-<https://grscheller.github.io/pythonic-fp>`_
+`boring-math
+<https://grscheller.github.io/boring-math>`_
 PyPI projects.
 
 Documentation
@@ -17,7 +17,7 @@ Documentation
 
 Documentation for this project is hosted on
 `GitHub Pages
-<https://grscheller.github.io/pythonic-fp/protocols>`_.
+<https://grscheller.github.io/boring-math/abstract-algebra>`_.
 
 Copyright and License
 ---------------------

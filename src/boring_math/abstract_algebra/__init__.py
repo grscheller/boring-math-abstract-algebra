@@ -13,13 +13,13 @@
 # limitations under the License.
 
 """
-**Protocols useful for Functional Programming.**
+**Abstract Algebra Library.**
 
-=================================== ==========================
-Module                              Description
-=================================== ==========================
-``pythonic_fp.protocols.algebraic`` Abstract algebra datatypes
-=================================== ==========================
+================================ ==========================
+Module                           Description
+================================ ==========================
+``boring-math-abstract-algebra`` Abstract algebra datatypes
+================================ ==========================
 
 """
 

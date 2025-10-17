@@ -14,6 +14,13 @@ See [Semantic Versioning 2.0.0](https://semver.org).
 
 ## Releases and Important Milestones
 
+### Update - 2025-15-17
+
+Major increase in my understanding of Protocols.
+
+- decided to move project to Boring Math
+- renaming repo pythonic-fp-protocols -> boring-math-abstract-algebra
+
 ### Update - 2025-15-13
 
 Narrowing scope of project to just protocols.

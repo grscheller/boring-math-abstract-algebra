@@ -1,4 +1,4 @@
-# Copyright 2016-2025 Geoffrey R. Scheller
+# Copyright 2025 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,19 +29,145 @@
 
 """
 
-__all__ = ['orderable_generator']
+from typing import ClassVar, Protocol, Self
+
+__all__ = [
+    'Element',
+    'SemiGroupElement',
+    'One',
+    'GroupElement',
+    'AbelianSemiGroupElement',
+    'Zero',
+    'AbelianGroupElement',
+    'PartialOrder',
+    'TotalOrder',
+]
 
 
-class Ordered(Protocol):
-    def __lt__(self: Self, other: Self) -> bool: ...
+class Element[T]():
+    def __init__(self, element: T) -> None:
+        self._element = element
+
+    def __call__(self) -> T:
+        return self._element
 
 
-class Ring(Protocol):
-    def __add__(self: Self, other: Self) -> Self: ...
-    def __sub__(self: Self, other: Self) -> Self: ...
-    def __mult__(self: Self, other: Self) -> Self: ...
-    def __mod__(self: Self, other: Self) -> Self: ...
+# class SemiGroupElement[T](Element[T], Protocol):
+#     """An element of a set with a commutative, associative binary operator.
+#
+#     Contract: Multiplication must be associative
+#
+#     """
+#     def __init__(self, element: T):
+#         self._element = Element(element)
+#
+#     def element(self) -> Element[T]:
+#         return self._element
+#
+#     def __mult__(self, other: Self) -> Self:
+#         return self._element * other._element
 
 
-class OrderedRing(Ordered, Ring, Protocol):
-    def __mod__(self: Self, other: Self) -> Self: ...
+class SemiGroupElement[T](Protocol):
+    """An element of a set with a commutative, associative binary operator.
+
+    Contract: Multiplication must be associative
+
+    """
+    def __mult__(self, other: Self) -> Self: ...
+
+
+class One[T](Protocol):
+    _one: ClassVar[Element[T]]
+
+    def __init__(self, g: Element[T], one: Element[T]): ...
+
+    @classmethod
+    def one_element(cls) -> Element[T]:
+        return cls._one
+
+
+class GroupElement[T](SemiGroupElement[T], One[T], Protocol):
+    def one(self) -> Self: ...
+
+    def __pow__(self, n: int) -> Self:
+        if n > 0:
+            g = self
+            g_ret = g
+            while n > 1:
+                g_ret, n = g_ret * g, n - 1
+            return g_ret
+
+        if n < 0:
+            g_inv = self.inverse()
+            g_ret = g_inv
+            while n < -1:
+                g_ret, n = g_ret * g_inv, n + 1
+            return g_ret
+
+        return self.one()
+
+
+class AbelianSemiGroupElement[T](Protocol):
+    """A set with a commutative, associative binary operator.
+
+    Contract: Addition must be associative and commutative.
+
+    """
+
+    def __add__(self, other: Self) -> Self: ...
+
+
+class Zero[T](Protocol):
+    _zero: ClassVar[Element[T]]
+
+    @classmethod
+    def zero(cls) -> Element[T]:
+        return cls._zero
+
+
+class AbelianGroupElement[T](AbelianSemiGroupElement[T], Zero[T], Protocol):
+    def inverse(self) -> Self: ...
+
+    def __neg__(self) -> Self:
+        return self.inverse()
+
+    def __sub__(self, other: Self) -> Self:
+        return self + (-other)
+
+
+class PartialOrder(Protocol):
+    """Partially Ordered.
+
+    Contract: Operator ``<=`` is reflexive, anti-symmetric and transitive.
+
+    """
+
+    def __le__(self, other: Self) -> bool: ...
+
+
+class TotalOrder(PartialOrder, Protocol):
+    """Totally Ordered.
+
+    Contract: If overridden, all ordering must be consistently defined
+    as a total ordering.
+
+    """
+
+    def __lt__(self, other: Self) -> bool:
+        return self <= other and self != other
+
+    def __ge__(self, other: Self) -> bool:
+        return not self < other
+
+    def __gt__(self, other: Self) -> bool:
+        return not self <= other
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+        if self is other:
+            return True
+        if self == other:
+            return True
+        return False

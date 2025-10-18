@@ -13,16 +13,13 @@
 # limitations under the License.
 
 """
-**Abstract Algebra Library.**
+**Protocols.**
 
-============= ==================================================
+============= =====================================================
 Module        Description
-============= ==================================================
-``protocols`` Protocols for types of abstract algebra structures
-============= ==================================================
+============= =====================================================
+``elements``  Protocols for the elements making up an algebra
+``orderings`` Protocols for orderings of the elements of an algebra
+============= =====================================================
 
 """
-
-__author__ = 'Geoffrey R. Scheller'
-__copyright__ = 'Copyright (c) 2023-2025 Geoffrey R. Scheller'
-__license__ = 'Apache License 2.0'

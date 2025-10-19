@@ -41,17 +41,12 @@ __all__ = [
 ]
 
 
-# class Element[T]():
-#     def __init__(self, element: T) -> None:
-#         self._element = element
-#
-#     def __call__(self) -> T:
-#         return self._element
+class Element[R](Protocol):
+    _representation: R
 
-
-class Element[**P, I](Protocol):
-    def __init__(self, *args: P.args, **kwargs: P.kwargs) -> None: ...
-    def __call__(self) -> I: ...
+    def __init__(self, representation: R) -> None: ...
+    def __call__(self) -> R:
+        return self._representation
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, type(self)):
             return False
@@ -64,29 +59,14 @@ class Element[**P, I](Protocol):
         return False
 
 
-# class SemiGroupElement[T](Element[T], Protocol):
-#     """An element of a set with a commutative, associative binary operator.
-#
-#     Contract: Multiplication must be associative
-#
-#     """
-#     def __init__(self, element: T):
-#         self._element = Element(element)
-#
-#     def element(self) -> Element[T]:
-#         return self._element
-#
-#     def __mult__(self, other: Self) -> Self:
-#         return self._element * other._element
-
-
-class SemiGroupElement[**P, I](Element[P, I], Protocol):
+class SemiGroupElement[R](Element[R], Protocol):
     """An element of a set with a associative binary operator.
 
-    Contract: Multiplication must be associative.
+    Contract:
+
+        - Multiplication must be associative.
 
     """
-
     def __mul__(self, other: Self) -> Self: ...
 
     def __pow__(self, n: int) -> Self:
@@ -98,15 +78,32 @@ class SemiGroupElement[**P, I](Element[P, I], Protocol):
         msg = f'For a SemiGroup n>0, but n={n} was given.'
         raise ValueError(msg)
 
+class SemiGroupOne[R](SemiGroupElement[R], Protocol):
+    """The unique multiplicative identity, if it exists.
 
-class GroupElement[**P, I](SemiGroupElement[P, I], Protocol):
-    """Protocol for a multiplicative group element.
+    Contract:
 
-    Contract: Initializer must associate the correct unique multiplicative identity.
+        - Actually a two sided identity.
 
     """
+    ...
 
-    _one: Self
+class GroupElement[R](SemiGroupElement[R], Protocol):
+    """Protocol for a multiplicative group element.
+
+    Contract:
+
+        - Multiplication must be associative.
+        - Associate the correct unique multiplicative identity.
+
+    """
+    _one: SemiGroupElement[R]
+
+    def __init__(
+        self,
+        element: SemiGroupElement[R],
+        one: SemiGroupElement[R] ,
+    ): ...
 
     def inv(self) -> Self: ...
 
@@ -125,12 +122,15 @@ class GroupElement[**P, I](SemiGroupElement[P, I], Protocol):
             return type(self)._one
 
 
-class AbelianSemiGroupElement[**P, I](Element[P, I], Protocol):
+class AbelianSemiGroupElement[R](Element[R], Protocol):
     """A set with a commutative, associative binary operator.
 
-    Contract: Addition must be associative and commutative.
+    Contract:
+
+        - Addition must be associative and commutative.
 
     """
+    def __init__(self, representatation: R): ...
 
     def __add__(self, other: Self) -> Self: ...
 
@@ -147,14 +147,22 @@ class AbelianSemiGroupElement[**P, I](Element[P, I], Protocol):
         return self.__mul__(n)
 
 
-class AbelianGroupElement[**P, I](AbelianSemiGroupElement[P, I], Protocol):
+class AbelianGroupElement[R](AbelianSemiGroupElement[R], Protocol):
     """Protocol for an additive (commutative) group element.
 
-    Contract: Initializer must associate the unique additive identity.
+    Contract:
+
+        - Addition must be associative and commutative.
+        - Associate the correct unique additive identity.
 
     """
+    _zero: AbelianSemiGroupElement[R]
 
-    _zero: Self
+    def __init__(
+        self,
+        element: AbelianSemiGroupElement[R],
+        zero: AbelianSemiGroupElement[R] ,
+    ): ...
 
     def inv(self) -> Self: ...
 

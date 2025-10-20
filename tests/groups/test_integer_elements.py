@@ -1,4 +1,4 @@
-# Copyright 2023-2024 Geoffrey R. Scheller
+# Copyright 2025 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,73 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from boring_math.abstract_algebra.protocols.elements import (
+from boring_math.abstract_algebra.protocols.group_element import GroupElement
+from boring_math.abstract_algebra.protocols.abelian_group_element import (
     AbelianGroupElement,
-    AbelianSemiGroupElement,
 )
 
-class AddIntSemi(AbelianSemiGroupElement[int]):
-    def __init__(self, rep: int):
-        self._representation = rep
+# Group of additive integers
 
-class AddInt(AbelianGroupElement[int]):
-    def __init__(self, element: AddIntSemi, zero: AddIntSemi):
-        self._rep = element()
-        self._zero = zero
+def sum(m: int, n: int) -> int:
+    return m + n
+
+
+def neg(m: int) -> int:
+    return -m
+
+
+class AdditiveIntegers(AbelianGroupElement[int]):
+    pass
+
 
 class Test_group_addition:
-    def test_abel_int(self) -> None:
-        pass # additive 
+    def test_additive_integers(self) -> None:
+        zero = AdditiveIntegers(0, 0, sum, neg)
+        one = AdditiveIntegers(1, 0, sum, neg, zero)
+
+        assert zero == zero
+        assert one == one
+        assert one != zero
+
+        two1 = AdditiveIntegers(2, 0, sum, neg, zero)
+        two2 = one + one
+
+        assert two1 == two1
+        assert two2 == two2
+        assert two1 == two2
+
+        forty_two = AdditiveIntegers(42, 0, sum, neg, zero)
+
+        assert forty_two == one * 42 == 42 * one
+
+
+# Cyclic group of order 2
+
+def mult2(m: int, n: int) -> int:
+    return (m + n) - max(m, n)
+
+
+def flip(m: int) -> int:
+    return (m + 1) % 2
+
+
+class Ctwo(GroupElement[int]):
+    pass
+
+
+class Test_cyclic_group_order_two:
+    def test_cyclic_group_of_order_two(self) -> None:
+        one = Ctwo(1, 1, mult2, flip)
+        zero = Ctwo(0, 1, mult2, flip)
+
+        assert zero == zero
+        assert one == one
+        assert one != zero
+
+        assert zero * zero == zero
+        assert zero * one == zero
+        assert one * zero == zero
+        assert one * one == one
+
+        assert zero**42 == zero
+        assert one**42 == one

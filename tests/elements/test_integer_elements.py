@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from boring_math.abstract_algebra.elements.group import (
-    GroupElement,
+    AbelianGroupElement,
     CommutativeGroupElement,
 )
 
@@ -34,51 +34,74 @@ class AdditiveIntegers(CommutativeGroupElement[int]):
 class Test_group_addition:
     def test_additive_integers(self) -> None:
         zero = AdditiveIntegers(0, 0, sum, neg)
-        one = AdditiveIntegers(1, 0, sum, neg, zero)
+        one = AdditiveIntegers(1, 0, sum, neg)
 
         assert zero == zero
         assert one == one
         assert one != zero
 
-        two1 = AdditiveIntegers(2, 0, sum, neg, zero)
+        two = AdditiveIntegers(2, 0, sum, neg)
         two2 = one + one
 
-        assert two1 == two1
+        assert two == two
         assert two2 == two2
-        assert two1 == two2
+        assert two == two2
 
-        forty_two = AdditiveIntegers(42, 0, sum, neg, zero)
+        five = AdditiveIntegers(5, 0, sum, neg)
 
-        assert forty_two == one * 42 == 42 * one
+        assert five == one * 5 == 5 * one
+        assert five - two - two == one
 
 
 # Cyclic group of order 2
 
-def mult2(m: int, n: int) -> int:
-    return (m + n) - max(m, n)
+def add_mod2(m: int, n: int) -> int:
+    return (m + n) % 2
 
 
-def flip(m: int) -> int:
-    return (m + 1) % 2
+def neg2(m: int) -> int:
+    return m % 2
 
 
-class Ctwo(GroupElement[int]):
+class C2additive(CommutativeGroupElement[int]):
+    pass
+
+
+class C2multiplicative(AbelianGroupElement[int]):
     pass
 
 
 class Test_cyclic_group_order_two:
-    def test_cyclic_group_of_order_two(self) -> None:
-        one = Ctwo(1, 1, mult2, flip)
-        zero = Ctwo(0, 1, mult2, flip)
+    def test_c2_additive(self) -> None:
+        zero = C2additive(0, 0, add_mod2, neg2)
+        one = C2additive(1, 0, add_mod2, neg2)
 
         assert zero == zero
         assert one == one
         assert one != zero
 
-        assert zero * zero == zero
-        assert zero * one == zero
-        assert one * zero == zero
-        assert one * one == one
+        assert zero + zero == zero
+        assert zero + one == one
+        assert one + zero == one
+        assert one + one == zero
 
-        assert zero**42 == zero
-        assert one**42 == one
+        assert zero * 42 == zero == 42 * zero
+        assert one * 42 == zero == one * 42
+        assert one * 21 == one == one * 21
+
+    def test_c2_multiplicative(self) -> None:
+        one = C2multiplicative(0, 0, add_mod2, neg2)
+        two = C2multiplicative(1, 0, add_mod2, neg2)
+
+        assert one == one
+        assert two == two
+        assert two != one
+
+        assert one * one == one
+        assert one * two == two
+        assert two * one == two
+        assert two * two == one
+
+        assert one * 42 == one == 42 * one
+        assert two * 42 == one == two * 42
+        assert two * 21 == two == two * 21

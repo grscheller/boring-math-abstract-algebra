@@ -18,6 +18,7 @@
 """
 
 from typing import Protocol, Self
+from .element import Element
 
 __all__ = [
     'PartialOrder',
@@ -25,7 +26,7 @@ __all__ = [
 ]
 
 
-class PartialOrder(Protocol):
+class PartialOrder[O](Element[O], Protocol):
     """Partially Ordered.
 
     Contract: Operator ``<=`` is reflexive, anti-symmetric and transitive.
@@ -35,14 +36,12 @@ class PartialOrder(Protocol):
     def __le__(self, other: Self) -> bool: ...
 
 
-class TotalOrder(PartialOrder, Protocol):
+class TotalOrder[O](PartialOrder[O], Protocol):
     """Totally Ordered.
 
-    Contract: If overridden, all ordering must be consistently defined
-    as a total ordering.
+    Contract: Overloaded methods must still define a total order.
 
     """
-
     def __lt__(self, other: Self) -> bool:
         return self <= other and self != other
 
@@ -51,12 +50,3 @@ class TotalOrder(PartialOrder, Protocol):
 
     def __gt__(self, other: Self) -> bool:
         return not self <= other
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
-            return False
-        if self is other:
-            return True
-        if self == other:
-            return True
-        return False

@@ -13,13 +13,15 @@
 # limitations under the License.
 
 """
-**Protocols.**
+**Protocols for elements making up representations for algebras.**
 
-============= =====================================================
-Module        Description
-============= =====================================================
-``elements``  Protocols for the elements making up an algebra
-``orderings`` Protocols for orderings of the elements of an algebra
-============= =====================================================
+==================== ===================================================
+Module               Protocol Description
+==================== ===================================================
+``elements.element`` Member of the set of elements making up an algebra.
+``elements.groups``  Elements for different types of groups.
+``elements.rings``   Elements for different types of rings.
+``elements.ordered`` Ordering behaviors for the elements of an algebra.
+==================== ===================================================
 
 """

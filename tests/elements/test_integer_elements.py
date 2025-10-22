@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from boring_math.abstract_algebra.protocols.group_element import GroupElement
-from boring_math.abstract_algebra.protocols.abelian_group_element import (
-    AbelianGroupElement,
+from boring_math.abstract_algebra.elements.group import (
+    GroupElement,
+    CommutativeGroupElement,
 )
 
 # Group of additive integers
@@ -27,7 +27,7 @@ def neg(m: int) -> int:
     return -m
 
 
-class AdditiveIntegers(AbelianGroupElement[int]):
+class AdditiveIntegers(CommutativeGroupElement[int]):
     pass
 
 

@@ -15,14 +15,29 @@
 """
 **Abstract Algebra Library.**
 
-============= ==================================================
+A library designed to construct concrete representations for abstract
+algebra systems.
+
+- Each element of the algebra has an internal representation.
+
+  - Operations and properties are defined on the elements themselves.
+  - Possibly, but not necessarily, implemented with internal elements representations.
+  
+- The term "algebra" will be used loosely to mean either,
+
+  - An abstract system unique up to isomorphism.
+  - Or a concrete representation of such a system.
+
+============= ====================i================================================
 Module        Description
-============= ==================================================
-``protocols`` Protocols for types of abstract algebra structures
-============= ==================================================
+============= ==i==================================================================
+``algebras``  Collections of elements with associated operations and relationships.
+``elements``  Protocols for elements making up an algebra.
+``laws``      Assertions for algebras.
+============= ======================================i==============================
 
 """
 
 __author__ = 'Geoffrey R. Scheller'
-__copyright__ = 'Copyright (c) 2023-2025 Geoffrey R. Scheller'
+__copyright__ = 'Copyright (c) 2025 Geoffrey R. Scheller'
 __license__ = 'Apache License 2.0'

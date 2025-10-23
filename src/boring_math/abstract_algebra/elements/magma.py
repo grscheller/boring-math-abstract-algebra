@@ -13,17 +13,16 @@
 # limitations under the License.
 
 """
-**Element of an abstract algebra**
+**Protocol for a Magma.**
 
 .. info::
 
-    Mathematically speaking, an **Algebra** is a **set** with a collection
-    of closed binary operators, usually one or two, unary partial functions,
-    and nullary functions (or designated elements).
+    Mathematically a Magma is a set **M** along with a binary
+    operation **op: M X M -> M**.
 
 .. important::
 
-    The Python ``Element`` wraps a Python hashable values of type ``R``
+    The Python ``Magma`` protocol wraps a Python hashable values of type ``R``
     along with an operation ``op: Callable[[R, R], R]``. The **set** making
     up the elements of the **Magma** will be implemented as a Python ``dict``
     whose keys are the underlying values of the data structures making up
@@ -36,37 +35,28 @@
     quite invariant. An ``int`` added to a ``float`` returns a ``float``.
     The type system sees the ``int.__add__`` method as returning an
     ``int|float|complex`` despite an ``int`` added to an ``int`` always
-    returning an ``int``, thus presenting various typing challenges.
+    returning an ``int``. This presenting various typing challenges.
 
 """
 
-from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, Self
+from .element import Element
 
-__all__ = ['Element']
+__all__ = ['MagmaElement']
 
 
-class Element[R](ABC):
-    _op: Callable[[R, R], R]
+class MagmaElement[M](Element[M]):
 
-    def __init__(self, rep: R, op: Callable[[R, R], R] | None = None) -> None:
+    def __init__(self, rep: M, op: Callable[[M, M], M] | None = None) -> None:
         if op is not None:
             if type(self)._op is not op:
                 msg = 'MagmaElement: Operation already asigned.'
                 raise ValueError(msg)
             type(self)._op = op
 
-    @property
-    @abstractmethod
-    def ref(self) -> R: ...
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
-            return False
-        if self is other:
-            return True
-        if self.ref is other.ref:
-            return True
-        if self.ref == other.ref:
-            return True
-        return False
+    def __mul__(self, other: Self) -> Self:
+        Me = type(self)
+        return Me(
+            rep = Me._op(self.ref, other.ref),
+            op = self._op,
+        )

@@ -13,87 +13,84 @@
 # limitations under the License.
 
 """
-**Protocol for a SemiGroup.**
+**Abstract Semigroup Elements.**
 
 .. info::
 
     Mathematically a Semigroup is a set **S** along with an associative
     binary operation **op: S X S -> S**.
 
-.. important::
-
-    The Python ``Semigroup`` protocol extends ``Magma`` by a "contract"
-    that ``op`` is associative. 
-
 """
-from abc import abstractmethod
 from typing import Callable, Self
-from .element import Element
+from .magma import MagmaElementMult, MagmaElementAdd
 
 __all__ = [
+    'AbelianSemigroupElement',
+    'CommutativeSemigroupElement',
     'SemigroupElement',
-    'SemigroupElementAdditive',
 ]
 
 
-class SemigroupElement[S](Element[S]):
+class SemigroupElement[S](MagmaElementMult[S]):
     """An element of a set with a associative binary operator.
+
+.. important::
 
     Contract:
 
-        - Multiplication must be associative.
+    - Multiplication must be associative.
 
     """
-    def __init__(self, rep: S, op: Callable[[S, S], S]) -> None:
-        super().__init__(rep, op)
-
-    @property
-    @abstractmethod
-    def ref(self) -> S: ...
-
-    def __mul__(self, other: Self) -> Self:
-        Me = type(self)
-        return Me(
-            rep = Me._op(self.ref, other.ref),
-            op = self._op,
-        )
+    def __init__(self, representation: S, operation: Callable[[S, S], S]) -> None:
+        super().__init__(representation, operation)
 
     def __pow__(self, n: int) -> Self:
         if n > 0:
-            g = self
+            mult = self._mult
+            r = (r1 := self())
             while n > 1:
-                g, n = g * self, n - 1
-            return g
-        msg = f'For a SemiGroup n>0, but n={n} was given.'
+                r, n = mult(r1, r), n - 1
+            return type(self)(r, mult)
+        msg = f'For a semi-group n>0, but n={n} was given.'
         raise ValueError(msg)
 
 
-class SemigroupElementAdditive[S](Element[S]):
+class AbelianSemigroupElement[S](SemigroupElement[S]):
+    """An element of a set with a associative binary operator.
+
+    .. important::
+
+        Contract:
+
+        - Multiplication must also be commutative.
+
+    """
+    pass
+
+
+class CommutativeSemigroupElement[S](MagmaElementAdd[S]):
     """A set with a commutative, associative binary operator.
 
-    Contract:
+    .. important::
+
+        Contract:
 
         - Addition must be associative and commutative.
 
     """
-    def __init__(self, rep: S, op: Callable[[S, S], S]) -> None:
-        super().__init__(rep, op)
-
-    def __add__(self, other: Self) -> Self:
-        Me = type(self)
-        return Me(
-            rep = Me._op(self.ref, other.ref),
-            op = self._op,
-        )
+    def __init__(self, representation: S, operation: Callable[[S, S], S]) -> None:
+        super().__init__(representation, operation)
 
     def __mul__(self, n: int) -> Self:
         if n > 0:
-            g = self
+            add = self._add
+            r = (r0 := self())
             while n > 1:
-                g, n = g + self, n - 1
-            return g
-        msg = f'For a Abelian SemiGroup n>0, but n={n} was given.'
-        raise ValueError(msg)
+                r, n = add(r0, r), n - 1
+            return type(self)(r, add)
+        msg1 = 'Commutative semi-group integer mult makes sense only for n>0,'
+        msg2 = f' but n={n} was given.'
+        raise ValueError(msg1 + msg2)
 
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)

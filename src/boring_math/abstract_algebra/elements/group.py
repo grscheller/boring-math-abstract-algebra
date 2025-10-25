@@ -17,7 +17,7 @@
 
 """
 
-from typing import cast, Callable, Protocol, Self
+from typing import cast, Callable, Self
 from .element import Element
 
 __all__ = [
@@ -27,7 +27,7 @@ __all__ = [
 ]
 
 
-class GroupElement[G](Element[G], Protocol):
+class GroupElement[G](Element[G]):
     """Protocol for a multiplicative group element.
 
     Contract:
@@ -37,7 +37,6 @@ class GroupElement[G](Element[G], Protocol):
         - invert returns the multiplicative inverse of its argument
 
     """
-
     _one: G
     _mult: Callable[[G, G], G]
     _invert: Callable[[G], G]
@@ -117,7 +116,7 @@ class GroupElement[G](Element[G], Protocol):
             )
 
 
-class AbelianGroupElement[G](GroupElement[G], Protocol):
+class AbelianGroupElement[G](GroupElement[G]):
     """Protocol for a multiplicative Abelian group element.
 
     Contract:
@@ -159,7 +158,7 @@ class AbelianGroupElement[G](GroupElement[G], Protocol):
         return self.__mul__(h)
 
 
-class CommutativeGroupElement[G](Element[G], Protocol):
+class CommutativeGroupElement[G](Element[G]):
     """Protocol for an additive group element.
 
     Contract:

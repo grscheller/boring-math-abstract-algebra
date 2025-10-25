@@ -18,55 +18,28 @@
 .. info::
 
     Mathematically speaking, an **Algebra** is a **set** with a collection
-    of closed binary operators, usually one or two, unary partial functions,
-    and nullary functions (or designated elements).
-
-.. important::
-
-    The Python ``Element`` wraps a Python hashable values of type ``R``
-    along with an operation ``op: Callable[[R, R], R]``. The **set** making
-    up the elements of the **Magma** will be implemented as a Python ``dict``
-    whose keys are the underlying values of the data structures making up
-    the elements of the Magma.
-
-.. note::
-
-    Python suffers from a disease introduced by Fortran. Built-in arithmetic
-    operators act in a contravariant way while the types themselves are not
-    quite invariant. An ``int`` added to a ``float`` returns a ``float``.
-    The type system sees the ``int.__add__`` method as returning an
-    ``int|float|complex`` despite an ``int`` added to an ``int`` always
-    returning an ``int``, thus presenting various typing challenges.
+    of closed n-ary operators. Usually 1 or 2 binary operations, 1 or 0
+    partial functions for inverses, and nullary functions for designated
+    elements.
 
 """
-
-from abc import ABC, abstractmethod
-from typing import Callable
-
 __all__ = ['Element']
 
 
-class Element[R](ABC):
-    _op: Callable[[R, R], R]
+class Element[R]():
+    def __init__(self, representative: R) -> None:
+        self._rep = representative
 
-    def __init__(self, rep: R, op: Callable[[R, R], R] | None = None) -> None:
-        if op is not None:
-            if type(self)._op is not op:
-                msg = 'MagmaElement: Operation already asigned.'
-                raise ValueError(msg)
-            type(self)._op = op
-
-    @property
-    @abstractmethod
-    def ref(self) -> R: ...
+    def __call__(self) -> R:
+        return self._rep
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, type(self)):
             return False
         if self is other:
             return True
-        if self.ref is other.ref:
+        if self() is other():
             return True
-        if self.ref == other.ref:
+        if self() == other():
             return True
         return False

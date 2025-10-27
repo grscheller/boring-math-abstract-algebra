@@ -18,16 +18,27 @@
 .. info::
 
     Mathematically speaking, an **Algebra** is a **set** with a collection
-    of closed n-ary operators. Usually 1 or 2 binary operations, 1 or 0
-    partial functions for inverses, and nullary functions for designated
+    of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2
+    (partial) functions for inverses, and nullary functions for designated
     elements.
 
+.. note::
+
+    This data structure wraps "representations" for elements of an algebra.
+    An element is callable and returns its representation. Representations
+    should be thought of as implementation details. The same group can have
+    multiple sets of representations.
+
 """
+
 __all__ = ['Element']
 
 
-class Element[R]():
-    def __init__(self, representative: R) -> None:
+class Element[R]:
+    def __init__(
+        self,
+        representative: R,
+    ) -> None:
         self._rep = representative
 
     def __call__(self) -> R:

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-**Abstract Semigroup Elements.**
+**Abstract Semigroup Element.**
 
 .. info::
 
@@ -22,16 +22,12 @@
 
 """
 from typing import Callable, Self
-from .magma import MagmaElementMult, MagmaElementAdd
+from .magma import MagmaElement
 
-__all__ = [
-    'AbelianSemigroupElement',
-    'CommutativeSemigroupElement',
-    'SemigroupElement',
-]
+__all__ = ['SemigroupElement']
 
 
-class SemigroupElement[S](MagmaElementMult[S]):
+class SemigroupElement[S](MagmaElement[S]):
     """An element of a set with a associative binary operator.
 
 .. important::
@@ -41,8 +37,15 @@ class SemigroupElement[S](MagmaElementMult[S]):
     - Multiplication must be associative.
 
     """
-    def __init__(self, representation: S, operation: Callable[[S, S], S]) -> None:
-        super().__init__(representation, operation)
+    def __init__(
+        self,
+        representation: S,
+        mult: Callable[[S, S], S]
+    ) -> None:
+        super().__init__(
+            representation,
+            mult,
+        )
 
     def __pow__(self, n: int) -> Self:
         if n > 0:
@@ -53,44 +56,3 @@ class SemigroupElement[S](MagmaElementMult[S]):
             return type(self)(r, mult)
         msg = f'For a semi-group n>0, but n={n} was given.'
         raise ValueError(msg)
-
-
-class AbelianSemigroupElement[S](SemigroupElement[S]):
-    """An element of a set with a associative binary operator.
-
-    .. important::
-
-        Contract:
-
-        - Multiplication must also be commutative.
-
-    """
-    pass
-
-
-class CommutativeSemigroupElement[S](MagmaElementAdd[S]):
-    """A set with a commutative, associative binary operator.
-
-    .. important::
-
-        Contract:
-
-        - Addition must be associative and commutative.
-
-    """
-    def __init__(self, representation: S, operation: Callable[[S, S], S]) -> None:
-        super().__init__(representation, operation)
-
-    def __mul__(self, n: int) -> Self:
-        if n > 0:
-            add = self._add
-            r = (r0 := self())
-            while n > 1:
-                r, n = add(r0, r), n - 1
-            return type(self)(r, add)
-        msg1 = 'Commutative semi-group integer mult makes sense only for n>0,'
-        msg2 = f' but n={n} was given.'
-        raise ValueError(msg1 + msg2)
-
-    def __rmul__(self, n: int) -> Self:
-        return self.__mul__(n)

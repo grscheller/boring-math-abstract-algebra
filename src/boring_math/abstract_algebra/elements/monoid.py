@@ -18,29 +18,20 @@
 .. info::
 
     Mathematically a Monoid is a Semigroup **M** along with an identity
-    element u, that is (∃u ∈ M) => (∀m ∈ M) u*m = u = m*u.
+    element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = u = m*u).
 
     Such an identity element is necessarily unique.
-
-.. note::
-
-    - ``one`` denotes the identity element in a multiplicative monoid
-    - ``zero`` denotes the identity element in an additive monoid
 
 """
 
 from typing import Callable, Self
-from .semigroup import SemigroupElement, CommutativeSemigroupElement
+from .semigroup import SemigroupElement
 
-__all__ = [
-    'AbelianMonoidElement',
-    'CommutativeMonoidElement',
-    'MonoidElement',
-]
+__all__ = ['MonoidElement']
 
 
 class MonoidElement[M](SemigroupElement[M]):
-    """An element of a set with a associative binary operator.
+    """An element for a Monoid.
 
     Contract:
 
@@ -49,16 +40,20 @@ class MonoidElement[M](SemigroupElement[M]):
     """
 
     def __init__(
-        self, representation: M, operation: Callable[[M, M], M], one: M
+        self,
+        representation: M,
+        mult: Callable[[M, M], M],
+        one: M,
+        /,
     ) -> None:
         self._one = one
-        super().__init__(representation, operation)
+        super().__init__(representation, mult)
 
     def __mul__(self, other: Self) -> Self:
         return type(self)(
-            representation=self._mult(self(), other()),
-            operation=self._mult,
-            one=self._one,
+            self._mult(self(), other()),
+            self._mult,
+            self._one,
         )
 
     def __pow__(self, n: int) -> Self:
@@ -68,63 +63,47 @@ class MonoidElement[M](SemigroupElement[M]):
             r = (one := self._one)
             while n > 0:
                 r, n = mult(r, r1), n - 1
-            return type(self)(
-                representation=r,
-                operation=mult,
-                one=one,
-            )
+            return type(self)(r, mult, one)
         msg = f'For a Monoid n>=0, but n={n} was given.'
         raise ValueError(msg)
 
 
-class AbelianMonoidElement[M](SemigroupElement[M]):
-    """An element of a set with a associative binary operator.
-
-    Contract:
-
-        - Multiplication must also be commutative.
-
-    """
-
-    pass
-
-
-class CommutativeMonoidElement[M](CommutativeSemigroupElement[M]):
-    """A set with a commutative, associative binary operator.
-
-    Contract:
-
-        - Addition must be associative and commutative.
-
-    """
-
-    def __init__(
-        self, representation: M, operation: Callable[[M, M], M], zero: M
-    ) -> None:
-        self._zero = zero
-        super().__init__(representation, operation)
-
-    def __add__(self, other: Self) -> Self:
-        return type(self)(
-            representation=self._add(self(), other()),
-            operation=self._add,
-            zero=self._zero,
-        )
-
-    def __mul__(self, n: int) -> Self:
-        if n >= 0:
-            add = self._add
-            r1 = self()
-            r = self._zero
-            while n > 0:
-                r, n = add(r, r1), n - 1
-            return type(self)(
-                representation=r,
-                operation=add,
-                zero=self._zero,
-            )
-        msg = f'For a Abelian SemiGroup n>0, but n={n} was given.'
-        raise ValueError(msg)
-
-    def __rmul__(self, n: int) -> Self:
-        return self.__mul__(n)
+# class CommutativeMonoidElement[M](CommutativeSemigroupElement[M]):
+#     """A set with a commutative, associative binary operator.
+#
+#     Contract:
+#
+#         - Addition must be associative and commutative.
+#
+#     """
+#
+#     def __init__(
+#         self, representation: M, operation: Callable[[M, M], M], zero: M
+#     ) -> None:
+#         self._zero = zero
+#         super().__init__(representation, operation)
+#
+#     def __add__(self, other: Self) -> Self:
+#         return type(self)(
+#             representation=self._add(self(), other()),
+#             operation=self._add,
+#             zero=self._zero,
+#         )
+#
+#     def __mul__(self, n: int) -> Self:
+#         if n >= 0:
+#             add = self._add
+#             r1 = self()
+#             r = self._zero
+#             while n > 0:
+#                 r, n = add(r, r1), n - 1
+#             return type(self)(
+#                 representation=r,
+#                 operation=add,
+#                 zero=self._zero,
+#             )
+#         msg = f'For a Abelian SemiGroup n>0, but n={n} was given.'
+#         raise ValueError(msg)
+#
+#     def __rmul__(self, n: int) -> Self:
+#         return self.__mul__(n)

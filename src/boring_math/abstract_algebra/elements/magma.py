@@ -13,40 +13,46 @@
 # limitations under the License.
 
 """
-**Abstract Magma Elements.**
+**Abstract Magma Element.**
 
 .. info::
 
     Mathematically a Magma is a set **M** along with a binary
-    operation **op: M X M -> M** on that set.
+    multiplicative operation **mult: M X M -> M** on that set.
 
 """
 
 from typing import Callable, Self
 from .element import Element
 
-__all__ = ['MagmaElementMult', 'MagmaElementAdd']
+__all__ = ['MagmaElement']
 
 
-class MagmaElementMult[M](Element[M]):
-    def __init__(self, representation: M, operation: Callable[[M, M], M]) -> None:
-        self._mult = operation
-        super().__init__(representation)
+class MagmaElement[M](Element[M]):
+    def __init__(
+        self,
+        representation: M,
+        mult: Callable[[M, M], M],
+    ) -> None:
+        self._mult = mult
+        super().__init__(
+            representation,
+        )
 
     def __mul__(self, other: Self) -> Self:
         return type(self)(
-            representation=self._mult(self(), other()),
-            operation=self._mult,
+            self._mult(self(), other()),
+            self._mult,
         )
 
 
-class MagmaElementAdd[M](Element[M]):
-    def __init__(self, representation: M, operation: Callable[[M, M], M]) -> None:
-        self._add = operation
-        super().__init__(representation)
-
-    def __add__(self, other: Self) -> Self:
-        return type(self)(
-            representation=self._add(self(), other()),
-            operation=self._add,
-        )
+# class MagmaElementAdd[M](Element[M]):
+#     def __init__(self, representation: M, operation: Callable[[M, M], M]) -> None:
+#         self._add = operation
+#         super().__init__(representation)
+#
+#     def __add__(self, other: Self) -> Self:
+#         return type(self)(
+#             representation=self._add(self(), other()),
+#             operation=self._add,
+#         )

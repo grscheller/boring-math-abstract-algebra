@@ -15,42 +15,34 @@
 """
 **Element of an abstract algebra**
 
-.. info::
-
-    Mathematically speaking, an **Algebra** is a **set** with a collection
-    of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2
-    (partial) functions for inverses, and nullary functions for designated
-    elements.
-
 .. note::
 
-    This data structure wraps "representations" for elements of an algebra.
-    An element is callable and returns its representation. Representations
-    should be thought of as implementation details. The same group can have
-    multiple sets of representations.
+    The same abstract algebra can be implemented in different ways
+    with different types of "representations." The elements themselves
+    are callable and return their representations.
+
+    .. important::
+
+        Once set up, the representations and the entities that directly
+        act upon them should be thought of as an implementation details.
 
 """
+
+from typing import Hashable
+from ..algebras.algebra import Algebra
 
 __all__ = ['Element']
 
 
-class Element[R]:
-    def __init__(
-        self,
-        representative: R,
-    ) -> None:
-        self._rep = representative
+class Element[R: Hashable]:
+    def __init__(self, rep: R, algebra: Algebra[R]) -> None:
+        self._rep = rep
+        self._algebra = algebra
 
     def __call__(self) -> R:
         return self._rep
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
-            return False
         if self is other:
-            return True
-        if self() is other():
-            return True
-        if self() == other():
             return True
         return False

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-**Abstract Magma Element.**
+**Magma**
 
 .. info::
 
@@ -22,23 +22,15 @@
 
 """
 
-from typing import cast, Self
-from .element import Element
-from ..algebras.magma import Magma
+from typing import Callable
+from .algebra import Algebra
+from ..elements.element import Element
+from ..elements.magma import MagmaElement
 
-__all__ = ['MagmaElement']
 
-
-class MagmaElement[M](Element[M]):
-    def __init__(self, rep: M, algebra: Magma[M]) -> None:
-        self._rep = rep
-        self._algebra = algebra
-
-    def __mul__(self, other: Self) -> Self:
-        # cast needed since dict is invariant.
-        # mypy suggests I use Mapping instead... Mapping???
-        algebra = cast(Magma[M], self._algebra)
-        return type(self)(
-            algebra._mult(self(), other()),
-            algebra,
-        )
+class Magma[M](Algebra[M]):
+    def __init__(self, *reps: M, mult: Callable[[M, M], M]):
+        self._mult = mult
+        self.elements: dict[M, Element[M]] = {}
+        for rep in reps:
+            self.elements.setdefault(rep, MagmaElement(rep, self))

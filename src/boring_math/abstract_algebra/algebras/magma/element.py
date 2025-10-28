@@ -23,8 +23,8 @@
 """
 
 from typing import cast, Self
-from .element import Element
-from ..algebras.magma import Magma
+from ..algebra.element import Element
+from .magma import Magma
 
 __all__ = ['MagmaElement']
 

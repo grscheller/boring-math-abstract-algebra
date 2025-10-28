@@ -29,7 +29,7 @@
 """
 
 from typing import Hashable
-from ..algebras.algebra import Algebra
+from .algebra import Algebra
 
 __all__ = ['Element']
 

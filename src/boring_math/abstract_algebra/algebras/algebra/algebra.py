@@ -37,7 +37,9 @@
 """
 
 from typing import Hashable
-from ..elements.element import Element
+from .element import Element
+
+__all__ = ['Algebra']
 
 
 class Algebra[R: Hashable]:

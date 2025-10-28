@@ -23,9 +23,9 @@
 """
 
 from typing import Callable
-from .algebra import Algebra
-from ..elements.element import Element
-from ..elements.magma import MagmaElement
+from ..algebra.algebra import Algebra
+from ..algebra.element import Element
+from .element import MagmaElement
 
 
 class Magma[M](Algebra[M]):

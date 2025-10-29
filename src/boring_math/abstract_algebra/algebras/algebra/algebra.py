@@ -36,19 +36,28 @@
 
 """
 
-from typing import Hashable
-from .element import Element
+from typing import Hashable, Iterable
 
-__all__ = ['Algebra']
+__all__ = ['Algebra', 'Element']
 
 
-class Algebra[R: Hashable]:
-    def __init__(self, *reps: R):
-        self.elements: dict[R, Element[R]] = {}
+class Algebra[H: Hashable]:
+    def __init__(self, reps: Iterable[H]):
+        self.elements: dict[H, Element[H]] = {}
         for rep in reps:
             self.elements.setdefault(rep, Element(rep, self))
 
-    def has(self, rep: R) -> bool:
+    def __call__(self, rep: H) -> 'Element[H]':
+        """Add an element to the algebra with a given representation.
+
+        :param rep: Representation to add if not already present.
+        :returns: The element with that representation.
+
+        """
+        self.elements.setdefault(rep, Element(rep, self))
+        return self.elements[rep]
+
+    def has(self, rep: H) -> bool:
         """Determine if the algebra has a element with a given
         representation.
 
@@ -57,3 +66,21 @@ class Algebra[R: Hashable]:
 
         """
         return rep in self.elements
+
+
+class Element[R]:
+    def __init__(self, rep: R, algebra: Algebra[R]) -> None:
+        self._rep = rep
+        self._algebra = algebra
+
+    def __call__(self) -> R:
+        return self._rep
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+        if self is other:
+            return True
+        if self() == other():
+            return True
+        return False

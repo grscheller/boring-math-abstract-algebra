@@ -22,15 +22,27 @@
 
 """
 
-from typing import Callable
-from ..algebra.algebra import Algebra
-from ..algebra.element import Element
-from .element import MagmaElement
+from typing import Callable, Iterable, Self
+from ..algebra.algebra import Algebra, Element
 
 
 class Magma[M](Algebra[M]):
-    def __init__(self, *reps: M, mult: Callable[[M, M], M]):
+    def __init__(self, reps: Iterable[M], mult: Callable[[M, M], M]):
         self._mult = mult
         self.elements: dict[M, Element[M]] = {}
         for rep in reps:
             self.elements.setdefault(rep, MagmaElement(rep, self))
+
+
+class MagmaElement[M](Element[M]):
+    def __init__(self, rep: M, algebra: Magma[M]) -> None:
+        super().__init__(rep, algebra)
+
+    def __mul__(self, other: Self) -> Self:
+        if isinstance((algebra := self._algebra), Magma):
+            return type(self)(
+                algebra._mult(self(), other()),
+                algebra,
+        )
+        msg = 'Multiplication only defined for subtypes of Magma.'
+        raise TypeError(msg)

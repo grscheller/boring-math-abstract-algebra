@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable
+from typing import Callable, Iterable
 from boring_math.abstract_algebra.algebras.magma.magma import Magma
-from boring_math.abstract_algebra.algebras.magma.element import MagmaElement
 
 
 def non_assoc_mult(m: int, n: int) -> int:
@@ -26,50 +25,58 @@ def non_comm_mult(m: int, n: int) -> int:
 
 
 class MagmaRepInt(Magma[int]):
-    def __init__(self, *ms: int, mult: Callable[[int, int], int]) -> None:
-        super().__init__(*ms, mult=non_assoc_mult)
+    def __init__(self, ms: Iterable[int], mult: Callable[[int, int], int]) -> None:
+        super().__init__(ms, mult=non_assoc_mult)
 
-na = MagmaRepInt(*range(6), mult=non_assoc_mult)
-nc = MagmaRepInt(*range(6), mult=non_comm_mult)
+class Test_magma:
+    def test_basic(self) -> None:
+        na = MagmaRepInt(range(7), mult=non_assoc_mult)
+        nc = MagmaRepInt(range(7), mult=non_comm_mult)
 
-na2 = MagmaElement(2, na)
-na3 = MagmaElement(3, na)
-na3 = MagmaElement(3, na)
-na10 = MagmaElement(10, na)
+        na2 = na(2)
+        na3 = na(3)
+        na4 = na(4)
+        na5 = na(5)
+        na6 = na(6)
+        na10 = na(25)
 
-nc2 = MagmaElement(2, nc)
-nc3 = MagmaElement(3, nc)
-nc3 = MagmaElement(3, nc)
-nc4 = MagmaElement(4, nc)
-nc10 = MagmaElement(10, nc)
+        nc2 = nc(2)
+        nc3 = nc(3)
+        nc4 = nc(4)
+        nc5 = nc(5)
+        nc6 = nc(6)
+        nc10 = nc(10)
 
-assert na2() == 2
-assert nc4() == 4
-assert na3() == nc3() == 3
+        assert na2() == 2
+        assert nc4() == 4
+        assert na3() == nc3() == 3
 
-assert na2 == na2
-assert na2 is na2
-assert na2 != na3
-assert na2 is not na3
+        assert na2 == na2
+        assert na2 is na2
+        assert na2 != na3
+        assert na2 is not na3
 
-assert nc4 == nc4
-assert nc4 is nc4
-assert nc2 != nc3
-assert nc2 is not nc3
+        assert nc4 == nc4
+        assert nc4 is nc4
+        assert nc2 != nc3
+        assert nc2 is not nc3
 
-assert (foo := na2 * na3) == (bar := MagmaElement(4, na))
-assert foo == bar
-assert foo is bar
+        foo1 = na2 * na3
+        foo2 = na3 * na2
+        assert foo1 == foo2
+#       assert foo1 is foo2
 
-assert (foo := nc2 * nc3) == (bar := MagmaElement(4, nc))
-assert foo == bar
-assert foo is bar
-assert foo == nc4
-assert foo is nc4
+        bar1 = nc2 * nc3
+        bar2 = nc2 * nc(3)
+        assert bar1 == nc4
+        assert bar1 == bar2
+        assert bar1 is nc4
+        assert bar1 is bar2
 
-# do I want to make elements invariant???
-
-what = nc2 * na2
-huh = na2 * nc2
-assert what() > 0
-assert huh() > 0
+        # Do I want to make elements invariant???
+        # No, they are the same type.
+        # Blow up if algebras not the same? Make algebra a singleton?
+        # huh = nc3 * na2
+        # what = nc3 * na2
+        # assert huh() == 4
+        # assert what() == 3

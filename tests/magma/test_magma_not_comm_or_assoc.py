@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable
 from boring_math.abstract_algebra.algebras.magma import Magma
+from boring_math.abstract_algebra.algebras import Algebra
 
 
 def non_assoc_mult(m: int, n: int) -> int:
@@ -24,14 +24,10 @@ def non_comm_mult(m: int, n: int) -> int:
     return m * n - m
 
 
-class MagmaRepInt(Magma[int]):
-    def __init__(self, mult: Callable[[int, int], int]) -> None:
-        super().__init__(mult=non_assoc_mult)
-
 class Test_magma:
     def test_basic(self) -> None:
-        na = MagmaRepInt(mult=non_assoc_mult)
-        nc = MagmaRepInt(mult=non_comm_mult)
+        na = Magma[int](mult=non_assoc_mult)
+        nc = Magma[int](mult=non_comm_mult)
 
         na2 = na(2)
         na3 = na(3)
@@ -57,19 +53,70 @@ class Test_magma:
         foo1 = na2 * na3
         foo2 = na3 * na2
         assert foo1 == foo2
-#       assert foo1 is foo2
+        assert foo1 is foo2
 
         bar1 = nc2 * nc3
-        bar2 = nc2 * nc(3)
-        assert bar1 == nc4
+        bar2 = nc2 * nc3
         assert bar1 == bar2
-#       assert bar1 is nc4
-#       assert bar1 is bar2
+        assert bar1 == nc4
+        assert bar1() == bar2()
+        assert bar1() == nc4()
+        assert bar1 is bar2
+        assert bar1 is nc4
 
-        # Do I want to make elements invariant???
-        # No, they are the same type even if in different algebras.
-        # Blow up if algebras not the same? Make algebra a singleton?
-        huh = nc(5) * na(6)
-        what = na(7) * nc(8)
-        assert huh() == 25
-        assert what() == 49
+    def test_illegal_mult(self) -> None:
+        na = Magma[int](mult=non_assoc_mult)
+        nc = Magma[int](mult=non_comm_mult)
+        al = Algebra[int]()
+
+        try:
+            what1 = nc(5) * na(6)
+        except ValueError as err:
+            assert True
+            assert str(err) == 'Multiplication must be between elements of the same algebra.'
+        else:
+            assert what1() == 25
+            assert False
+
+        try:
+            what2 = na(7) * nc(8)
+        except ValueError as err:
+            assert str(err) == 'Multiplication must be between elements of the same algebra.'
+            assert True
+        else:
+            assert what2() == 49
+            assert False
+
+        try:
+            what3 = na(5) * al(25)  # type: ignore
+        except TypeError as err:
+            assert str(err) == 'Right multiplication operand not part of the algebra.'
+            assert True
+        else:
+            assert what3() == 120
+            assert False
+
+        try:
+           what4 = al(25) * na(5)
+        except TypeError as err:
+            assert str(err) == 'Left multiplication operand different type than right.'
+            assert True
+        else:
+            assert what4() == 120
+            assert False
+
+        try:
+            na(0) * [1,2,3]  # type: ignore
+        except TypeError as err:
+            assert str(err) == 'Right multiplication operand not part of the algebra.'
+            assert True
+        else:
+            assert False
+
+        try:
+            [1,2,3] * na(1)  # type: ignore
+        except TypeError as err:
+            assert str(err) == 'Left multiplication operand different type than right.'
+            assert True
+        else:
+            assert False

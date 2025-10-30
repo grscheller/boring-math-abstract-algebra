@@ -52,8 +52,11 @@ class Algebra[H: Hashable]:
         :returns: The element with that representation.
 
         """
-        self.elements.setdefault(rep, Element(rep, self))
-        return self.elements[rep]
+        return self.elements.setdefault(rep, Element(rep, self))
+
+    def __eq__(self, other: object) -> bool:
+        # Change to some sort of compatibility condition?
+        return self is other
 
     def has(self, rep: H) -> bool:
         """Determine if the algebra has a element with a given

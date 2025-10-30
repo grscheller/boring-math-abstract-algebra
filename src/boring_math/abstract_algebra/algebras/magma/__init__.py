@@ -20,6 +20,18 @@
     Mathematically a Magma is a set **M** along with a binary
     multiplicative operation **mult: M X M -> M** on that set.
 
+.. note::
+    Python ``dict`` is invariant. It is used to represents
+    the underlying **set** of elements of the **magma**. Python
+    typing does not allow it to be declared a Mapping because
+    the ``dict.setdefault`` method is not part of Mapping. 
+
+    Since elements are added to the ``dict`` in a completely
+    deterministic "natural" way and are never changed or deleted
+    once added, and elements are never returned to client code
+    without adding them to the ``dict``, the maintainer feels
+    the use of ``cast`` in this module's code is justified.
+
 """
 
 from typing import Callable, cast, Self
@@ -47,10 +59,37 @@ class MagmaElement[M](Element[M]):
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
-        if isinstance((algebra := self._algebra), Magma):
-            return type(self)(
-                algebra._mult(self(), other()),
-                algebra,
-        )
-        msg = 'Multiplication only defined for subtypes of Magma.'
+        """Multiply two elements of the same algebra together.
+
+        .. note::
+            Have added some runtime type checking. Not necessary if
+            strict typing is used, but may be useful in gradual typing
+            situations.
+
+        :param other: Another element within the same algebra.
+        :returns: The product ``self * other``.
+        :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
+        :raises TypeError: If ``self`` & ``other`` are different types.
+
+        """
+        if isinstance(other, type(self)):
+            if self._algebra is other._algebra and isinstance(
+                (algebra := self._algebra), Magma
+            ):
+                return cast(Self, algebra(algebra._mult(self(), other())))
+            else:
+                msg = 'Multiplication must be between elements of the same algebra.'
+                raise ValueError(msg)
+        msg = 'Right multiplication operand not part of the algebra.'
+        raise TypeError(msg)
+
+    def __rmul__(self, other: object) -> Self:
+        """For when left operand has no knowledge of the right operand.
+
+        :param other: The left multiplication operand.
+        :returns: Never returns, otherwise ``left.__mul__(right)`` would have.
+        :raises TypeError:
+
+        """
+        msg = 'Left multiplication operand different type than right.'
         raise TypeError(msg)

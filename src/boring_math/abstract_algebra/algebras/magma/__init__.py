@@ -23,7 +23,7 @@
 """
 
 from typing import Callable, Iterable, Self
-from ..algebra.algebra import Algebra, Element
+from .. import Algebra, Element
 
 
 class Magma[M](Algebra[M]):

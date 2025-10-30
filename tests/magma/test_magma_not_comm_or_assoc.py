@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from typing import Callable, Iterable
-from boring_math.abstract_algebra.algebras.magma.magma import Magma
+from boring_math.abstract_algebra.algebras.magma import Magma
 
 
 def non_assoc_mult(m: int, n: int) -> int:

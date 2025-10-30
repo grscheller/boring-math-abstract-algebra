@@ -13,15 +13,74 @@
 # limitations under the License.
 
 """
-**Protocols for representations of algebras.**
+**Infrastructure for an abstract algebra**
 
-========================================== ======================= ========================
-Module                                     Protocol Description    Structure
-========================================== ======================= ========================
-``algebras.groups.multiplicative``         Multiplicative group.   { G, {*}, one}
-``algebras.groups.multiplicative.abelian`` Additive abelian group. { G, {+}, zero}
-``algebras.rings.commutative``             Commutative ring.       { R, {+, *}, zero, one }
-``algebras.rings.non_commutative``         Non-commutative Ring.   { R, {+, *}, zero, one }
-========================================== ======================= ========================
+.. info::
+
+    Mathematically speaking, an **Algebra** is a **set** with a collection
+    of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2
+    (partial) functions for inverses, and nullary functions for designated
+    elements.
+
+.. note::
+
+    An instance of the ``Algebra`` class is an implementation of an algebra
+    based on the type of the representation for its elements.
+
+    The idea is that
+
+    - Elements wrap representations, called ``reps``.
+    - Operations act on the elements themselves, not their representations.
+    - Elements know which algebra they belong to.
+    - The algebras know how to manipulate the representations of their elements.
 
 """
+
+from typing import Hashable, Iterable
+
+__all__ = ['Algebra', 'Element']
+
+
+class Algebra[H: Hashable]:
+    def __init__(self, reps: Iterable[H]):
+        self.elements: dict[H, Element[H]] = {}
+        for rep in reps:
+            self.elements.setdefault(rep, Element(rep, self))
+
+    def __call__(self, rep: H) -> 'Element[H]':
+        """Add an element to the algebra with a given representation.
+
+        :param rep: Representation to add if not already present.
+        :returns: The element with that representation.
+
+        """
+        self.elements.setdefault(rep, Element(rep, self))
+        return self.elements[rep]
+
+    def has(self, rep: H) -> bool:
+        """Determine if the algebra has a element with a given
+        representation.
+
+        :param rep: Element representation.
+        :returns: ``True`` if algebra contains an element with with representation ``rep``.
+
+        """
+        return rep in self.elements
+
+
+class Element[R]:
+    def __init__(self, rep: R, algebra: Algebra[R]) -> None:
+        self._rep = rep
+        self._algebra = algebra
+
+    def __call__(self) -> R:
+        return self._rep
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+        if self is other:
+            return True
+        if self() == other():
+            return True
+        return False

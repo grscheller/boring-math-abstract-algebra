@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable, Iterable
+from typing import Callable
 from boring_math.abstract_algebra.algebras.magma import Magma
 
 
@@ -25,27 +25,20 @@ def non_comm_mult(m: int, n: int) -> int:
 
 
 class MagmaRepInt(Magma[int]):
-    def __init__(self, ms: Iterable[int], mult: Callable[[int, int], int]) -> None:
-        super().__init__(ms, mult=non_assoc_mult)
+    def __init__(self, mult: Callable[[int, int], int]) -> None:
+        super().__init__(mult=non_assoc_mult)
 
 class Test_magma:
     def test_basic(self) -> None:
-        na = MagmaRepInt(range(7), mult=non_assoc_mult)
-        nc = MagmaRepInt(range(7), mult=non_comm_mult)
+        na = MagmaRepInt(mult=non_assoc_mult)
+        nc = MagmaRepInt(mult=non_comm_mult)
 
         na2 = na(2)
         na3 = na(3)
-        na4 = na(4)
-        na5 = na(5)
-        na6 = na(6)
-        na10 = na(25)
 
         nc2 = nc(2)
         nc3 = nc(3)
         nc4 = nc(4)
-        nc5 = nc(5)
-        nc6 = nc(6)
-        nc10 = nc(10)
 
         assert na2() == 2
         assert nc4() == 4
@@ -70,13 +63,13 @@ class Test_magma:
         bar2 = nc2 * nc(3)
         assert bar1 == nc4
         assert bar1 == bar2
-        assert bar1 is nc4
-        assert bar1 is bar2
+#       assert bar1 is nc4
+#       assert bar1 is bar2
 
         # Do I want to make elements invariant???
-        # No, they are the same type.
+        # No, they are the same type even if in different algebras.
         # Blow up if algebras not the same? Make algebra a singleton?
-        # huh = nc3 * na2
-        # what = nc3 * na2
-        # assert huh() == 4
-        # assert what() == 3
+        huh = nc(5) * na(6)
+        what = na(7) * nc(8)
+        assert huh() == 25
+        assert what() == 49

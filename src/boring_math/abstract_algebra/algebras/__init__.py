@@ -36,16 +36,14 @@
 
 """
 
-from typing import Hashable, Iterable
+from typing import Hashable
 
 __all__ = ['Algebra', 'Element']
 
 
 class Algebra[H: Hashable]:
-    def __init__(self, reps: Iterable[H]):
+    def __init__(self) -> None:
         self.elements: dict[H, Element[H]] = {}
-        for rep in reps:
-            self.elements.setdefault(rep, Element(rep, self))
 
     def __call__(self, rep: H) -> 'Element[H]':
         """Add an element to the algebra with a given representation.

@@ -22,16 +22,24 @@
 
 """
 
-from typing import Callable, Iterable, Self
+from typing import Callable, cast, Self
 from .. import Algebra, Element
 
 
 class Magma[M](Algebra[M]):
-    def __init__(self, reps: Iterable[M], mult: Callable[[M, M], M]):
+    def __init__(self, mult: Callable[[M, M], M]):
+        super().__init__()
         self._mult = mult
-        self.elements: dict[M, Element[M]] = {}
-        for rep in reps:
-            self.elements.setdefault(rep, MagmaElement(rep, self))
+
+    def __call__(self, rep: M) -> 'MagmaElement[M]':
+        """Add an element to the algebra with a given representation.
+
+        :param rep: Representation to add if not already present.
+        :returns: The element with that representation.
+
+        """
+        self.elements.setdefault(rep, MagmaElement(rep, self))
+        return cast('MagmaElement[M]', self.elements[rep])
 
 
 class MagmaElement[M](Element[M]):

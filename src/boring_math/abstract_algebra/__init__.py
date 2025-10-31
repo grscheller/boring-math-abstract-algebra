@@ -21,7 +21,7 @@ algebra systems.
 - Each element of the algebra has an internal representation.
 
   - Operations and properties are defined on the elements themselves.
-  - Possibly, but not necessarily, implemented with internal elements representations.
+  - Possibly, but not necessarily, implemented with internal element representations.
   
 - The term "algebra" will be used loosely to mean either,
 
@@ -32,7 +32,6 @@ algebra systems.
 Module        Description
 ============= ==i==================================================================
 ``algebras``  Collections of elements with associated operations and relationships.
-``elements``  Protocols for elements making up an algebra.
 ``laws``      Assertions for algebras.
 ============= ======================================i==============================
 

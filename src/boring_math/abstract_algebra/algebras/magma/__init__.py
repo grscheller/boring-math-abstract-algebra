@@ -50,8 +50,8 @@ class Magma[M](Algebra[M]):
         :returns: The element with that representation.
 
         """
-        self.elements.setdefault(rep, MagmaElement(rep, self))
-        return cast('MagmaElement[M]', self.elements[rep])
+        self._elements.setdefault(rep, MagmaElement(rep, self))
+        return cast('MagmaElement[M]', self._elements[rep])
 
 
 class MagmaElement[M](Element[M]):
@@ -75,7 +75,6 @@ class MagmaElement[M](Element[M]):
         if isinstance(other, type(self)):
             algebra = cast(Magma[M], self._algebra)
             if algebra is other._algebra:
-            #   return cast(Self, algebra(algebra._mult(self(), other())))
                 return cast(Self, algebra(algebra._mult(self(), other())))
             else:
                 msg = 'Multiplication must be between elements of the same algebra.'

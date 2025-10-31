@@ -43,7 +43,7 @@ __all__ = ['Algebra', 'Element']
 
 class Algebra[H: Hashable]:
     def __init__(self) -> None:
-        self.elements: dict[H, Element[H]] = {}
+        self._elements: dict[H, Element[H]] = {}
 
     def __call__(self, rep: H) -> 'Element[H]':
         """Add an element to the algebra with a given representation.
@@ -52,7 +52,7 @@ class Algebra[H: Hashable]:
         :returns: The element with that representation.
 
         """
-        return self.elements.setdefault(rep, Element(rep, self))
+        return self._elements.setdefault(rep, Element(rep, self))
 
     def __eq__(self, other: object) -> bool:
         # Change to some sort of compatibility condition?
@@ -66,7 +66,7 @@ class Algebra[H: Hashable]:
         :returns: ``True`` if algebra contains an element with with representation ``rep``.
 
         """
-        return rep in self.elements
+        return rep in self._elements
 
 
 class Element[R]:

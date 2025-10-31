@@ -39,7 +39,7 @@ from .. import Algebra, Element
 
 
 class Magma[M](Algebra[M]):
-    def __init__(self, mult: Callable[[M, M], M]):
+    def __init__(self, mult: Callable[[M, M], M]) -> None:
         super().__init__()
         self._mult = mult
 
@@ -73,9 +73,9 @@ class MagmaElement[M](Element[M]):
 
         """
         if isinstance(other, type(self)):
-            if self._algebra is other._algebra and isinstance(
-                (algebra := self._algebra), Magma
-            ):
+            algebra = cast(Magma[M], self._algebra)
+            if algebra is other._algebra:
+            #   return cast(Self, algebra(algebra._mult(self(), other())))
                 return cast(Self, algebra(algebra._mult(self(), other())))
             else:
                 msg = 'Multiplication must be between elements of the same algebra.'

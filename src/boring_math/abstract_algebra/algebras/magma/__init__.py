@@ -34,7 +34,7 @@
 
 """
 
-from typing import Callable, cast, MutableMapping, Self
+from typing import Callable, cast, Self
 from .. import Algebra, Element
 
 
@@ -43,15 +43,14 @@ class Magma[M](Algebra[M]):
         super().__init__()
         self._mult = mult
 
-    def __call__(self, rep: M) -> Element[M]:
+    def __call__(self, rep: M) -> 'MagmaElement[M]':
         """Add an element to the algebra with a given representation.
 
         :param rep: Representation to add if not already present.
         :returns: The element with that representation.
 
         """
-        elements = cast(MutableMapping[M, Element[M]], self._elements)
-        return elements.setdefault(rep, MagmaElement(rep, self))
+        return cast(MagmaElement[M], self._elements.setdefault(rep, MagmaElement(rep, self)))
 
 
 class MagmaElement[M](Element[M]):

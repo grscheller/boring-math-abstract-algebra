@@ -36,28 +36,32 @@
 
 """
 
-from typing import cast, Hashable, Mapping, MutableMapping, Self
+from collections.abc import Container, Hashable, Iterable, Sized
+from typing import Protocol, runtime_checkable
 
-__all__ = ['Algebra', 'Element']
+__all__ = ['Algebra', 'Element', 'NaturalMapping']
 
+@runtime_checkable
+class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
+    """Custom type protocol for Mapping-like objects that support
+       both read-only access and can be extended in a "natural"
+       deterministic way.
+    """
+    def __getitem__(self, key: K) -> V: ...
+    def setdefault(self, key: K, default: V) -> V: ...
 
 class Algebra[H: Hashable]:
     def __init__(self) -> None:
-        self._elements: Mapping[H, Element[H]] = {}
+        self._elements: NaturalMapping[H, Element[H]] = dict()
 
-    def __call__(self, rep: H) -> Self:
+    def __call__(self, rep: H) -> 'Element[H]':
         """Add an element to the algebra with a given representation.
 
         :param rep: Representation to add if not already present.
         :returns: The element with that representation.
 
         """
-        return cast(
-            Self,
-            cast(MutableMapping[H, Element[H]], self._elements).setdefault(
-                rep, Element(rep, self)
-            ),
-        )
+        return self._elements.setdefault(rep, Element(rep, self))
 
     def __eq__(self, other: object) -> bool:
         # Change to some sort of compatibility condition?
@@ -72,16 +76,6 @@ class Algebra[H: Hashable]:
 
         """
         return rep in self._elements
-
-    # overide on magma
-
-    def __mul__(self, other: Self) -> Self:
-        msg = 'Multiplication not yet implemented.'
-        raise TypeError(msg)
-
-    def __rmul__(self, other: Self) -> Self:
-        msg = 'Right multiplication not yet implemented.'
-        raise TypeError(msg)
 
 
 class Element[R]:

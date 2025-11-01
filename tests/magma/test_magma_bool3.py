@@ -32,38 +32,69 @@ def xor(u: Bool3, v: Bool3) -> Bool3:
 
 
 magma3: Final[Magma[Bool3]] = Magma[Bool3](mult=xor)
+mama: Final[Magma[Bool3]] = Magma[Bool3](mult=xor)
 
-b000 = magma3(b3_000)
-b001 = magma3(b3_001)
-b010 = magma3(b3_010)
-b011 = magma3(b3_011)
-b100 = magma3(b3_100)
-b101 = magma3(b3_101)
-b110 = magma3(b3_110)
-b111 = magma3(b3_111)
+b000, m000 = magma3(b3_000), mama(b3_000)
+b001, m001 = magma3(b3_001), mama(b3_001)
+b010, m010 = magma3(b3_010), mama(b3_010)
+b011, m011 = magma3(b3_011), mama(b3_011)
+b100, m100 = magma3(b3_100), mama(b3_100)
+b101, m101 = magma3(b3_101), mama(b3_101)
+b110, m110 = magma3(b3_110), mama(b3_110)
+b111, m111 = magma3(b3_111), mama(b3_111)
 
 
 class Test_bool3:
     def test_equality(self) -> None:
-        b000 * b000 == b000
-        b010 * b011 == b001
-        b111 * b000 == b111
-        b111 * b111 == b000
-        b101 * b011 == b110 
-        b110 * b011 == b101 
+        assert b000 * b000 == b000
+        assert b010 * b011 == b001
+        # why???
+        moe = b010 * b011
+        larry = (curly := b111 * b110)
+
+        assert moe == curly
+        assert moe == larry
+
+
+        assert b111 * b000 == b111
+        assert b111 * b111 == b000
+        assert b101 * b011 == b110 
+        assert b110 * b011 == b101 
+
+        assert m000 * m000 == m000
+        assert m011 * m111 == m100
+        assert m111 * m000 == m111
+        assert m011 * m110 == m101
+        assert m101 * m011 == m110 
+        assert m111 * m101 == m010 
+
 
     def test_identity(self) -> None:
-        b000 * b000 is b000
-        b010 * b011 is b001
-        b111 * b000 is b111
-        b111 * b111 is b000
-        b101 * b011 is b110 
-        b110 * b011 is b101 
+        assert b000 * b000 is b000
+        assert b010 * b011 is b001
+        assert b111 * b000 is b111
+        assert b111 * b111 is b000
+        assert b101 * b011 is b110 
+        assert b110 * b011 is b101 
+
+        assert m000 * m000 is m000
+        assert m011 * m111 is m100
+        assert m111 * m000 is m111
+        assert m011 * m110 is m101
+        assert m101 * m011 is m110 
+        assert m111 * m101 is m010 
 
     def test_create(self) -> None:
         b_3 = magma3(b3_011)
         b_5 = magma3((True, False, True))
-        b_3 == b011
-        b_3 is b011
-        b_5 == b101
-        b_5 is b101
+        assert b_3 == b011
+        assert b_3 is b011
+        assert b_5 == b101
+        assert b_5 is b101
+
+        m_4 = mama(b3_100)
+        m_1 = mama((False, False, True))
+        assert m_4 == m100
+        assert m_1 is m001
+        assert m_4 == m100
+        assert m_1 is m001

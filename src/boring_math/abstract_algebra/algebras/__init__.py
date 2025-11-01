@@ -36,23 +36,28 @@
 
 """
 
-from typing import Hashable
+from typing import cast, Hashable, Mapping, MutableMapping, Self
 
 __all__ = ['Algebra', 'Element']
 
 
 class Algebra[H: Hashable]:
     def __init__(self) -> None:
-        self._elements: dict[H, Element[H]] = {}
+        self._elements: Mapping[H, Element[H]] = {}
 
-    def __call__(self, rep: H) -> 'Element[H]':
+    def __call__(self, rep: H) -> Self:
         """Add an element to the algebra with a given representation.
 
         :param rep: Representation to add if not already present.
         :returns: The element with that representation.
 
         """
-        return self._elements.setdefault(rep, Element(rep, self))
+        return cast(
+            Self,
+            cast(MutableMapping[H, Element[H]], self._elements).setdefault(
+                rep, Element(rep, self)
+            ),
+        )
 
     def __eq__(self, other: object) -> bool:
         # Change to some sort of compatibility condition?
@@ -67,6 +72,16 @@ class Algebra[H: Hashable]:
 
         """
         return rep in self._elements
+
+    # overide on magma
+
+    def __mul__(self, other: Self) -> Self:
+        msg = 'Multiplication not yet implemented.'
+        raise TypeError(msg)
+
+    def __rmul__(self, other: Self) -> Self:
+        msg = 'Right multiplication not yet implemented.'
+        raise TypeError(msg)
 
 
 class Element[R]:

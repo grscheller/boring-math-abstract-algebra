@@ -48,6 +48,6 @@ class SemigroupElement[S](MagmaElement[S]):
             r = (r1 := self())
             while n > 1:
                 r, n = mult(r1, r), n - 1
-            return type(self)(r, algebra)
+            return cast(Self, algebra(r))
         msg = f'For a semi-group n>0, but n={n} was given.'
         raise ValueError(msg)

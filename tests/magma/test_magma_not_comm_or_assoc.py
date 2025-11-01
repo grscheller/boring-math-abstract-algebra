@@ -52,7 +52,6 @@ class Test_magma:
 
         foo1 = na2 * na3
         foo2 = na3 * na2
-        assert foo1 == foo2
         assert foo1 is foo2
 
         bar1 = nc2 * nc3

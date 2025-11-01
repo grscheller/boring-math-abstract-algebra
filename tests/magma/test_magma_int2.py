@@ -17,10 +17,10 @@ from boring_math.abstract_algebra.algebras.magma import Magma
 
 type Int2 = tuple[int, int]
 
-b2_00: Final[Int2] = 0, 0
-b2_01: Final[Int2] = 0, 1
-b2_10: Final[Int2] = 1, 0
-b2_11: Final[Int2] = 1, 1
+i2_00: Final[Int2] = 0, 0
+i2_01: Final[Int2] = 0, 1
+i2_10: Final[Int2] = 1, 0
+i2_11: Final[Int2] = 1, 1
 
 
 def xor(u: Int2, v: Int2) -> Int2:
@@ -29,54 +29,54 @@ def xor(u: Int2, v: Int2) -> Int2:
 
 magma3: Final[Magma[Int2]] = Magma[Int2](mult=xor)
 
-b00 = magma3(b2_00)
-b01 = magma3(b2_01)
-b10 = magma3(b2_10)
-b11 = magma3(b2_11)
+i00 = magma3(i2_00)
+i01 = magma3(i2_01)
+i10 = magma3(i2_10)
+i11 = magma3(i2_11)
 
 
 class Test_bool3:
     def test_equality(self) -> None:
-        b00 * b00 == b00
-        b00 * b01 == b01
-        b00 * b10 == b10
-        b00 * b11 == b11
-        b01 * b00 == b01
-        b01 * b01 == b00
-        b01 * b10 == b11
-        b01 * b11 == b10
-        b10 * b00 == b10
-        b10 * b01 == b11
-        b10 * b10 == b00
-        b10 * b11 == b01
-        b11 * b00 == b11
-        b11 * b01 == b10
-        b11 * b10 == b01
-        b11 * b11 == b00
+        assert i00 * i00 == i00
+        assert i00 * i01 == i01
+        assert i00 * i10 == i10
+        assert i00 * i11 == i11
+        assert i01 * i00 == i01
+        assert i01 * i01 == i00
+        assert i01 * i10 == i11
+        assert i01 * i11 == i10
+        assert i10 * i00 == i10
+        assert i10 * i01 == i11
+        assert i10 * i10 == i00
+        assert i10 * i11 == i01
+        assert i11 * i00 == i11
+        assert i11 * i01 == i10
+        assert i11 * i10 == i01
+        assert i11 * i11 == i00
 
 
     def test_identity(self) -> None:
-        b00 == b00 * b00
-        b01 == b00 * b01
-        b10 == b00 * b10
-        b11 == b00 * b11
-        b01 == b01 * b00
-        b00 == b01 * b01
-        b11 == b01 * b10
-        b10 == b01 * b11
-        b10 == b10 * b00
-        b11 == b10 * b01
-        b00 == b10 * b10
-        b01 == b10 * b11
-        b11 == b11 * b00
-        b10 == b11 * b01
-        b01 == b11 * b10
-        b00 == b11 * b11
+        assert i00 == i00 * i00
+        assert i01 == i00 * i01
+        assert i10 == i00 * i10
+        assert i11 == i00 * i11
+        assert i01 == i01 * i00
+        assert i00 == i01 * i01
+        assert i11 == i01 * i10
+        assert i10 == i01 * i11
+        assert i10 == i10 * i00
+        assert i11 == i10 * i01
+        assert i00 == i10 * i10
+        assert i01 == i10 * i11
+        assert i11 == i11 * i00
+        assert i10 == i11 * i01
+        assert i01 == i11 * i10
+        assert i00 == i11 * i11
 
     def test_create(self) -> None:
-        b_3 = magma3(b2_11)
+        b_3 = magma3(i2_11)
         b_1 = magma3((0, 1))
-        b_3 == b11
-        b_3 is b11
-        b_1 == b01
-        b_1 is b01
+        assert b_3 == i11
+        assert b_3 is i11
+        assert b_1 == i01
+        assert b_1 is i01

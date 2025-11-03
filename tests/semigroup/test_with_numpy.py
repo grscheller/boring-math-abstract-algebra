@@ -14,7 +14,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, reveal_type
 from boring_math.abstract_algebra.algebras.semigroup import Semigroup
 
 ## Infrastructure setup
@@ -35,7 +35,7 @@ class HashableNDArray:
             ))
 
     def __call__(self) -> npt.NDArray[Any]:
-        return np.array(self._array, copy=True)  # safer
+        return np.array(self._array, copy=True)
 
     def __hash__(self) -> int:
         return self._hash
@@ -58,6 +58,8 @@ def matrix_mult(left: I64_2x2, right: I64_2x2) -> I64_2x2:
 
 m2x2 = Semigroup[I64_2x2](mult=matrix_mult)
 
+reveal_type(m2x2)
+
 np_eye = HashableNDArray(np.identity(2, dtype=np.int64))
 np_zero = HashableNDArray(np.zeros((2, 2), dtype=np.int64))
 np_A = HashableNDArray(np.array([[5, -1], [0, 2]], dtype=np.int64))
@@ -66,6 +68,8 @@ np_C = HashableNDArray(np.array([[1, 1], [1, 1]], dtype=np.int64))
 np_D = HashableNDArray(np.array([[0, 1], [1, 0]], dtype=np.int64))
 np_E = HashableNDArray(np.array([[11, -7], [-2, 4]], dtype=np.int64))
 
+reveal_type(np_eye)
+
 Eye = m2x2(np_eye)
 Zero = m2x2(np_zero)
 A = m2x2(np_A)
@@ -73,6 +77,8 @@ B = m2x2(np_B)
 C = m2x2(np_C)
 D = m2x2(np_D)
 E = m2x2(np_E)
+
+reveal_type(Eye)
 
 
 class Test_bool3:
@@ -101,3 +107,7 @@ class Test_bool3:
         See = m2x2(np_see)
         assert See == C
         assert See is C
+
+    def test_pow(self) -> None:
+        Eye ** 5 == Eye
+        Eye ** 5 is Eye

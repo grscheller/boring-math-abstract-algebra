@@ -28,22 +28,23 @@
 
 """
 
+from collections.abc import Hashable
 from typing import Callable, cast, Self
 from ..magma import Magma, MagmaElement
 
 
-class Semigroup[S](Magma[S]):
-    def __init__(self, mult: Callable[[S, S], S]):
+class Semigroup[H: Hashable](Magma[H]):
+    def __init__(self, mult: Callable[[H, H], H]):
         super().__init__(mult)
 
 
-class SemigroupElement[S](MagmaElement[S]):
-    def __init__(self, rep: S, algebra: Semigroup[S]) -> None:
+class SemigroupElement[H: Hashable](MagmaElement[H]):
+    def __init__(self, rep: H, algebra: Semigroup[H]) -> None:
         super().__init__(rep, algebra)
 
     def __pow__(self, n: int) -> Self:
         if n > 0:
-            algebra = cast(Semigroup[S], self._algebra)
+            algebra = cast(Semigroup[H], self._algebra)
             mult = algebra._mult
             r = (r1 := self())
             while n > 1:

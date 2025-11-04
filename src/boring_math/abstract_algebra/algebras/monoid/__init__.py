@@ -30,23 +30,24 @@
 
 """
 
+from collections.abc import Hashable
 from typing import Callable, cast, Self
 from ..semigroup import Semigroup, SemigroupElement
 
 
-class Monoid[M](Semigroup[M]):
-    def __init__(self, mult: Callable[[M, M], M], one: M):
+class Monoid[H: Hashable](Semigroup[H]):
+    def __init__(self, mult: Callable[[H, H], H], one: H):
         super().__init__(mult)
         self._one = one
 
 
-class MonoidElement[M](SemigroupElement[M]):
-    def __init__(self, rep: M, algebra: Monoid[M]) -> None:
+class MonoidElement[H: Hashable](SemigroupElement[H]):
+    def __init__(self, rep: H, algebra: Monoid[H]) -> None:
         super().__init__(rep, algebra)
 
     def __pow__(self, n: int) -> Self:
         if n >= 0:
-            algebra = cast(Monoid[M], self._algebra)
+            algebra = cast(Monoid[H], self._algebra)
             mult = algebra._mult
             r, r1 = algebra._one, self()
             while n > 0:

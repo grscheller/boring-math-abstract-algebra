@@ -34,27 +34,19 @@
 
 """
 
-from typing import Callable, cast, Self
+from collections.abc import Hashable
+from typing import Callable, Self, cast
 from .. import Algebra, Element
 
 
-class Magma[M](Algebra[M]):
-    def __init__(self, mult: Callable[[M, M], M]) -> None:
+class Magma[H: Hashable](Algebra[H]):
+    def __init__(self, mult: Callable[[H, H], H]) -> None:
         super().__init__()
         self._mult = mult
 
-    def __call__(self, rep: M) -> 'MagmaElement[M]':
-        """Add an element to the algebra with a given representation.
 
-        :param rep: Representation to add if not already present.
-        :returns: The element with that representation.
-
-        """
-        return cast(MagmaElement[M], self._elements.setdefault(rep, MagmaElement(rep, self)))
-
-
-class MagmaElement[M](Element[M]):
-    def __init__(self, rep: M, algebra: Magma[M]) -> None:
+class MagmaElement[H: Hashable](Element[H]):
+    def __init__(self, rep: H, algebra: Magma[H]) -> None:
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
@@ -72,7 +64,7 @@ class MagmaElement[M](Element[M]):
 
         """
         if isinstance(other, type(self)):
-            algebra = cast(Magma[M], self._algebra)
+            algebra = cast(Magma[H], self._algebra)
             if algebra is other._algebra:
                 return cast(Self, algebra(algebra._mult(self(), other())))
             else:

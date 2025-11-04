@@ -39,16 +39,19 @@
 from collections.abc import Container, Hashable, Iterable, Sized
 from typing import Protocol, runtime_checkable
 
-__all__ = ['Algebra', 'Element', 'NaturalMapping']
+__all__ = ['Algebra', 'Element']
+
 
 @runtime_checkable
 class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
     """Custom type protocol for Mapping-like objects that support
-       both read-only access and can be extended in a "natural"
-       deterministic way.
+    both read-only access and can be extended in a "natural"
+    deterministic way.
     """
+
     def __getitem__(self, key: K) -> V: ...
     def setdefault(self, key: K, default: V) -> V: ...
+
 
 class Algebra[H: Hashable]:
     def __init__(self) -> None:
@@ -78,12 +81,12 @@ class Algebra[H: Hashable]:
         return rep in self._elements
 
 
-class Element[R]:
-    def __init__(self, rep: R, algebra: Algebra[R]) -> None:
+class Element[H: Hashable]:
+    def __init__(self, rep: H, algebra: Algebra[H]) -> None:
         self._rep = rep
         self._algebra = algebra
 
-    def __call__(self) -> R:
+    def __call__(self) -> H:
         return self._rep
 
     def __eq__(self, other: object) -> bool:

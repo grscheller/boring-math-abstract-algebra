@@ -31,27 +31,35 @@
 """
 
 from collections.abc import Hashable
-from typing import Callable, cast, Self
+from typing import Callable, ClassVar, Final, cast, Self, Type
 from ..semigroup import Semigroup, SemigroupElement
 
-
-class Monoid[H: Hashable](Semigroup[H]):
-    def __init__(self, mult: Callable[[H, H], H], one: H):
-        super().__init__(mult)
-        self._one = one
+__all__ = ['Monoid', 'MonoidElement']
 
 
 class MonoidElement[H: Hashable](SemigroupElement[H]):
-    def __init__(self, rep: H, algebra: Monoid[H]) -> None:
+    def __init__(self, rep: H, algebra: 'Monoid[H]') -> None:
         super().__init__(rep, algebra)
 
     def __pow__(self, n: int) -> Self:
         if n >= 0:
-            algebra = cast(Monoid[H], self._algebra)
-            mult = algebra._mult
-            r, r1 = algebra._one, self()
+            algebra = self._algebra
+            if (mult := algebra._mult) is None:
+                raise ValueError('Algebra has no multiplication method')
+            if (one := algebra._one) is None:
+                raise ValueError('Algebra has no multiplicative identity')
+            r, r1 = one, self()
             while n > 0:
                 r, n = mult(r, r1), n - 1
-            return type(self)(r, algebra)
+            return algebra(r)
         msg = f'For a Monoid n>=0, but n={n} was given.'
         raise ValueError(msg)
+
+
+class Monoid[H: Hashable](Semigroup[H]):
+    Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
+
+    def __init__(self, mult: Callable[[H, H], H], one: H):
+        super().__init__(mult)
+        self._one = one
+        self._Element = MonoidElement

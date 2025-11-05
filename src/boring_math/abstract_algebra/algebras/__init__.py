@@ -36,8 +36,9 @@
 
 """
 
-from collections.abc import Container, Hashable, Iterable, Sized
-from typing import Protocol, runtime_checkable
+# from abc import abstractmethod
+from collections.abc import Callable, Container, Hashable, Iterable, Sized
+from typing import ClassVar, Protocol, Self, Type, runtime_checkable, reveal_type
 
 __all__ = ['Algebra', 'Element']
 
@@ -53,36 +54,8 @@ class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol)
     def setdefault(self, key: K, default: V) -> V: ...
 
 
-class Algebra[H: Hashable]:
-    def __init__(self) -> None:
-        self._elements: NaturalMapping[H, Element[H]] = dict()
-
-    def __call__(self, rep: H) -> 'Element[H]':
-        """Add an element to the algebra with a given representation.
-
-        :param rep: Representation to add if not already present.
-        :returns: The element with that representation.
-
-        """
-        return self._elements.setdefault(rep, Element(rep, self))
-
-    def __eq__(self, other: object) -> bool:
-        # Change to some sort of compatibility condition?
-        return self is other
-
-    def has(self, rep: H) -> bool:
-        """Determine if the algebra has a element with a given
-        representation.
-
-        :param rep: Element representation.
-        :returns: ``True`` if algebra contains an element with with representation ``rep``.
-
-        """
-        return rep in self._elements
-
-
-class Element[H: Hashable]:
-    def __init__(self, rep: H, algebra: Algebra[H]) -> None:
+class AlgebraElement[H: Hashable]:
+    def __init__(self, rep: H, algebra: 'Algebra[H]') -> None:
         self._rep = rep
         self._algebra = algebra
 
@@ -97,3 +70,46 @@ class Element[H: Hashable]:
         if self() == other():
             return True
         return False
+
+    def __add__(self, other: Self) -> Self:
+        raise NotImplementedError('Addition not defined on algebra')
+
+    def __mul__(self, other: Self) -> Self:
+        raise NotImplementedError('Multiplication not defined on algebra')
+
+    def __pow__(self, n: int) -> Self:
+        raise NotImplementedError('Raising to integer powers not defined on algebra')
+
+
+class Algebra[H: Hashable]:
+    Element: ClassVar[Type[AlgebraElement[H]]] = AlgebraElement
+
+    def __init__(self) -> None:
+        self._elements: NaturalMapping[H, AlgebraElement[H]] = dict()
+        self._mult: Callable[[H, H], H] | None = None
+        self._add: Callable[[H, H], H] | None = None
+        self._one: H | None = None
+        self._zero: H | None = None
+
+    def __call__(self, rep: H) -> AlgebraElement[H]:
+        """Add an element to the algebra with a given representation.
+
+        :param rep: Representation to add if not already present.
+        :returns: The element with that representation.
+
+        """
+        return self._elements.setdefault(rep, type(self).Element(rep, self))
+
+    def __eq__(self, other: object) -> bool:
+        # Change to some sort of compatibility condition?
+        return self is other
+
+    def has(self, rep: H) -> bool:
+        """Determine if the algebra has a element with a given
+        representation.
+
+        :param rep: Element representation.
+        :returns: ``True`` if algebra contains an element with with representation ``rep``.
+
+        """
+        return rep in self._elements

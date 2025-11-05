@@ -27,12 +27,12 @@ def xor(u: Int2, v: Int2) -> Int2:
     return (u[0] ^ v[0], u[1] ^ v[1])
 
 
-magma3: Final[Magma[Int2]] = Magma[Int2](mult=xor)
+magma2: Final[Magma[Int2]] = Magma[Int2](mult=xor)
 
-i00 = magma3(i2_00)
-i01 = magma3(i2_01)
-i10 = magma3(i2_10)
-i11 = magma3(i2_11)
+i00 = magma2(i2_00)
+i01 = magma2(i2_01)
+i10 = magma2(i2_10)
+i11 = magma2(i2_11)
 
 
 class Test_bool3:
@@ -74,8 +74,8 @@ class Test_bool3:
         assert i00 == i11 * i11
 
     def test_create(self) -> None:
-        b_3 = magma3(i2_11)
-        b_1 = magma3((0, 1))
+        b_3 = magma2(i2_11)
+        b_1 = magma2((0, 1))
         assert b_3 == i11
         assert b_3 is i11
         assert b_1 == i01

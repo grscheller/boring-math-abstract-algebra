@@ -24,7 +24,7 @@
     Python ``dict`` is invariant. It is used to represents
     the underlying **set** of elements of the **magma**. Python
     typing does not allow it to be declared a Mapping because
-    the ``dict.setdefault`` method is not part of Mapping. 
+    the ``dict.setdefault`` method is not part of Mapping.
 
     Since elements are added to the ``dict`` in a completely
     deterministic "natural" way and are never changed or deleted
@@ -34,19 +34,15 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, Self, cast
-from .. import Algebra, Element
+from collections.abc import Callable, Hashable
+from typing import ClassVar, Final, Self, Type, reveal_type
+from .. import Algebra, AlgebraElement
+
+__all__ = ['Magma', 'MagmaElement']
 
 
-class Magma[H: Hashable](Algebra[H]):
-    def __init__(self, mult: Callable[[H, H], H]) -> None:
-        super().__init__()
-        self._mult = mult
-
-
-class MagmaElement[H: Hashable](Element[H]):
-    def __init__(self, rep: H, algebra: Magma[H]) -> None:
+class MagmaElement[H: Hashable](AlgebraElement[H]):
+    def __init__(self, rep: H, algebra: 'Magma[H]') -> None:
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
@@ -64,9 +60,13 @@ class MagmaElement[H: Hashable](Element[H]):
 
         """
         if isinstance(other, type(self)):
-            algebra = cast(Magma[H], self._algebra)
+            algebra = self._algebra
             if algebra is other._algebra:
-                return cast(Self, algebra(algebra._mult(self(), other())))
+                if (mult := algebra._mult) is not None:
+                    return algebra(mult(self(), other()))
+                else:
+                    msg = "Element not part of an algebra where multiplication is defined"
+                    raise ValueError(msg)
             else:
                 msg = 'Multiplication must be between elements of the same algebra.'
                 raise ValueError(msg)
@@ -83,3 +83,11 @@ class MagmaElement[H: Hashable](Element[H]):
         """
         msg = 'Left multiplication operand different type than right.'
         raise TypeError(msg)
+
+
+class Magma[H: Hashable](Algebra[H]):
+    Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
+
+    def __init__(self, mult: Callable[[H, H], H]) -> None:
+        super().__init__()
+        self._mult = mult

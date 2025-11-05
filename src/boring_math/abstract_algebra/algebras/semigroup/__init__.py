@@ -28,27 +28,32 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, cast, Self
+from collections.abc import Callable, Hashable
+from typing import ClassVar, Final, Self, Type
 from ..magma import Magma, MagmaElement
 
-
-class Semigroup[H: Hashable](Magma[H]):
-    def __init__(self, mult: Callable[[H, H], H]):
-        super().__init__(mult)
+__all__ = ['Semigroup', 'SemigroupElement']
 
 
 class SemigroupElement[H: Hashable](MagmaElement[H]):
-    def __init__(self, rep: H, algebra: Semigroup[H]) -> None:
+    def __init__(self, rep: H, algebra: 'Semigroup[H]') -> None:
         super().__init__(rep, algebra)
 
     def __pow__(self, n: int) -> Self:
         if n > 0:
-            algebra = cast(Semigroup[H], self._algebra)
-            mult = algebra._mult
+            algebra = self._algebra
+            if (mult := algebra._mult) is None:
+                raise ValueError('Algebra has no multiplication method')
             r = (r1 := self())
             while n > 1:
                 r, n = mult(r1, r), n - 1
-            return cast(Self, algebra(r))
+            return algebra(r)
         msg = f'For a semi-group n>0, but n={n} was given.'
         raise ValueError(msg)
+
+
+class Semigroup[H: Hashable](Magma[H]):
+    Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
+
+    def __init__(self, mult: Callable[[H, H], H]):
+        super().__init__(mult)

@@ -13,18 +13,12 @@
 # limitations under the License.
 
 """
-**Laws for algebras.**
+**Protocols for algebras.**
 
-======================= ===================================
-Module                  Description
-======================= ===================================
-``laws.magmas``         Laws for magmas.
-``laws.semigroups``     Laws for semigroups.
-``laws.monoids``        Laws for monoids.
-``laws.semigroups``     Laws for multiplicative groups.
-``laws.abelian_groups`` Laws for additive (Abelian) groups.
-``laws.rings``          Laws for commutative rings.
-``laws.fields``         Laws for non-commutative rings.
-======================+ ===================================
+======================== ========================================
+Module                   Description
+======================== ========================================
+``protocoles.orderings`` Partial and total orderings on algebras.
+=======================+ ========================================
 
 """

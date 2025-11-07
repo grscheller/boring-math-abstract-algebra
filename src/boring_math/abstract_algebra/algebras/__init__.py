@@ -38,7 +38,7 @@
 
 # from abc import abstractmethod
 from collections.abc import Callable, Container, Hashable, Iterable, Sized
-from typing import ClassVar, Protocol, Self, Type, runtime_checkable, reveal_type
+from typing import ClassVar, Protocol, Self, Type, runtime_checkable
 
 __all__ = ['Algebra', 'Element']
 

@@ -18,22 +18,23 @@
 A library designed to construct concrete representations for abstract
 algebra systems.
 
-- Each element of the algebra has an internal representation.
-
-  - Operations and properties are defined on the elements themselves.
-  - Possibly, but not necessarily, implemented with internal element representations.
-  
 - The term "algebra" will be used loosely to mean either,
 
   - An abstract system unique up to isomorphism.
   - Or a concrete representation of such.
 
-============= ====================i================================================
-Module        Description
-============= ==i==================================================================
-``algebras``  Collections of elements with associated operations and relationships.
-``laws``      Assertions for algebras.
-============= ======================================i==============================
+- Each element of the algebra has an internal representation.
+
+  - Each element knows the concrete representation of the algebra to which it belongs.
+  - Operations and properties are defined on the algebras themselves.
+
+============== ====================i================================================
+Module         Description
+============== =====================================================================
+``algebras``   Collections of elements with associated operations and relationships.
+``laws``       Assertions for algebras.
+``protocols``  Protocols for algebras.
+============== ======================================i==============================
 
 """
 

@@ -13,33 +13,45 @@
 # limitations under the License.
 
 """
-**Monoid**
+**Group**
 
 .. info::
 
-    Mathematically a Monoid is a Semigroup **M** along with an identity
-    element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).
+    Mathematically a Group is a Monoid **G** all of whose elements
+    have multiplicative inverses.
 
-    Such an identity element u exists, it is necessarily unique.
+.. note::
+
+    No assumptions are made whether or not the group is Abelian. See
+    **AbelianGroup**.
 
 .. important::
 
     Contract:
 
-    - Semigroup multiplication consistent with the identity element.
+    - Supplied inverse function consistent with group multiplication.
 
 """
 
 from collections.abc import Hashable
-from typing import Callable, ClassVar, Final, Self, Type, cast
-from ..semigroup import Semigroup, SemigroupElement
+from typing import Callable, ClassVar, Final, cast, Self, Type
+from ..monoid import Monoid, MonoidElement
 
 __all__ = ['Monoid', 'MonoidElement']
 
 
-class MonoidElement[H: Hashable](SemigroupElement[H]):
-    def __init__(self, rep: H, algebra: 'Monoid[H]') -> None:
+class GroupElement[H: Hashable](MonoidElement[H]):
+    def __init__(self, rep: H, algebra: 'Group[H]') -> None:
         super().__init__(rep, algebra)
+
+    def invert(self) -> Self:
+        algebra = self._algebra
+        if (invert := algebra._inv) is None:
+            raise ValueError('Algebra multiplication not invertable')
+        return type(self)(
+            invert(self()),
+            cast(Group[H], algebra),
+        )
 
     def __pow__(self, n: int) -> Self:
         if n >= 0:
@@ -52,13 +64,16 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
             while n > 0:
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a Monoid n>=0, but n={n} was given.'
-        raise ValueError(msg)
+        else:
+            g = (g_inv := self.invert())
+            while n < -1:
+                g, n = g * g_inv, n + 1
+            return g
 
 
-class Monoid[H: Hashable](Semigroup[H]):
-    Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
+class Group[H: Hashable](Monoid[H]):
+    Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement
 
-    def __init__(self, mult: Callable[[H, H], H], one: H):
-        super().__init__(mult)
-        self._one = one
+    def __init__(self, mult: Callable[[H, H], H], one: H, inv: Callable[[H], H]):
+        super().__init__(mult, one)
+        self._inv = inv

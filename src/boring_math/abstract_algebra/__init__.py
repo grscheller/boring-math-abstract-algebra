@@ -26,7 +26,7 @@ algebra systems.
 - The term "algebra" will be used loosely to mean either,
 
   - An abstract system unique up to isomorphism.
-  - Or a concrete representation of such a system.
+  - Or a concrete representation of such.
 
 ============= ====================i================================================
 Module        Description

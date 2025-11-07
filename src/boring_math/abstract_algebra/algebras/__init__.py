@@ -72,13 +72,13 @@ class AlgebraElement[H: Hashable]:
         return False
 
     def __add__(self, other: Self) -> Self:
-        raise NotImplementedError('Addition not defined on algebra')
+        raise NotImplementedError('Addition not defined on algebra.')
 
     def __mul__(self, other: Self) -> Self:
-        raise NotImplementedError('Multiplication not defined on algebra')
+        raise NotImplementedError('Multiplication not defined on algebra.')
 
     def __pow__(self, n: int) -> Self:
-        raise NotImplementedError('Raising to integer powers not defined on algebra')
+        raise NotImplementedError('Raising to integer powers not defined on algebra.')
 
 
 class Algebra[H: Hashable]:
@@ -90,6 +90,8 @@ class Algebra[H: Hashable]:
         self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
         self._zero: H | None = None
+        self._inv: Callable[[H], H] | None = None
+        self._neg: Callable[[H], H] | None = None
 
     def __call__(self, rep: H) -> AlgebraElement[H]:
         """Add an element to the algebra with a given representation.

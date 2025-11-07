@@ -55,34 +55,32 @@ class Test_bool3:
         assert moe == curly
         assert moe == larry
 
-
         assert b111 * b000 == b111
         assert b111 * b111 == b000
-        assert b101 * b011 == b110 
-        assert b110 * b011 == b101 
+        assert b101 * b011 == b110
+        assert b110 * b011 == b101
 
         assert m000 * m000 == m000
         assert m011 * m111 == m100
         assert m111 * m000 == m111
         assert m011 * m110 == m101
-        assert m101 * m011 == m110 
-        assert m111 * m101 == m010 
-
+        assert m101 * m011 == m110
+        assert m111 * m101 == m010
 
     def test_identity(self) -> None:
         assert b000 * b000 is b000
         assert b010 * b011 is b001
         assert b111 * b000 is b111
         assert b111 * b111 is b000
-        assert b101 * b011 is b110 
-        assert b110 * b011 is b101 
+        assert b101 * b011 is b110
+        assert b110 * b011 is b101
 
         assert m000 * m000 is m000
         assert m011 * m111 is m100
         assert m111 * m000 is m111
         assert m011 * m110 is m101
-        assert m101 * m011 is m110 
-        assert m111 * m101 is m010 
+        assert m101 * m011 is m110
+        assert m111 * m101 is m010
 
     def test_create(self) -> None:
         b_3 = magma3(b3_011)

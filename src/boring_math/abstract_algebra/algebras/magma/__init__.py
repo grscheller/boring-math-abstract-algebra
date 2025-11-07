@@ -35,7 +35,7 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, Self, Type, reveal_type
+from typing import ClassVar, Final, Self, Type, cast
 from .. import Algebra, AlgebraElement
 
 __all__ = ['Magma', 'MagmaElement']
@@ -63,14 +63,14 @@ class MagmaElement[H: Hashable](AlgebraElement[H]):
             algebra = self._algebra
             if algebra is other._algebra:
                 if (mult := algebra._mult) is not None:
-                    return algebra(mult(self(), other()))
+                    return cast(Self, algebra(mult(self(), other())))
                 else:
                     msg = "Element not part of an algebra where multiplication is defined"
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same algebra.'
+                msg = 'Multiplication must be between elements of the same concrete algebra.'
                 raise ValueError(msg)
-        msg = 'Right multiplication operand not part of the algebra.'
+        msg = 'Right multiplication operand not part of the algebra of Left.'
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:

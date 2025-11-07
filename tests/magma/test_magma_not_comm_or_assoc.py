@@ -72,7 +72,9 @@ class Test_magma:
             what1 = nc(5) * na(6)
         except ValueError as err:
             assert True
-            assert str(err) == 'Multiplication must be between elements of the same algebra.'
+            assert (
+                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+            )
         else:
             assert what1() == 25
             assert False
@@ -80,23 +82,25 @@ class Test_magma:
         try:
             what2 = na(7) * nc(8)
         except ValueError as err:
-            assert str(err) == 'Multiplication must be between elements of the same algebra.'
+            assert (
+                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+            )
             assert True
         else:
             assert what2() == 49
             assert False
 
         try:
-            what3 = na(5) * al(25)  # type: ignore
+            what3 = na(5) * al(25)
         except TypeError as err:
-            assert str(err) == 'Right multiplication operand not part of the algebra.'
+            assert str(err) == 'Right multiplication operand not part of the algebra of Left.'
             assert True
         else:
             assert what3() == 120
             assert False
 
         try:
-           what4 = al(25) * na(5)
+            what4 = al(25) * na(5)
         except TypeError as err:
             assert str(err) == 'Left multiplication operand different type than right.'
             assert True
@@ -105,15 +109,15 @@ class Test_magma:
             assert False
 
         try:
-            na(0) * [1,2,3]  # type: ignore
+            na(0) * [1, 2, 3]  # type: ignore
         except TypeError as err:
-            assert str(err) == 'Right multiplication operand not part of the algebra.'
+            assert str(err) == 'Right multiplication operand not part of the algebra of Left.'
             assert True
         else:
             assert False
 
         try:
-            [1,2,3] * na(1)  # type: ignore
+            [1, 2, 3] * na(1)  # type: ignore
         except TypeError as err:
             assert str(err) == 'Left multiplication operand different type than right.'
             assert True

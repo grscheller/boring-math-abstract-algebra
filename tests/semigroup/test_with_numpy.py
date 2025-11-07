@@ -14,7 +14,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from typing import Annotated, Any, Literal, reveal_type
+from typing import Annotated, Any, Literal
 from boring_math.abstract_algebra.algebras.semigroup import Semigroup
 
 ## Infrastructure setup
@@ -26,13 +26,12 @@ class HashableNDArrayWrapper:
     def __init__(self, ndarray: npt.NDArray[Any]) -> None:
         self._ndarray = np.array(ndarray, copy=True)
         self._ndarray.setflags(write=False)
-        self._hash = hash((
-            self._ndarray.tobytes(),
-            hash((
-                self._ndarray.shape,
-                self._ndarray.dtype,
-                )),
-            ))
+        self._hash = hash(
+            (
+                self._ndarray.tobytes(),
+                hash((self._ndarray.shape, self._ndarray.dtype)),
+            )
+        )
 
     def __call__(self) -> npt.NDArray[Any]:
         return np.array(self._ndarray, copy=True)
@@ -43,7 +42,10 @@ class HashableNDArrayWrapper:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, HashableNDArrayWrapper):
             return NotImplemented
-        if self._ndarray.shape != other._ndarray.shape or self._ndarray.dtype != other._ndarray.dtype:
+        if (
+            self._ndarray.shape != other._ndarray.shape
+            or self._ndarray.dtype != other._ndarray.dtype
+        ):
             return False
         return np.array_equal(self._ndarray, other._ndarray)
 
@@ -56,9 +58,8 @@ type I64_2x2 = Annotated[HashableNDArrayWrapper[npt.NDArray[np.int64]], Literal[
 def matrix_mult(left: I64_2x2, right: I64_2x2) -> I64_2x2:
     return HashableNDArrayWrapper(left() @ right())
 
-m2x2 = Semigroup[I64_2x2](mult=matrix_mult)
 
-reveal_type(m2x2)
+m2x2 = Semigroup[I64_2x2](mult=matrix_mult)
 
 np_eye = HashableNDArrayWrapper(np.eye(2, dtype=np.int64))
 np_zero = HashableNDArrayWrapper(np.zeros((2, 2), dtype=np.int64))
@@ -68,7 +69,6 @@ np_C = HashableNDArrayWrapper(np.array([[1, 1], [1, 1]], dtype=np.int64))
 np_D = HashableNDArrayWrapper(np.array([[0, 1], [1, 0]], dtype=np.int64))
 np_E = HashableNDArrayWrapper(np.array([[11, -7], [-2, 4]], dtype=np.int64))
 
-reveal_type(np_eye)
 
 Eye = m2x2(np_eye)
 Zero = m2x2(np_zero)
@@ -78,8 +78,6 @@ C = m2x2(np_C)
 D = m2x2(np_D)
 E = m2x2(np_E)
 
-reveal_type(Eye)
-
 
 class Test_bool3:
     def test_equality(self) -> None:
@@ -87,7 +85,7 @@ class Test_bool3:
         assert Eye * A == A
         assert B * Eye == B
         assert E * Zero == Zero
-        assert Zero *  E == Zero
+        assert Zero * E == Zero
         assert (A * B) * C == A * (B * C)
         assert D * D == Eye
         assert A * B == E
@@ -97,7 +95,7 @@ class Test_bool3:
         assert Eye * A is A
         assert B * Eye is B
         assert E * Zero is Zero
-        assert Zero *  E is Zero
+        assert Zero * E is Zero
         assert (A * B) * C is A * (B * C)
         assert D * D is Eye
         assert A * B is E
@@ -109,5 +107,5 @@ class Test_bool3:
         assert See is C
 
     def test_pow(self) -> None:
-        Eye ** 5 == Eye
-        Eye ** 5 is Eye
+        Eye**5 == Eye
+        Eye**5 is Eye

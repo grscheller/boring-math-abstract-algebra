@@ -54,7 +54,6 @@ class Test_bool3:
         assert i11 * i10 == i01
         assert i11 * i11 == i00
 
-
     def test_identity(self) -> None:
         assert i00 == i00 * i00
         assert i01 == i00 * i01

@@ -29,7 +29,7 @@ See [Semantic Versioning 2.0.0](https://semver.org).
   - contain user defined methods that take representations as parameters
   - contain attributes like
     - a monoid identity element
-    - or a ring additive multiplicative identities
+    - a ring's additive and multiplicative identities
 
 ### Update - 2025-10-17
 

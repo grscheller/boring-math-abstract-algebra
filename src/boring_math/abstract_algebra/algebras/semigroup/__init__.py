@@ -15,7 +15,7 @@
 """
 **Semigroup**
 
-.. info::
+.. note::
 
     Mathematically a Semigroup is a set **S** along with an associative
     binary operation **op: S X S -> S**.

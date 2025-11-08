@@ -14,14 +14,31 @@ See [Semantic Versioning 2.0.0](https://semver.org).
 
 ## Releases and Important Milestones
 
-### Update - 2025-15-17
+### Update - 2025-11-07
+
+- elements
+  - elements know the concrete algebra to which they belong
+  - they wrap hashable immutable representations
+  - binary operations * and + act on the elements
+    - not their representations
+- algebras
+  - contain an dict of their potential elements
+    - can be used with potentially infinite or continuous algebras
+    - the dict is "quasi-immutable"
+      - elements are added in a "natural" unique deterministic way
+  - contain user defined methods that take representations as parameters
+  - contain attributes like
+    - a monoid identity element
+    - or a ring additive multiplicative identities
+
+### Update - 2025-10-17
 
 Major increase in my understanding of Protocols.
 
 - decided to move project to Boring Math
 - renaming repo pythonic-fp-protocols -> boring-math-abstract-algebra
 
-### Update - 2025-15-13
+### Update - 2025-10-13
 
 Narrowing scope of project to just protocols.
 

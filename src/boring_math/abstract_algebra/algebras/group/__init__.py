@@ -15,7 +15,7 @@
 """
 **Group**
 
-.. info::
+.. note::
 
     Mathematically a Group is a Monoid **G** all of whose elements
     have multiplicative inverses.

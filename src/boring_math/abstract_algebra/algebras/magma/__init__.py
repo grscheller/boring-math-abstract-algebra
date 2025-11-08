@@ -15,7 +15,7 @@
 """
 **Magma**
 
-.. info::
+.. note::
 
     Mathematically a Magma is a set **M** along with a binary
     multiplicative operation **mult: M X M -> M** on that set.

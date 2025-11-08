@@ -28,13 +28,13 @@ algebra systems.
   - Each element knows the concrete representation of the algebra to which it belongs.
   - Operations and properties are defined on the algebras themselves.
 
-============== ====================i================================================
-Module         Description
-============== =====================================================================
-``algebras``   Collections of elements with associated operations and relationships.
-``laws``       Assertions for algebras.
-``protocols``  Protocols for algebras.
-============== ======================================i==============================
+========== =====================================================================
+Module     Description
+========== =====================================================================
+algebras   Collections of elements with associated operations and relationships.
+laws       Assertions for algebras.
+protocols  Protocols for algebras.
+========== =====================================================================
 
 """
 

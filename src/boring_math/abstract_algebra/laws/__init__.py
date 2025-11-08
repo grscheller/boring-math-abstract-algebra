@@ -25,6 +25,6 @@ Module                  Description
 ``laws.abelian_groups`` Laws for additive (Abelian) groups.
 ``laws.rings``          Laws for commutative rings.
 ``laws.fields``         Laws for non-commutative rings.
-======================+ ===================================
+======================= ===================================
 
 """

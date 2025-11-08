@@ -15,7 +15,7 @@
 """
 **Monoid**
 
-.. info::
+.. note::
 
     Mathematically a Monoid is a Semigroup **M** along with an identity
     element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).

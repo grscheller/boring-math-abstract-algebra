@@ -15,7 +15,7 @@
 """
 **Infrastructure for an abstract algebra**
 
-.. info::
+.. note::
 
     Mathematically speaking, an **Algebra** is a **set** with a collection
     of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2

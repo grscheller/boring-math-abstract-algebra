@@ -13,35 +13,24 @@
 # limitations under the License.
 
 """
-**Magma**
-
 .. note::
 
     Mathematically a Magma is a set **M** along with a binary
     multiplicative operation **mult: M X M -> M** on that set.
 
 .. note::
-    Python ``dict`` is invariant. It is used to represents
-    the underlying **set** of elements of the **magma**. Python
-    typing does not allow it to be declared a Mapping because
-    the ``dict.setdefault`` method is not part of Mapping.
-
-    Since elements are added to the ``dict`` in a completely
-    deterministic "natural" way and are never changed or deleted
-    once added, and elements are never returned to client code
-    without adding them to the ``dict``, the maintainer feels
-    the use of ``cast`` in this module's code is justified.
+    Python's ``*`` operator is used for the multiplication.
 
 """
 
 from collections.abc import Callable, Hashable
 from typing import ClassVar, Final, Self, Type, cast
-from .. import Algebra, AlgebraElement
+from .. import BaseSet, BaseElement
 
 __all__ = ['Magma', 'MagmaElement']
 
 
-class MagmaElement[H: Hashable](AlgebraElement[H]):
+class MagmaElement[H: Hashable](BaseElement[H]):
     def __init__(self, rep: H, algebra: 'Magma[H]') -> None:
         super().__init__(rep, algebra)
 
@@ -85,7 +74,7 @@ class MagmaElement[H: Hashable](AlgebraElement[H]):
         raise TypeError(msg)
 
 
-class Magma[H: Hashable](Algebra[H]):
+class Magma[H: Hashable](BaseSet[H]):
     Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
 
     def __init__(self, mult: Callable[[H, H], H]) -> None:

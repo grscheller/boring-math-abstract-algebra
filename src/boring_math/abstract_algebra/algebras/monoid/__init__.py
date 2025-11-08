@@ -13,14 +13,12 @@
 # limitations under the License.
 
 """
-**Monoid**
-
 .. note::
 
     Mathematically a Monoid is a Semigroup **M** along with an identity
     element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).
 
-    Such an identity element u exists, it is necessarily unique.
+    When such an identity element u exists, it is necessarily unique.
 
 .. important::
 

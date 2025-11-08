@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from boring_math.abstract_algebra.algebras.magma import Magma
-from boring_math.abstract_algebra.algebras import Algebra
+from boring_math.abstract_algebra.algebras import BaseSet
 
 
 def non_assoc_mult(m: int, n: int) -> int:
@@ -66,7 +66,7 @@ class Test_magma:
     def test_illegal_mult(self) -> None:
         na = Magma[int](mult=non_assoc_mult)
         nc = Magma[int](mult=non_comm_mult)
-        al = Algebra[int]()
+        al = BaseSet[int]()
 
         try:
             what1 = nc(5) * na(6)

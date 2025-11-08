@@ -14,22 +14,21 @@ See [Semantic Versioning 2.0.0](https://semver.org).
 
 ## Releases and Important Milestones
 
-### Update - 2025-11-07
+### Update - 2025-11-08
 
 - elements
   - elements know the concrete algebra to which they belong
   - they wrap hashable immutable representations
-  - binary operations * and + act on the elements
+  - binary operations like * and + can act on the elements
     - not their representations
 - algebras
-  - contain an dict of their potential elements
+  - contain a dict of their potential elements
     - can be used with potentially infinite or continuous algebras
     - the dict is "quasi-immutable"
-      - elements are added in a "natural" unique deterministic way
-  - contain user defined methods that take representations as parameters
-  - contain attributes like
-    - a monoid identity element
-    - a ring's additive and multiplicative identities
+      - elements are added in a "natural" uniquely deterministic way
+  - contain user defined functions and attributes
+    - functions take representation valued parameters and return values
+    - attributes are ``ref`` valued
 
 ### Update - 2025-10-17
 

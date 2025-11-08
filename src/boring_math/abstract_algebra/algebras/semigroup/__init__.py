@@ -13,8 +13,6 @@
 # limitations under the License.
 
 """
-**Semigroup**
-
 .. note::
 
     Mathematically a Semigroup is a set **S** along with an associative

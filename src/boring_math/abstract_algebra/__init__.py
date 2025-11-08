@@ -13,28 +13,14 @@
 # limitations under the License.
 
 """
-**Abstract Algebra Library.**
+Abstract Algebra Library
+------------------------
 
-A library designed to construct concrete representations for abstract
-algebra systems.
-
-- The term "algebra" will be used loosely to mean either,
-
-  - An abstract system unique up to isomorphism.
-  - Or a concrete representation of such.
-
-- Each element of the algebra has an internal representation.
-
-  - Each element knows the concrete representation of the algebra to which it belongs.
-  - Operations and properties are defined on the algebras themselves.
-
-========== =====================================================================
-Module     Description
-========== =====================================================================
-algebras   Collections of elements with associated operations and relationships.
-laws       Assertions for algebras.
-protocols  Protocols for algebras.
-========== =====================================================================
+A library designed to construct concrete representations of
+abstract algebraic systems and verify properties about and between
+such systems. The term "algebra" will be used loosely to mean either
+an abstract system unique up to isomorphism, or a concrete
+representation of such a system.
 
 """
 

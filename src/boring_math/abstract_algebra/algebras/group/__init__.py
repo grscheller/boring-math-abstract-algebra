@@ -13,8 +13,6 @@
 # limitations under the License.
 
 """
-**Group**
-
 .. note::
 
     Mathematically a Group is a Monoid **G** all of whose elements

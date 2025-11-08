@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-**Infrastructure for an abstract algebra**
+**Infrastructure for concrete representations of abstract algebras.**
 
 .. note::
 
@@ -24,38 +24,57 @@
 
 .. note::
 
-    An instance of the ``Algebra`` class is an implementation of an algebra
-    based on the type of the representation for its elements.
+    **elements:**
+
+    - Elements know the concrete algebra to which they belong.
+    - Each element wraps a hashable immutable representation, called a ``rep``.
+    - Binary operations like * and + can act on elements.
+
+      - Not their representations.
+
+    **algebras:**
+
+    - Contain a dict of their potential elements.
+
+      - Can be used with potentially infinite or continuous algebras.
+      - The dict is "quasi-immutable".
+
+        - Elements are added in a "natural" uniquely deterministic way.
+
+    - Contain user defined functions and attributes.
+
+      - Functions take ``ref`` parameters and return ``ref`` values.
+      - Attributes are ``ref`` valued.
 
     The idea is that
 
-    - Elements wrap representations, called ``reps``.
-    - Operations act on the elements themselves, not their representations.
-    - Elements know which algebra they belong to.
-    - The algebras know how to manipulate the representations of their elements.
+    - An element knows the concrete algebra to which it belongs.
+    - Each element wraps a hashable representation, called a ``rep``.
+    - There is a one-to-one correspondence between ``rep`` values and elements.
+    - Algebra operations act on the elements themselves, not on the reps.
+    - Algebras know how to manipulate the representations of their elements.
 
 """
 
-# from abc import abstractmethod
 from collections.abc import Callable, Container, Hashable, Iterable, Sized
-from typing import ClassVar, Protocol, Self, Type, runtime_checkable
+from typing import ClassVar, Final, Protocol, Self, Type, runtime_checkable
 
-__all__ = ['Algebra', 'Element']
+__all__ = ['BaseAlgebra', 'BaseElement']
 
 
 @runtime_checkable
 class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
-    """Custom type protocol for Mapping-like objects that support
-    both read-only access and can be extended in a "natural"
-    deterministic way.
+    """Similar to the collections/abc.Mapping protocol, NaturalMapping
+    supports read-only access to dict-like objects which can be extended
+    in a "natural" deterministic way.
     """
 
     def __getitem__(self, key: K) -> V: ...
     def setdefault(self, key: K, default: V) -> V: ...
 
 
-class AlgebraElement[H: Hashable]:
-    def __init__(self, rep: H, algebra: 'Algebra[H]') -> None:
+class BaseElement[H: Hashable]:
+    def __init__(self, rep: H, algebra: 'BaseSet[H]') -> None:
         self._rep = rep
         self._algebra = algebra
 
@@ -81,11 +100,11 @@ class AlgebraElement[H: Hashable]:
         raise NotImplementedError('Raising to integer powers not defined on algebra.')
 
 
-class Algebra[H: Hashable]:
-    Element: ClassVar[Type[AlgebraElement[H]]] = AlgebraElement
+class BaseSet[H: Hashable]:
+    Element: ClassVar[Final[Type[BaseElement[H]]]] = BaseElement
 
     def __init__(self) -> None:
-        self._elements: NaturalMapping[H, AlgebraElement[H]] = dict()
+        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
         self._mult: Callable[[H, H], H] | None = None
         self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
@@ -93,7 +112,7 @@ class Algebra[H: Hashable]:
         self._inv: Callable[[H], H] | None = None
         self._neg: Callable[[H], H] | None = None
 
-    def __call__(self, rep: H) -> AlgebraElement[H]:
+    def __call__(self, rep: H) -> BaseElement[H]:
         """Add an element to the algebra with a given representation.
 
         :param rep: Representation to add if not already present.

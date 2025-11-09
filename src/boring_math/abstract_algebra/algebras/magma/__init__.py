@@ -75,7 +75,7 @@ class MagmaElement[H: Hashable](BaseElement[H]):
 
 
 class Magma[H: Hashable](BaseSet[H]):
-    Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
+    _Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
 
     def __init__(self, mult: Callable[[H, H], H]) -> None:
         super().__init__()

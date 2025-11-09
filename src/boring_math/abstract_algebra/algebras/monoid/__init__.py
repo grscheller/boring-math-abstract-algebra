@@ -55,7 +55,7 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
 
 
 class Monoid[H: Hashable](Semigroup[H]):
-    Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
+    _Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
 
     def __init__(self, mult: Callable[[H, H], H], one: H):
         super().__init__(mult)

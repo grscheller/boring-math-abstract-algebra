@@ -51,7 +51,7 @@ class SemigroupElement[H: Hashable](MagmaElement[H]):
 
 
 class Semigroup[H: Hashable](Magma[H]):
-    Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
+    _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
 
     def __init__(self, mult: Callable[[H, H], H]):
         super().__init__(mult)

@@ -70,7 +70,7 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 
 
 class Group[H: Hashable](Monoid[H]):
-    Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement
+    _Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement
 
     def __init__(self, mult: Callable[[H, H], H], one: H, inv: Callable[[H], H]):
         super().__init__(mult, one)

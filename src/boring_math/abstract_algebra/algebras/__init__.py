@@ -101,7 +101,7 @@ class BaseElement[H: Hashable]:
 
 
 class BaseSet[H: Hashable]:
-    Element: ClassVar[Final[Type[BaseElement[H]]]] = BaseElement
+    _Element: ClassVar[Final[Type[BaseElement[H]]]] = BaseElement
 
     def __init__(self) -> None:
         self._elements: NaturalMapping[H, BaseElement[H]] = dict()
@@ -119,7 +119,7 @@ class BaseSet[H: Hashable]:
         :returns: The element with that representation.
 
         """
-        return self._elements.setdefault(rep, type(self).Element(rep, self))
+        return self._elements.setdefault(rep, type(self)._Element(rep, self))
 
     def __eq__(self, other: object) -> bool:
         # Change to some sort of compatibility condition?

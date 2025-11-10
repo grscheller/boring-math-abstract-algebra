@@ -13,21 +13,23 @@
 # limitations under the License.
 
 """
-.. note::
+.. admonition:: Group
 
     Mathematically a Group is a Monoid **G** all of whose elements
     have multiplicative inverses.
 
-.. note::
+.. caution::
 
-    No assumptions are made whether or not the group is Abelian. See
-    **AbelianGroup**.
+    No assumptions are made whether or not the group is Abelian.
+    See **AbelianGroup**.
 
 .. important::
 
-    Contract:
+    **Contract:** Group initializer parameters must have
 
-    - Supplied inverse function consistent with group multiplication.
+    - **mult** closed and associative on reps
+    - **one** an identity on reps, ``rep*one == rep == one*rep``
+    - **inv** must me idempotent: ``inv(inv(rep)) == rep``
 
 """
 
@@ -72,6 +74,17 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 class Group[H: Hashable](Monoid[H]):
     _Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement
 
-    def __init__(self, mult: Callable[[H, H], H], one: H, inv: Callable[[H], H]):
+    def __init__(
+        self,
+        mult: Callable[[H, H], H],
+        one: H,
+        inv: Callable[[H], H],
+    ):
+        """
+        :param mult: Associative function ``H X H -> H`` on representations.
+        :param one: Representation for multiplicative identity.
+        :param inv: Function ``H -> H`` mapping element representation to
+                    the representation of corresponding inverse element.
+        """
         super().__init__(mult, one)
         self._inv = inv

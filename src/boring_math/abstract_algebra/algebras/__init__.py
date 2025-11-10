@@ -13,18 +13,14 @@
 # limitations under the License.
 
 """
-**Infrastructure for concrete representations of abstract algebras.**
-
-.. note::
+.. admonition:: Concrete representations of abstract algebras
 
     Mathematically speaking, an **Algebra** is a **set** with a collection
     of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2
     (partial) functions for inverses, and nullary functions for designated
     elements.
 
-.. note::
-
-    **elements:**
+    **Element:**
 
     - Elements know the concrete algebra to which they belong.
     - Each element wraps a hashable immutable representation, called a ``rep``.
@@ -32,16 +28,16 @@
 
       - Not their representations.
 
-    **algebras:**
+    **Algebra:**
 
-    - Contain a dict of their potential elements.
+    - Contains a dict of potential elements.
 
       - Can be used with potentially infinite or continuous algebras.
       - The dict is "quasi-immutable".
 
         - Elements are added in a "natural" uniquely deterministic way.
 
-    - Contain user defined functions and attributes.
+    - Contain user defined functions and attributes to implement the algebra.
 
       - Functions take ``ref`` parameters and return ``ref`` values.
       - Attributes are ``ref`` valued.
@@ -55,82 +51,3 @@
     - Algebras know how to manipulate the representations of their elements.
 
 """
-
-from collections.abc import Callable, Container, Hashable, Iterable, Sized
-from typing import ClassVar, Final, Protocol, Self, Type, runtime_checkable
-
-__all__ = ['BaseAlgebra', 'BaseElement']
-
-
-@runtime_checkable
-class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
-    """Similar to the collections/abc.Mapping protocol, NaturalMapping
-    supports read-only access to dict-like objects which can be extended
-    in a "natural" deterministic way.
-    """
-
-    def __getitem__(self, key: K) -> V: ...
-    def setdefault(self, key: K, default: V) -> V: ...
-
-
-class BaseElement[H: Hashable]:
-    def __init__(self, rep: H, algebra: 'BaseSet[H]') -> None:
-        self._rep = rep
-        self._algebra = algebra
-
-    def __call__(self) -> H:
-        return self._rep
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
-            return False
-        if self is other:
-            return True
-        if self() == other():
-            return True
-        return False
-
-    def __add__(self, other: Self) -> Self:
-        raise NotImplementedError('Addition not defined on algebra.')
-
-    def __mul__(self, other: Self) -> Self:
-        raise NotImplementedError('Multiplication not defined on algebra.')
-
-    def __pow__(self, n: int) -> Self:
-        raise NotImplementedError('Raising to integer powers not defined on algebra.')
-
-
-class BaseSet[H: Hashable]:
-    _Element: ClassVar[Final[Type[BaseElement[H]]]] = BaseElement
-
-    def __init__(self) -> None:
-        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
-        self._mult: Callable[[H, H], H] | None = None
-        self._add: Callable[[H, H], H] | None = None
-        self._one: H | None = None
-        self._zero: H | None = None
-        self._inv: Callable[[H], H] | None = None
-        self._neg: Callable[[H], H] | None = None
-
-    def __call__(self, rep: H) -> BaseElement[H]:
-        """Add an element to the algebra with a given representation.
-
-        :param rep: Representation to add if not already present.
-        :returns: The element with that representation.
-
-        """
-        return self._elements.setdefault(rep, type(self)._Element(rep, self))
-
-    def __eq__(self, other: object) -> bool:
-        # Change to some sort of compatibility condition?
-        return self is other
-
-    def has(self, rep: H) -> bool:
-        """Determine if the algebra has a element with a given
-        representation.
-
-        :param rep: Element representation.
-        :returns: ``True`` if algebra contains an element with with representation ``rep``.
-
-        """
-        return rep in self._elements

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-.. note::
+.. admonition:: Monoid
 
     Mathematically a Monoid is a Semigroup **M** along with an identity
     element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).
@@ -22,9 +22,10 @@
 
 .. important::
 
-    Contract:
+    **Contract:** Monoid initializer parameters must have
 
-    - Semigroup multiplication consistent with the identity element.
+    - **mult** closed and associative on reps
+    - **one** an identity on reps, ``rep*one == rep == one*rep``
 
 """
 

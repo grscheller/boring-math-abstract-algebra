@@ -13,19 +13,28 @@
 # limitations under the License.
 
 """
-.. note::
+.. admonition:: Magma
 
     Mathematically a Magma is a set **M** along with a binary
     multiplicative operation **mult: M X M -> M** on that set.
 
-.. note::
-    Python's ``*`` operator is used for the multiplication.
+.. caution::
+
+    No assumptions are made whether or not the magma multiplication
+    is associative. Python's ``*`` operator is used for Magma
+    multiplication.
+
+.. important::
+
+    **Contract:** Magma initializer parameters must have
+
+    - **mult** closed on reps
 
 """
 
 from collections.abc import Callable, Hashable
 from typing import ClassVar, Final, Self, Type, cast
-from .. import BaseSet, BaseElement
+from ..baseset import BaseSet, BaseElement
 
 __all__ = ['Magma', 'MagmaElement']
 
@@ -35,11 +44,15 @@ class MagmaElement[H: Hashable](BaseElement[H]):
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
-        """Multiply two elements of the same algebra together.
+        """
+        .. admonition:: Description.
+
+            Multiply two elements of the same algebra together.
 
         .. note::
-            Have added some runtime type checking. Not necessary if
-            strict typing is used, but may be useful in gradual typing
+
+            Have added some runtime type checking. Not really necessary
+            if strict typing is used, but may be useful in gradual typing
             situations.
 
         :param other: Another element within the same algebra.
@@ -63,7 +76,10 @@ class MagmaElement[H: Hashable](BaseElement[H]):
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
-        """For when left operand has no knowledge of the right operand.
+        """
+        .. admonition:: Description.
+
+            For when left operand has no knowledge of the right operand.
 
         :param other: The left multiplication operand.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.

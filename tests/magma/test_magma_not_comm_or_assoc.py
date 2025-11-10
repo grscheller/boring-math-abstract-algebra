@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from boring_math.abstract_algebra.algebras.magma import Magma
-from boring_math.abstract_algebra.algebras import BaseSet
+from boring_math.abstract_algebra.algebras.baseset import BaseSet
 
 
 def non_assoc_mult(m: int, n: int) -> int:

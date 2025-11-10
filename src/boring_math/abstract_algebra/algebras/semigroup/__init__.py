@@ -13,16 +13,16 @@
 # limitations under the License.
 
 """
-.. note::
+.. admonition:: Semigroup
 
     Mathematically a Semigroup is a set **S** along with an associative
     binary operation **op: S X S -> S**.
 
-.. important::
+    .. important::
 
-    Contract:
+        **Contract:** Group initializer parameters must have
 
-    - Multiplication must be associative.
+        - **mult** closed and associative on reps
 
 """
 

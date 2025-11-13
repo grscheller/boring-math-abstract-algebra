@@ -31,7 +31,7 @@
 
 from collections.abc import Hashable
 from typing import Callable, ClassVar, Final, Self, Type, cast
-from ..semigroup import Semigroup, SemigroupElement
+from .semigroup import Semigroup, SemigroupElement
 
 __all__ = ['Monoid', 'MonoidElement']
 

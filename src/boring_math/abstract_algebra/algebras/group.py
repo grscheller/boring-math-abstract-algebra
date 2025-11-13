@@ -35,7 +35,7 @@
 
 from collections.abc import Hashable
 from typing import Callable, ClassVar, Final, cast, Self, Type
-from ..monoid import Monoid, MonoidElement
+from .monoid import Monoid, MonoidElement
 
 __all__ = ['Group', 'GroupElement']
 

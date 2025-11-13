@@ -24,11 +24,11 @@
 
 .. important::
 
-    **Contract:** Group initializer parameters must have
+    **Contract:** AbelianGroup initializer parameters must have
 
     - **add** closed, associative and commutative on reps
     - **zero** additive identity on reps, ``rep*one == rep == one*rep``
-    - **neg** must me idempotent: ``neg(neg(rep)) == rep``
+    - **negate** must me idempotent: ``neg(neg(rep)) == rep``
 
 """
 
@@ -40,7 +40,11 @@ __all__ = ['AbelianGroup', 'AbelianGroupElement']
 
 
 class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
-    def __init__(self, rep: H, algebra: 'AbelianGroup[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'AbelianGroup[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def negate(self) -> Self:
@@ -52,22 +56,27 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
             cast(AbelianGroup[H], algebra),
         )
 
-    def __mult__(self, n: int) -> Self:
-        if n >= 0:
-            algebra = self._algebra
-            if (add := algebra._add) is None:
-                raise ValueError('Algebra has no multiplication method')
-            if (zero := algebra._zero) is None:
-                raise ValueError('Algebra has no multiplicative identity')
-            r, r1 = zero, self()
-            while n > 0:
-                r, n = add(r, r1), n - 1
-            return cast(Self, algebra(r))
-        else:
-            g = (g_neg := self.negate())
-            while n < -1:
-                g, n = g + g_neg, n + 1
-            return g
+    def __mul__(self, n: Self | int) -> Self:
+        if isinstance(n, int):
+            if n >= 0:
+                algebra = self._algebra
+                if (add := algebra._add) is None:
+                    raise ValueError('Algebra has no multiplication method')
+                if (zero := algebra._zero) is None:
+                    raise ValueError('Algebra has no multiplicative identity')
+                r, r1 = zero, self()
+                while n > 0:
+                    r, n = add(r, r1), n - 1
+                return cast(Self, algebra(r))
+            else:
+                g = (g_neg := self.negate())
+                while n < -1:
+                    g, n = g + g_neg, n + 1
+                return g
+        raise ValueError('Element multiplication not defined on algebra')
+
+    def __rmul__(self, n: int) -> Self:
+        return self.__mul__(n)
 
 
 class AbelianGroup[H: Hashable](AdditiveMonoid[H]):

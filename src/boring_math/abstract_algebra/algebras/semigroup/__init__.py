@@ -34,7 +34,11 @@ __all__ = ['Semigroup', 'SemigroupElement']
 
 
 class SemigroupElement[H: Hashable](BaseElement[H]):
-    def __init__(self, rep: H, algebra: 'Semigroup[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'Semigroup[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
@@ -61,12 +65,12 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                 if (mult := algebra._mult) is not None:
                     return cast(Self, algebra(mult(self(), other())))
                 else:
-                    msg = "Multiplication not defined on the algebra of the elements."
+                    msg = 'Multiplication not defined on the algebra of the elements.'
                     raise ValueError(msg)
             else:
                 msg = 'Multiplication must be between elements of the same concrete algebra.'
                 raise ValueError(msg)
-        msg = "Right side of multiplication wrong type."
+        msg = 'Right side of multiplication wrong type.'
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
@@ -97,6 +101,9 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 class Semigroup[H: Hashable](BaseSet[H]):
     _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
 
-    def __init__(self, mult: Callable[[H, H], H]):
+    def __init__(
+        self,
+        mult: Callable[[H, H], H],
+    ):
         super().__init__()
         self._mult = mult

@@ -22,6 +22,7 @@
     to serve as invariant base classes for algebras and algebra elements.
 
 """
+
 from collections.abc import Callable, Container, Hashable, Iterable, Sized
 from types import NotImplementedType
 from typing import ClassVar, Final, Protocol, Self, Type, runtime_checkable
@@ -41,13 +42,17 @@ class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol)
 
 
 class BaseElement[H: Hashable]:
-    def __init__(self, rep: H, algebra: 'BaseSet[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'BaseSet[H]',
+    ) -> None:
         self._rep = rep
         self._algebra = algebra
 
     def __call__(self) -> H:
         """
-        :returns: a reference to the representation wrapped by the element.
+        :returns: A reference to the representation wrapped by the element.
         """
         return self._rep
 
@@ -60,25 +65,19 @@ class BaseElement[H: Hashable]:
             return True
         return False
 
-    def __add__(self, other: Self) -> Self|NotImplementedType:
+    def __add__(self, other: Self) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __mul__(self, other: Self) -> Self|NotImplementedType:
+    def __mul__(self, other: int | Self) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __neg__(self) -> Self|NotImplementedType:
+    def __pow__(self, n: int) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __pos__(self) -> Self|NotImplementedType:
+    def __sub__(self) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __pow__(self, n: int) -> Self|NotImplementedType:
-        return NotImplemented
-
-    def __sub__(self) -> Self|NotImplementedType:
-        return NotImplemented
-
-    def __truediv__(self, other: Self) -> Self|NotImplementedType:
+    def __truediv__(self, other: Self) -> Self | NotImplementedType:
         return NotImplemented
 
 
@@ -113,7 +112,7 @@ class BaseSet[H: Hashable]:
             API subject to change. Might want to make this
             some sort of comparison.
 
-        :param other: Object being compared to. 
+        :param other: Object being compared to.
         :returns: ``self is other`` if other same type of algebra, otherwise NotImplemented.
 
         """

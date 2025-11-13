@@ -34,7 +34,11 @@ __all__ = ['AdditiveSemigroup', 'AdditiveSemigroupElement']
 
 
 class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
-    def __init__(self, rep: H, algebra: 'AdditiveSemigroup[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'AdditiveSemigroup[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def __add__(self, other: Self) -> Self:
@@ -61,12 +65,12 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
                 if (add := algebra._add) is not None:
                     return cast(Self, algebra(add(self(), other())))
                 else:
-                    msg = "Addition not defined on the algebra of the elements."
+                    msg = 'Addition not defined on the algebra of the elements.'
                     raise ValueError(msg)
             else:
                 msg = 'Addition must be between elements of the same concrete algebra.'
                 raise ValueError(msg)
-        msg = "Right side of addition wrong type."
+        msg = 'Right side of addition wrong type.'
         raise TypeError(msg)
 
     def __radd__(self, other: object) -> Self:
@@ -81,22 +85,29 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
         msg = 'Left addition operand different type than right.'
         raise TypeError(msg)
 
-    def __mult__(self, n: int) -> Self:
-        if n > 0:
-            algebra = self._algebra
-            if (add := algebra._add) is None:
-                raise ValueError('Algebra has no addition method')
-            r = (r1 := self())
-            while n > 1:
-                r, n = add(r1, r), n - 1
-            return cast(Self, algebra(r))
-        msg = f'For an additive semi-group n>0, but n={n} was given.'
-        raise ValueError(msg)
+    def __mul__(self, n: int | Self) -> Self:
+        if isinstance(n, int):
+            if n > 0:
+                algebra = self._algebra
+                if (add := algebra._add) is None:
+                    raise ValueError('Algebra has no addition method')
+                r = (r1 := self())
+                while n > 1:
+                    r, n = add(r1, r), n - 1
+                return cast(Self, algebra(r))
+            msg = f'For an additive semi-group n>0, but n={n} was given.'
+            raise ValueError(msg)
+        raise ValueError('Element multiplication not defined on algebra')
 
 
 class AdditiveSemigroup[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[AdditiveSemigroupElement[H]]]] = AdditiveSemigroupElement
+    _Element: ClassVar[Final[Type[AdditiveSemigroupElement[H]]]] = (
+        AdditiveSemigroupElement
+    )
 
-    def __init__(self, add: Callable[[H, H], H]):
+    def __init__(
+        self,
+        add: Callable[[H, H], H],
+    ):
         super().__init__()
         self._add = add

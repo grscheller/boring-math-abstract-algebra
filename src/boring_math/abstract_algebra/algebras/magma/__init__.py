@@ -40,7 +40,11 @@ __all__ = ['Magma', 'MagmaElement']
 
 
 class MagmaElement[H: Hashable](BaseElement[H]):
-    def __init__(self, rep: H, algebra: 'Magma[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'Magma[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def __mul__(self, other: Self) -> Self:
@@ -67,7 +71,9 @@ class MagmaElement[H: Hashable](BaseElement[H]):
                 if (mult := algebra._mult) is not None:
                     return cast(Self, algebra(mult(self(), other())))
                 else:
-                    msg = "Element not part of an algebra where multiplication is defined"
+                    msg = (
+                        'Element not part of an algebra where multiplication is defined'
+                    )
                     raise ValueError(msg)
             else:
                 msg = 'Multiplication must be between elements of the same concrete algebra.'
@@ -93,6 +99,9 @@ class MagmaElement[H: Hashable](BaseElement[H]):
 class Magma[H: Hashable](BaseSet[H]):
     _Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
 
-    def __init__(self, mult: Callable[[H, H], H]) -> None:
+    def __init__(
+        self,
+        mult: Callable[[H, H], H],
+    ) -> None:
         super().__init__()
         self._mult = mult

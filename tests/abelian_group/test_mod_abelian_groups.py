@@ -42,7 +42,7 @@ class ModRep:
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, type(self)):
-            return NotImplemented  # Could use this to define a right action on a group element.
+            return NotImplemented
         if self._mod != other._mod:
             return False
         if self._num == other._num:
@@ -239,28 +239,36 @@ class TestGroupAdd:
         except ValueError as err:
             assert True
             assert (
-                str(err) == 'Addition must be between elements of the same concrete algebra.'
+                str(err)
+                == 'Addition must be between elements of the same concrete algebra.'
             )
         else:
             assert bad is I51
             assert False
 
-    def test_pow_not_implemented(self) -> None:
-    #   good1 = I53 * 3
-    #   assert good1 == I54
-    #   assert good1 is I54
+    def test_mult_not_implemented(self) -> None:
+        good1 = I53 * 3
+        assert good1 == I54
+        assert good1 is I54
 
-    #   good2 = 3 * I54
-    #   assert good2 == I54
-    #   assert good2 is I54 
+        good2 = 3 * I54
+        assert good2 == I52
+        assert good2 is I52
+
+        try:
+            bad = I54 * I54
+        except ValueError as err:
+            assert True
+            assert str(err) == 'Element multiplication not defined on algebra'
+        else:
+            assert bad is I51
+            assert False
 
         try:
             bad = I54 * J54
-        except NotImplementedError as err:
+        except ValueError as err:
             assert True
-            assert (
-                str(err) == 'Multiplication not defined on algebra.'
-            )
+            assert str(err) == 'Element multiplication not defined on algebra'
         else:
-            assert bad is I52
+            assert bad is I51
             assert False

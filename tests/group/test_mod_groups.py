@@ -242,11 +242,8 @@ class TestGroupMult:
 
         try:
             bad = I54 + J54
-        except NotImplementedError as err:
+        except TypeError:
             assert True
-            assert (
-                str(err) == 'Addition not defined on algebra.'
-            )
         else:
             assert bad is I51
             assert False

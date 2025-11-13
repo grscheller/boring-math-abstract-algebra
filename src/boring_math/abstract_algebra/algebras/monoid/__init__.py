@@ -37,7 +37,11 @@ __all__ = ['Monoid', 'MonoidElement']
 
 
 class MonoidElement[H: Hashable](SemigroupElement[H]):
-    def __init__(self, rep: H, algebra: 'Monoid[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'Monoid[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def __pow__(self, n: int) -> Self:
@@ -58,6 +62,10 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
 class Monoid[H: Hashable](Semigroup[H]):
     _Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
 
-    def __init__(self, mult: Callable[[H, H], H], one: H):
+    def __init__(
+        self,
+        mult: Callable[[H, H], H],
+        one: H,
+    ):
         super().__init__(mult)
         self._one = one

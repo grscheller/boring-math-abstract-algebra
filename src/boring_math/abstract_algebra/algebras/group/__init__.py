@@ -41,7 +41,11 @@ __all__ = ['Group', 'GroupElement']
 
 
 class GroupElement[H: Hashable](MonoidElement[H]):
-    def __init__(self, rep: H, algebra: 'Group[H]') -> None:
+    def __init__(
+        self,
+        rep: H,
+        algebra: 'Group[H]',
+    ) -> None:
         super().__init__(rep, algebra)
 
     def invert(self) -> Self:

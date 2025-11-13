@@ -37,7 +37,7 @@ from collections.abc import Hashable
 from typing import Callable, ClassVar, Final, cast, Self, Type
 from ..monoid import Monoid, MonoidElement
 
-__all__ = ['Monoid', 'MonoidElement']
+__all__ = ['Group', 'GroupElement']
 
 
 class GroupElement[H: Hashable](MonoidElement[H]):
@@ -78,13 +78,13 @@ class Group[H: Hashable](Monoid[H]):
         self,
         mult: Callable[[H, H], H],
         one: H,
-        inv: Callable[[H], H],
+        invert: Callable[[H], H],
     ):
         """
         :param mult: Associative function ``H X H -> H`` on representations.
         :param one: Representation for multiplicative identity.
-        :param inv: Function ``H -> H`` mapping element representation to
+        :param invert: Function ``H -> H`` mapping element representation to
                     the representation of corresponding inverse element.
         """
         super().__init__(mult, one)
-        self._inv = inv
+        self._inv = invert

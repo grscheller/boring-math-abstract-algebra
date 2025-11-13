@@ -22,8 +22,8 @@
     to serve as invariant base classes for algebras and algebra elements.
 
 """
-
 from collections.abc import Callable, Container, Hashable, Iterable, Sized
+from types import NotImplementedType
 from typing import ClassVar, Final, Protocol, Self, Type, runtime_checkable
 
 __all__ = ['BaseSet', 'BaseElement']
@@ -60,23 +60,26 @@ class BaseElement[H: Hashable]:
             return True
         return False
 
-    def __add__(self, other: Self) -> Self:
-        raise NotImplementedError('Addition not defined on algebra.')
+    def __add__(self, other: Self) -> Self|NotImplementedType:
+        return NotImplemented
 
-    def __mul__(self, other: Self) -> Self:
-        raise NotImplementedError('Multiplication not defined on algebra.')
+    def __mul__(self, other: Self) -> Self|NotImplementedType:
+        return NotImplemented
 
-    def __neg__(self) -> Self:
-        raise NotImplementedError('Negation not defined on algebra.')
+    def __neg__(self) -> Self|NotImplementedType:
+        return NotImplemented
 
-    def __pow__(self, n: int) -> Self:
-        raise NotImplementedError('Raising to integer powers not defined on algebra.')
+    def __pos__(self) -> Self|NotImplementedType:
+        return NotImplemented
 
-    def __sub__(self) -> Self:
-        raise NotImplementedError('subtraction not defined on algebra.')
+    def __pow__(self, n: int) -> Self|NotImplementedType:
+        return NotImplemented
 
-    def __truediv__(self, other: Self) -> Self:
-        raise NotImplementedError('division not defined on algebra.')
+    def __sub__(self) -> Self|NotImplementedType:
+        return NotImplemented
+
+    def __truediv__(self, other: Self) -> Self|NotImplementedType:
+        return NotImplemented
 
 
 class BaseSet[H: Hashable]:

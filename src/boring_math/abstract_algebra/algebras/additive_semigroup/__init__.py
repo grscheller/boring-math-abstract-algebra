@@ -13,16 +13,16 @@
 # limitations under the License.
 
 """
-.. admonition:: Semigroup
+.. admonition:: Additive Semigroup
 
-    Mathematically a Semigroup is a set **S** along with an associative
-    binary operation **mult: S X S -> S**.
+    Mathematically an Additive Semigroup is a set **S** along with an
+    associative binary operation **add: S X S -> S**.
 
     .. important::
 
         **Contract:** Group initializer parameters must have
 
-        - **mult** closed and associative on reps
+        - **add** closed, commutative and associative on reps
 
 """
 
@@ -30,18 +30,18 @@ from collections.abc import Callable, Hashable
 from typing import ClassVar, Final, Self, Type, cast
 from ..baseset import BaseSet, BaseElement
 
-__all__ = ['Semigroup', 'SemigroupElement']
+__all__ = ['AdditiveSemigroup', 'AdditiveSemigroupElement']
 
 
-class SemigroupElement[H: Hashable](BaseElement[H]):
-    def __init__(self, rep: H, algebra: 'Semigroup[H]') -> None:
+class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
+    def __init__(self, rep: H, algebra: 'AdditiveSemigroup[H]') -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, other: Self) -> Self:
+    def __add__(self, other: Self) -> Self:
         """
         .. admonition:: Description.
 
-            Multiply two elements of the same algebra together.
+            Add two elements of the same algebra together.
 
         .. note::
 
@@ -50,7 +50,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             situations.
 
         :param other: Another element within the same algebra.
-        :returns: The product ``self * other``.
+        :returns: The sum ``self + other``.
         :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
         :raises TypeError: If ``self`` & ``other`` are different types.
 
@@ -58,45 +58,45 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
         if isinstance(other, type(self)):
             algebra = self._algebra
             if algebra is other._algebra:
-                if (mult := algebra._mult) is not None:
-                    return cast(Self, algebra(mult(self(), other())))
+                if (add := algebra._add) is not None:
+                    return cast(Self, algebra(add(self(), other())))
                 else:
-                    msg = "Multiplication not defined on the algebra of the elements."
+                    msg = "Addition not defined on the algebra of the elements."
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same concrete algebra.'
+                msg = 'Addition must be between elements of the same concrete algebra.'
                 raise ValueError(msg)
-        msg = "Right side of multiplication wrong type."
+        msg = "Right side of addition wrong type."
         raise TypeError(msg)
 
-    def __rmul__(self, other: object) -> Self:
+    def __radd__(self, other: object) -> Self:
         """
-        When left side of multiplication does not know how to multiply right side.
+        When left side of addition does not know how to add right side.
 
-        :param other: Left side of the multiplication.
-        :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left operand does not know how to deal with a SemigroupElement.
+        :param other: Left side of the addition.
+        :returns: Never returns, otherwise ``left.__add__(right)`` would have worked.
+        :raises TypeError: When left side does not know how to add right.
 
         """
-        msg = 'Left multiplication operand different type than right.'
+        msg = 'Left addition operand different type than right.'
         raise TypeError(msg)
 
-    def __pow__(self, n: int) -> Self:
+    def __mult__(self, n: int) -> Self:
         if n > 0:
             algebra = self._algebra
-            if (mult := algebra._mult) is None:
-                raise ValueError('Algebra has no multiplication method')
+            if (add := algebra._add) is None:
+                raise ValueError('Algebra has no addition method')
             r = (r1 := self())
             while n > 1:
-                r, n = mult(r1, r), n - 1
+                r, n = add(r1, r), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a semi-group n>0, but n={n} was given.'
+        msg = f'For an additive semi-group n>0, but n={n} was given.'
         raise ValueError(msg)
 
 
-class Semigroup[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
+class AdditiveSemigroup[H: Hashable](BaseSet[H]):
+    _Element: ClassVar[Final[Type[AdditiveSemigroupElement[H]]]] = AdditiveSemigroupElement
 
-    def __init__(self, mult: Callable[[H, H], H]):
+    def __init__(self, add: Callable[[H, H], H]):
         super().__init__()
-        self._mult = mult
+        self._add = add

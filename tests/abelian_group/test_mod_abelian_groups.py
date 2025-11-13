@@ -14,7 +14,7 @@
 
 from typing import Self
 from boring_math.number_theory import is_prime
-from boring_math.abstract_algebra.algebras.group import Group
+from boring_math.abstract_algebra.algebras.abelian_group import AbelianGroup
 
 ## First define infrastructure
 
@@ -49,19 +49,19 @@ class ModRep:
             return True
         return False
 
-    def __mul__(self, other: Self) -> 'ModRep':
+    def __add__(self, other: Self) -> 'ModRep':
         if (mod := self._mod) != (omod := other._mod):
             msg = f'The prime moduli differ, {mod} != {omod})'
             raise ValueError(msg)
-        return ModRep((self._num * other._num), mod)
+        return ModRep((self._num + other._num), mod)
 
 
-def mod_mult(left: ModRep, right: ModRep) -> ModRep:
-    return left * right
+def mod_add(left: ModRep, right: ModRep) -> ModRep:
+    return left + right
 
 
-def mod_inv(m: ModRep) -> ModRep:
-    return ModRep(m.mod() - m.num() + 1, m.mod())
+def mod_neg(m: ModRep) -> ModRep:
+    return ModRep(m.mod() - m.num(), m.mod())
 
 
 # Define some values of using this representation.
@@ -98,22 +98,22 @@ k78 = ModRep(8, 7)
 
 # Define 3 different Group objects, the first two isomorphic.
 
-foo5 = Group[ModRep](
-    mult=mod_mult,
-    one=ModRep(1, 5),
-    invert=mod_inv,
+foo5 = AbelianGroup[ModRep](
+    add=mod_add,
+    zero=ModRep(0, 5),
+    negate=mod_neg,
 )
 
-bar5 = Group[ModRep](
-    mult=mod_mult,
-    one=ModRep(1, 5),
-    invert=mod_inv,
+bar5 = AbelianGroup[ModRep](
+    add=mod_add,
+    zero=ModRep(0, 5),
+    negate=mod_neg,
 )
 
-bar7 = Group[ModRep](
-    mult=mod_mult,
-    one=ModRep(1, 7),
-    invert=mod_inv,
+bar7 = AbelianGroup[ModRep](
+    add=mod_add,
+    zero=ModRep(0, 7),
+    negate=mod_neg,
 )
 
 # Define some group elements for above group objects.
@@ -160,6 +160,8 @@ class TestModRep:
         assert k71 != k77
         assert k71 == k71
         assert k71 != j51
+        assert K78 == K71
+        assert K77 == K70
 
     def test_identity(self) -> None:
         assert i50 is i50
@@ -206,47 +208,59 @@ class TestGroupWithModRep:
         assert SeventyFive1 is K75
 
 
-class TestGroupMult:
+class TestGroupAdd:
     def test_mult(self) -> None:
-        assert I53 * I54 == I52
-        assert I53 * I54 != I55
-        assert I53 * I54 is I52
+        assert I51 + I53 == I54
+        assert I52 + I53 == I50
+        assert I51 + I53 is I54
+        assert I52 + I53 is I50
 
-        assert K73 * K74 != K72
-        assert K73 * K74 == K75
-        assert K73 * K74 is K75
+        assert K76 + K74 != K72
+        assert K73 + K75 == K71
+        assert K73 + K75 is K71
+        assert K75 + K72 == K77 == K70
+        assert K74 + K74 is K78
+        assert K74 + K74 is K71
+        assert K73 + K74 == K77 == K70
+        assert K73 + K74 is K77
+        assert K73 + K74 is K70
 
-        assert J53 * J54 == J52
-        assert J53 * J54 == I52
-        assert J53 * J54 is J52
-        assert J53 * J54 is not I52
+        assert J53 + J54 == J52
+        assert J53 + J54 == I52
+        assert J53 + J54 is J52
+        assert J53 + J54 is not I52
 
-    def test_bad_mult(self) -> None:
-        good = I54 * I54
-        assert good is I51
+    def test_bad_add(self) -> None:
+        good = I54 + I54
+        assert good is I53
 
         try:
-            bad = I54 * J54
+            bad = I54 + J54
         except ValueError as err:
             assert True
             assert (
-                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+                str(err) == 'Addition must be between elements of the same concrete algebra.'
             )
         else:
             assert bad is I51
             assert False
 
-    def test_addition_not_implemented(self) -> None:
-        good = I53**3
-        assert good is I52
+    def test_pow_not_implemented(self) -> None:
+    #   good1 = I53 * 3
+    #   assert good1 == I54
+    #   assert good1 is I54
+
+    #   good2 = 3 * I54
+    #   assert good2 == I54
+    #   assert good2 is I54 
 
         try:
-            bad = I54 + J54
+            bad = I54 * J54
         except NotImplementedError as err:
             assert True
             assert (
-                str(err) == 'Addition not defined on algebra.'
+                str(err) == 'Multiplication not defined on algebra.'
             )
         else:
-            assert bad is I51
+            assert bad is I52
             assert False

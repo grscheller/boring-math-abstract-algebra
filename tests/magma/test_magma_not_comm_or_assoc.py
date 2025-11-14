@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from boring_math.abstract_algebra.algebras.magma import Magma
-from boring_math.abstract_algebra.algebras.baseset import BaseSet
 
 
 def non_assoc_mult(m: int, n: int) -> int:
@@ -66,7 +65,6 @@ class Test_magma:
     def test_illegal_mult(self) -> None:
         na = Magma[int](mult=non_assoc_mult)
         nc = Magma[int](mult=non_comm_mult)
-        al = BaseSet[int]()
 
         try:
             what1 = nc(5) * na(6)
@@ -76,7 +74,7 @@ class Test_magma:
                 str(err) == 'Multiplication must be between elements of the same concrete algebra'
             )
         else:
-            assert what1() == 25  # type: ignore
+            assert what1() == 25
             assert False
 
         try:
@@ -87,25 +85,7 @@ class Test_magma:
             )
             assert True
         else:
-            assert what2() == 49  # type: ignore
-            assert False
-
-        try:
-            what3 = na(5) * al(25)
-        except TypeError as err:
-            assert str(err) == 'Right multiplication operand not part of the algebra of left'
-            assert True
-        else:
-            assert what3() == 120  # type: ignore
-            assert False
-
-        try:
-            what4 = al(25) * na(5)
-        except TypeError as err:
-            assert str(err) == 'Left multiplication operand different type than right'
-            assert True
-        else:
-            assert what4() == 120  # type: ignore
+            assert what2() == 49
             assert False
 
         try:

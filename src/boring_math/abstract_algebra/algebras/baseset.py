@@ -90,15 +90,7 @@ class BaseSet[H: Hashable](ABC):
         self._neg: Callable[[H], H] | None = None
 
     @abstractmethod
-    def __call__(self, rep: H) -> Self:
-        """
-        Add an element to the algebra with a given representation.
-
-        :param rep: Representation to add if not already present.
-        :returns: The element with that representation.
-
-        """
-        ...
+    def __call__(self, rep: H) -> BaseElement[H]: ...
 
     def __eq__(self, other: object) -> bool:
         """
@@ -114,29 +106,3 @@ class BaseSet[H: Hashable](ABC):
         if isinstance(other, type(self)):
             return self is other
         return NotImplemented
-
-
-# from abc import ABC, abstractmethod
-# from typing import Self
-# 
-# class Foo2:
-#     pass
-# 
-# class Foo1(ABC):
-#     @abstractmethod
-#     def create_foo2_instance(self) -> Self:
-#         """Must return an instance of a concrete subclass of Foo2."""
-#         pass
-# 
-# class SpecificFoo2(Foo2):
-#     pass
-# 
-# class ConcreteFoo1(Foo1):
-#     def create_foo2_instance(self) -> SpecificFoo2:
-#         # This implementation satisfies the type hint because SpecificFoo2 is a subclass of Foo2
-#         return SpecificFoo2()
-# 
-# # Usage
-# concrete_instance = ConcreteFoo1()
-# result = concrete_instance.create_foo2_instance()
-# print(f"Result type: {type(result)}") # Output: Result type: <class '__main__.SpecificFoo2'>

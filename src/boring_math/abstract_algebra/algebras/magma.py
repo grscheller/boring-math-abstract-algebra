@@ -110,4 +110,11 @@ class Magma[H: Hashable](BaseSet[H]):
         self._elements: NaturalMapping[H, MagmaElement[H]] = dict()
 
     def __call__(self, rep: H) -> MagmaElement[H]:
-        return self._elements.setdefault(rep, MagmaElement(rep))
+        """
+        Add the unique element to the magma with a given rep.
+ 
+        :param rep: Representation to add if not already present.
+        :returns: The element with that representation.
+ 
+        """
+        return self._elements.setdefault(rep, MagmaElement(rep, self))

@@ -18,16 +18,14 @@
     - **BaseSet:** Base class for algebras
     - **BaseElement:** Base class for elements of algebras.
 
-    Even though these class is instantiatable, their purposes are
-    to serve as invariant base classes for algebras and algebra elements.
-
 """
 
+from abc import ABC, abstractmethod
 from collections.abc import Callable, Container, Hashable, Iterable, Sized
 from types import NotImplementedType
-from typing import ClassVar, Final, Protocol, Self, Type, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
-__all__ = ['BaseSet', 'BaseElement']
+__all__ = ['BaseSet', 'BaseElement', 'NaturalMapping']
 
 
 @runtime_checkable
@@ -52,7 +50,7 @@ class BaseElement[H: Hashable]:
 
     def __call__(self) -> H:
         """
-        :returns: A reference to the representation wrapped by the element.
+        :returns: The representation wrapped by the element.
         """
         return self._rep
 
@@ -81,11 +79,9 @@ class BaseElement[H: Hashable]:
         return NotImplemented
 
 
-class BaseSet[H: Hashable]:
-    _Element: ClassVar[Final[Type[BaseElement[H]]]] = BaseElement
+class BaseSet[H: Hashable](ABC):
 
     def __init__(self) -> None:
-        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
         self._mult: Callable[[H, H], H] | None = None
         self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
@@ -93,17 +89,16 @@ class BaseSet[H: Hashable]:
         self._inv: Callable[[H], H] | None = None
         self._neg: Callable[[H], H] | None = None
 
-    def __call__(self, rep: H) -> BaseElement[H]:
+    @abstractmethod
+    def __call__(self, rep: H) -> Self:
         """
-        .. admonition:: Description
-
-            Add an element to the algebra with a given representation.
+        Add an element to the algebra with a given representation.
 
         :param rep: Representation to add if not already present.
         :returns: The element with that representation.
 
         """
-        return self._elements.setdefault(rep, type(self)._Element(rep, self))
+        ...
 
     def __eq__(self, other: object) -> bool:
         """
@@ -120,12 +115,28 @@ class BaseSet[H: Hashable]:
             return self is other
         return NotImplemented
 
-    def has(self, rep: H) -> bool:
-        """
-        Determine if the algebra has a element with a given representation.
 
-        :param rep: Element representation.
-        :returns: ``True`` if algebra contains an element with with representation ``rep``.
-
-        """
-        return rep in self._elements
+# from abc import ABC, abstractmethod
+# from typing import Self
+# 
+# class Foo2:
+#     pass
+# 
+# class Foo1(ABC):
+#     @abstractmethod
+#     def create_foo2_instance(self) -> Self:
+#         """Must return an instance of a concrete subclass of Foo2."""
+#         pass
+# 
+# class SpecificFoo2(Foo2):
+#     pass
+# 
+# class ConcreteFoo1(Foo1):
+#     def create_foo2_instance(self) -> SpecificFoo2:
+#         # This implementation satisfies the type hint because SpecificFoo2 is a subclass of Foo2
+#         return SpecificFoo2()
+# 
+# # Usage
+# concrete_instance = ConcreteFoo1()
+# result = concrete_instance.create_foo2_instance()
+# print(f"Result type: {type(result)}") # Output: Result type: <class '__main__.SpecificFoo2'>

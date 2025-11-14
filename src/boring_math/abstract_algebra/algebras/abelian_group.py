@@ -80,7 +80,7 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
 
 
 class AbelianGroup[H: Hashable](AdditiveMonoid[H]):
-    _Element: ClassVar[Final[Type[AbelianGroupElement[H]]]] = AbelianGroupElement
+    _Element: ClassVar[Final[Type[AbelianGroupElement[H]]]] = AbelianGroupElement[H]
 
     def __init__(
         self,
@@ -92,7 +92,7 @@ class AbelianGroup[H: Hashable](AdditiveMonoid[H]):
         :param add: Associative function ``H X H -> H`` on representations.
         :param zero: Representation for multiplicative identity.
         :param negate: Function ``H -> H`` mapping element representation to
-                    the representation of corresponding negated element.
+                       the representation of corresponding negated element.
         """
         super().__init__(add, zero)
         self._neg = negate

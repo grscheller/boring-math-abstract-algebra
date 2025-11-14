@@ -24,9 +24,9 @@ from boring_math.abstract_algebra.algebras.group import Group
 class ModRep:
     def __init__(self, num: int, prime_mod: int):
         if prime_mod < 2:
-            raise ValueError('The prime modulus must be >= 2.')
+            raise ValueError('The prime modulus must be >= 2')
         if not is_prime(prime_mod):
-            raise ValueError('The prime given is not prime.')
+            raise ValueError('The prime given is not prime')
         self._num = num % prime_mod
         self._mod = prime_mod
         self._hash = hash((self._num, self._mod))
@@ -230,7 +230,7 @@ class TestGroupMult:
         except ValueError as err:
             assert True
             assert (
-                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+                str(err) == 'Multiplication must be between elements of the same concrete algebra'
             )
         else:
             assert bad is I51

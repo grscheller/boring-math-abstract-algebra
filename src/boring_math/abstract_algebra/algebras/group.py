@@ -76,7 +76,7 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 
 
 class Group[H: Hashable](Monoid[H]):
-    _Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement
+    _Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement[H]
 
     def __init__(
         self,
@@ -88,7 +88,7 @@ class Group[H: Hashable](Monoid[H]):
         :param mult: Associative function ``H X H -> H`` on representations.
         :param one: Representation for multiplicative identity.
         :param invert: Function ``H -> H`` mapping element representation to
-                    the representation of corresponding inverse element.
+                       the representation of corresponding inverse element.
         """
         super().__init__(mult, one)
         self._inv = invert

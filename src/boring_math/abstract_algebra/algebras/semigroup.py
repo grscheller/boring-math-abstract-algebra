@@ -18,11 +18,11 @@
     Mathematically a Semigroup is a set **S** along with an associative
     binary operation **mult: S X S -> S**.
 
-    .. important::
+.. important::
 
-        **Contract:** Group initializer parameters must have
+    **Contract:** Semigroup initializer parameters must have
 
-        - **mult** closed and associative on reps
+    - **mult** closed and associative on reps
 
 """
 
@@ -41,11 +41,9 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, other: Self) -> Self:
+    def __mul__(self, other: int | Self) -> Self:
         """
-        .. admonition:: Description.
-
-            Multiply two elements of the same algebra together.
+        Multiply two elements of the same algebra together.
 
         .. note::
 
@@ -53,7 +51,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             if strict typing is used, but may be useful in gradual typing
             situations.
 
-        :param other: Another element within the same algebra.
+        :param other: Another element within the same algebra or an int.
         :returns: The product ``self * other``.
         :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
         :raises TypeError: If ``self`` & ``other`` are different types.
@@ -65,12 +63,13 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                 if (mult := algebra._mult) is not None:
                     return cast(Self, algebra(mult(self(), other())))
                 else:
-                    msg = 'Multiplication not defined on the algebra of the elements.'
+                    msg = 'Multiplication not defined on the algebra of the elements'
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same concrete algebra.'
+                msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
-        msg = 'Right side of multiplication wrong type.'
+
+        msg = 'Right side of multiplication wrong type'
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
@@ -79,10 +78,10 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
         :param other: Left side of the multiplication.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left operand does not know how to deal with a SemigroupElement.
+        :raises TypeError: When left operand does not know how to multiply right.
 
         """
-        msg = 'Left multiplication operand different type than right.'
+        msg = 'Left multiplication operand different type than right'
         raise TypeError(msg)
 
     def __pow__(self, n: int) -> Self:
@@ -94,12 +93,12 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             while n > 1:
                 r, n = mult(r1, r), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a semi-group n>0, but n={n} was given.'
+        msg = f'For a semi-group n>0, but n={n} was given'
         raise ValueError(msg)
 
 
 class Semigroup[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement
+    _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement[H]
 
     def __init__(
         self,

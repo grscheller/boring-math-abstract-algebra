@@ -56,18 +56,18 @@ class AdditiveMonoidElement[H: Hashable](AdditiveSemigroupElement[H]):
                 while n > 0:
                     r, n = add(r, r1), n - 1
                 return cast(Self, algebra(r))
-            msg = f'For an Additive Monoid n>=0, but n={n} was given.'
+            msg = f'For an Additive Monoid n>=0, but n={n} was given'
             raise ValueError(msg)
         raise ValueError('Element multiplication not defined on algebra')
 
 
 class AdditiveMonoid[H: Hashable](AdditiveSemigroup[H]):
-    _Element: ClassVar[Final[Type[AdditiveMonoidElement[H]]]] = AdditiveMonoidElement
+    _Element: ClassVar[Final[Type[AdditiveMonoidElement[H]]]] = AdditiveMonoidElement[H]
 
     def __init__(
         self,
-        mult: Callable[[H, H], H],
+        add: Callable[[H, H], H],
         zero: H,
     ):
-        super().__init__(mult)
+        super().__init__(add=add)
         self._zero = zero

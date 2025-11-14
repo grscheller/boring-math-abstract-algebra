@@ -58,8 +58,8 @@ class Test_magma:
         bar2 = nc2 * nc3
         assert bar1 == bar2
         assert bar1 == nc4
-        assert bar1() == bar2()
-        assert bar1() == nc4()
+        assert bar1() == bar2()  # type: ignore # above multiplications are well defined
+        assert bar1() == nc4()   # type: ignore # will never return None
         assert bar1 is bar2
         assert bar1 is nc4
 
@@ -73,45 +73,45 @@ class Test_magma:
         except ValueError as err:
             assert True
             assert (
-                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+                str(err) == 'Multiplication must be between elements of the same concrete algebra'
             )
         else:
-            assert what1() == 25
+            assert what1() == 25  # type: ignore
             assert False
 
         try:
             what2 = na(7) * nc(8)
         except ValueError as err:
             assert (
-                str(err) == 'Multiplication must be between elements of the same concrete algebra.'
+                str(err) == 'Multiplication must be between elements of the same concrete algebra'
             )
             assert True
         else:
-            assert what2() == 49
+            assert what2() == 49  # type: ignore
             assert False
 
         try:
             what3 = na(5) * al(25)
         except TypeError as err:
-            assert str(err) == 'Right multiplication operand not part of the algebra of Left.'
+            assert str(err) == 'Right multiplication operand not part of the algebra of left'
             assert True
         else:
-            assert what3() == 120
+            assert what3() == 120  # type: ignore
             assert False
 
         try:
             what4 = al(25) * na(5)
         except TypeError as err:
-            assert str(err) == 'Left multiplication operand different type than right.'
+            assert str(err) == 'Left multiplication operand different type than right'
             assert True
         else:
-            assert what4() == 120
+            assert what4() == 120  # type: ignore
             assert False
 
         try:
             na(0) * [1, 2, 3]  # type: ignore
         except TypeError as err:
-            assert str(err) == 'Right multiplication operand not part of the algebra of Left.'
+            assert str(err) == 'Right multiplication operand not part of the algebra of left'
             assert True
         else:
             assert False
@@ -119,7 +119,7 @@ class Test_magma:
         try:
             [1, 2, 3] * na(1)  # type: ignore
         except TypeError as err:
-            assert str(err) == 'Left multiplication operand different type than right.'
+            assert str(err) == 'Left multiplication operand different type than right'
             assert True
         else:
             assert False

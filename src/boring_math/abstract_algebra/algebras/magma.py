@@ -33,8 +33,8 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, Self, Type, cast
-from .baseset import BaseSet, BaseElement
+from typing import Self, cast
+from .baseset import BaseSet, BaseElement, NaturalMapping
 
 __all__ = ['Magma', 'MagmaElement']
 
@@ -47,11 +47,9 @@ class MagmaElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, other: Self) -> Self:
+    def __mul__(self, other: int | Self) -> Self:
         """
-        .. admonition:: Description.
-
-            Multiply two elements of the same algebra together.
+        Multiply two elements of the same algebra together.
 
         .. note::
 
@@ -76,28 +74,32 @@ class MagmaElement[H: Hashable](BaseElement[H]):
                     )
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same concrete algebra.'
+                msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
-        msg = 'Right multiplication operand not part of the algebra of Left.'
+
+        if isinstance(other, int):
+            msg = 'Multiplication by an int on right not defined since addition not defined'
+        else:
+            msg = 'Right multiplication operand not part of the algebra of left'
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
         """
-        .. admonition:: Description.
-
-            For when left operand has no knowledge of the right operand.
+        For when left operand has no knowledge of the right operand.
 
         :param other: The left multiplication operand.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
         :raises TypeError: When left operand does not know how to deal with a MagmaElement.
 
         """
-        msg = 'Left multiplication operand different type than right.'
+        if isinstance(other, int):
+            msg = 'Multiplication by an int on left not defined since addition not defined'
+        else:
+            msg = 'Left multiplication operand different type than right'
         raise TypeError(msg)
 
 
 class Magma[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[MagmaElement[H]]]] = MagmaElement
 
     def __init__(
         self,
@@ -105,3 +107,7 @@ class Magma[H: Hashable](BaseSet[H]):
     ) -> None:
         super().__init__()
         self._mult = mult
+        self._elements: NaturalMapping[H, MagmaElement[H]] = dict()
+
+    def __call__(self, rep: H) -> MagmaElement[H]:
+        return self._elements.setdefault(rep, MagmaElement(rep))

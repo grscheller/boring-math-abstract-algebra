@@ -55,17 +55,17 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
             while n > 0:
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a Monoid n>=0, but n={n} was given.'
+        msg = f'For a Monoid n>=0, but n={n} was given'
         raise ValueError(msg)
 
 
 class Monoid[H: Hashable](Semigroup[H]):
-    _Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement
+    _Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement[H]
 
     def __init__(
         self,
         mult: Callable[[H, H], H],
         one: H,
     ):
-        super().__init__(mult)
+        super().__init__(mult=mult)
         self._one = one

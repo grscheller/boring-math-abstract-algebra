@@ -32,8 +32,8 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, ClassVar, Final, cast, Self, Type
+from collections.abc import Callable, Hashable
+from typing import ClassVar, Final, cast, Self, Type
 from .additive_monoid import AdditiveMonoid, AdditiveMonoidElement
 
 __all__ = ['AbelianGroup', 'AbelianGroupElement']

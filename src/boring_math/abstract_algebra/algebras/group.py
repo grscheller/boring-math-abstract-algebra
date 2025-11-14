@@ -21,7 +21,7 @@
 .. caution::
 
     No assumptions are made whether or not the group is Abelian.
-    See **AbelianGroup**.
+    See **AdditiveGroup**.
 
 .. important::
 
@@ -33,8 +33,8 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, ClassVar, Final, cast, Self, Type
+from collections.abc import Callable, Hashable
+from typing import Self, cast
 from .monoid import Monoid, MonoidElement
 
 __all__ = ['Group', 'GroupElement']
@@ -49,15 +49,42 @@ class GroupElement[H: Hashable](MonoidElement[H]):
         super().__init__(rep, algebra)
 
     def invert(self) -> Self:
+        """
+        Invert the group element.
+
+        .. note::
+
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
+
+        :returns: The unique inverse element to ``self``.
+        :raises ValueError: If algebra fails to have invertible elements.
+
+        """
         algebra = self._algebra
         if (invert := algebra._inv) is None:
-            raise ValueError('Algebra multiplication not invertable')
+            raise ValueError('Algebra not invertable')
         return type(self)(
             invert(self()),
             cast(Group[H], algebra),
         )
 
     def __pow__(self, n: int) -> Self:
+        """
+        Raise the group element to the power of ``n``.
+
+        .. note::
+
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
+
+        :param n: The ``int`` power to raise the element to.
+        :returns: The element (or its inverse) raised to an ``int`` power.
+        :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
+        :raises ValueError: If algebra fails to have an identity or elements not invertible.
+
+        """
         if n >= 0:
             algebra = self._algebra
             if (mult := algebra._mult) is None:
@@ -76,7 +103,6 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 
 
 class Group[H: Hashable](Monoid[H]):
-    _Element: ClassVar[Final[Type[GroupElement[H]]]] = GroupElement[H]
 
     def __init__(
         self,
@@ -89,6 +115,21 @@ class Group[H: Hashable](Monoid[H]):
         :param one: Representation for multiplicative identity.
         :param invert: Function ``H -> H`` mapping element representation to
                        the representation of corresponding inverse element.
+        :returns: A group algebra.
+
         """
         super().__init__(mult, one)
         self._inv = invert
+
+    def __call__(self, rep: H) -> GroupElement[H]:
+        """
+        Add the unique element to the group with a given rep.
+ 
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+ 
+        """
+        return cast(GroupElement[H], self._elements.setdefault(
+            rep,
+            GroupElement(rep, self),
+        ))

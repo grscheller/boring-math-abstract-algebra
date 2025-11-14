@@ -52,8 +52,8 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
         :param other: Another element within the same semigroup.
         :returns: The product ``self * other``.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete semigroups.
         :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete semigroups.
 
         """
         if isinstance(other, type(self)):
@@ -65,7 +65,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                     msg = 'Multiplication not defined on the algebra of the elements'
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same concrete semigroup'
+                msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
 
         if isinstance(other, int):
@@ -117,6 +117,10 @@ class Semigroup[H: Hashable](BaseSet[H]):
         self,
         mult: Callable[[H, H], H],
     ) -> None:
+        """
+        :param mult: Associative function ``H X H -> H`` on representations.
+        :returns: A semigroup algebra.
+        """
         super().__init__()
         self._mult = mult
         self._elements: NaturalMapping[H, SemigroupElement[H]] = dict()

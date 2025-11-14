@@ -29,8 +29,8 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, ClassVar, Final, Self, Type, cast
+from collections.abc import Callable, Hashable
+from typing import Self, cast
 from .semigroup import Semigroup, SemigroupElement
 
 __all__ = ['Monoid', 'MonoidElement']
@@ -42,9 +42,24 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
         rep: H,
         algebra: 'Monoid[H]',
     ) -> None:
-        super().__init__(rep, algebra)
+        super().__init__(rep, cast(Semigroup[H], algebra))
 
     def __pow__(self, n: int) -> Self:
+        """
+        Raise the group element to power to the power of ``n>=0``.
+
+        .. note::
+
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
+
+        :param n: The ``int`` power to raise the element to.
+        :returns: The element (or its inverse) raised to an ``int`` power.
+        :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
+        :raises ValueError: If algebra fails to have an identity element.
+
+        """
         if n >= 0:
             algebra = self._algebra
             if (mult := algebra._mult) is None:
@@ -60,12 +75,30 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
 
 
 class Monoid[H: Hashable](Semigroup[H]):
-    _Element: ClassVar[Final[Type[MonoidElement[H]]]] = MonoidElement[H]
 
     def __init__(
         self,
         mult: Callable[[H, H], H],
         one: H,
     ):
+        """
+        :param mult: Associative function ``H X H -> H`` on representations.
+        :param one: Representation for multiplicative identity.
+        :returns: A monoid algebra.
+
+        """
         super().__init__(mult=mult)
         self._one = one
+
+    def __call__(self, rep: H) -> MonoidElement[H]:
+        """
+        Add the unique element to the monoid with a given rep.
+ 
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+ 
+        """
+        return cast(MonoidElement[H], self._elements.setdefault(
+            rep,
+            MonoidElement(rep, self),
+        ))

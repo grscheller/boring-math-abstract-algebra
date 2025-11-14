@@ -29,8 +29,8 @@
 
 """
 
-from collections.abc import Hashable
-from typing import Callable, ClassVar, Final, Self, Type, cast
+from collections.abc import Callable, Hashable
+from typing import ClassVar, Final, Self, Type, cast
 from .additive_semigroup import AdditiveSemigroup, AdditiveSemigroupElement
 
 __all__ = ['AdditiveMonoid', 'AdditiveMonoidElement']

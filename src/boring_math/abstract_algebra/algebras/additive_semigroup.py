@@ -65,7 +65,7 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
                     msg = 'Addition not defined on the algebra of the elements'
                     raise ValueError(msg)
             else:
-                msg = 'Addition must be between elements of the same concrete additive semigroup'
+                msg = 'Addition must be between elements of the same concrete algebra'
                 raise ValueError(msg)
 
         msg = 'Right side of addition wrong type'
@@ -104,7 +104,7 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
                 return cast(Self, algebra(r))
             msg = f'For an additive semigroup n>0, but n={n} was given'
             raise ValueError(msg)
-        raise ValueError('Element multiplication not defined on an additive semigroup')
+        raise ValueError('Element multiplication not defined on algebra')
 
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)

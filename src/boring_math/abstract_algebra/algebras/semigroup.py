@@ -65,7 +65,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                     msg = 'Multiplication not defined on the algebra of the elements'
                     raise ValueError(msg)
             else:
-                msg = 'Multiplication must be between elements of the same concrete algebra'
+                msg = 'Multiplication must be between elements of the same concrete semigroup'
                 raise ValueError(msg)
 
         if isinstance(other, int):
@@ -80,7 +80,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
         :param other: Left side of the multiplication.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left operand does not know how to multiply the semigroup element.
+        :raises TypeError: When left side does not know how to multiply the semigroup element.
 
         """
         if isinstance(other, int):
@@ -91,11 +91,12 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
     def __pow__(self, n: int) -> Self:
         """
-        Raising semigroup element to a positive int power is the same as repeated multiplication.
+        Raising semigroup element to a positive ``int`` power is
+        the same as repeated multiplication.
 
-        :param n: Multiply semigroup element to itself n > 0 times.
+        :param n: Multiply semigroup element to itself ``n > 0`` times.
         :returns: The product of the semigroup element n times.
-        :raises ValueError: When n <= 0.
+        :raises ValueError: When ``n <= 0``.
         :raises ValueError: If for some reason a mult method was not defined on the semigroup.
         """
         if n > 0:

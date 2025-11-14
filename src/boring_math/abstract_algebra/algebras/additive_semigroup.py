@@ -27,8 +27,8 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, Self, Type, cast
-from .baseset import BaseSet, BaseElement
+from typing import Self, cast
+from .baseset import BaseSet, BaseElement, NaturalMapping
 
 __all__ = ['AdditiveSemigroup', 'AdditiveSemigroupElement']
 
@@ -43,18 +43,17 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
 
     def __add__(self, other: int | Self) -> Self:
         """
-        Add two elements of the same algebra together.
+        Add two elements of the same concrete additive semigroup together.
 
         .. note::
 
-            Have added some runtime type checking. Not really necessary
-            if strict typing is used, but may be useful in gradual typing
-            situations.
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
 
-        :param other: Another element within the same algebra.
+        :param other: Another element within the same additive semigroup or an ``int``.
         :returns: The sum ``self + other``.
-        :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
-        :raises TypeError: If ``self`` & ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete additive semigroups.
+        :raises TypeError: If ``self`` and ``other`` are different types.
 
         """
         if isinstance(other, type(self)):
@@ -66,7 +65,7 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
                     msg = 'Addition not defined on the algebra of the elements'
                     raise ValueError(msg)
             else:
-                msg = 'Addition must be between elements of the same concrete algebra'
+                msg = 'Addition must be between elements of the same concrete additive semigroup'
                 raise ValueError(msg)
 
         msg = 'Right side of addition wrong type'
@@ -78,13 +77,22 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
 
         :param other: Left side of the addition.
         :returns: Never returns, otherwise ``left.__add__(right)`` would have worked.
-        :raises TypeError: When left side does not know how to add right.
+        :raises TypeError: When left side does not know how to add the additive semigroup element.
 
         """
         msg = 'Left addition operand different type than right'
         raise TypeError(msg)
 
     def __mul__(self, n: int | Self) -> Self:
+        """
+        Multiplying additive semigroup element by a positive ``int`` is
+        the same as repeated addition.
+
+        :param n: Add additive semigroup element to itself ``n > 0`` times.
+        :returns: The sum of the semigroup element n times.
+        :raises ValueError: When ``n <= 0``.
+        :raises ValueError: If for some reason an add method was not defined on the semigroup.
+        """
         if isinstance(n, int):
             if n > 0:
                 algebra = self._algebra
@@ -94,17 +102,30 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
                 while n > 1:
                     r, n = add(r1, r), n - 1
                 return cast(Self, algebra(r))
-            msg = f'For an additive semi-group n>0, but n={n} was given'
+            msg = f'For an additive semigroup n>0, but n={n} was given'
             raise ValueError(msg)
-        raise ValueError('Element multiplication not defined on algebra')
+        raise ValueError('Element multiplication not defined on an additive semigroup')
+
+    def __rmul__(self, n: int) -> Self:
+        return self.__mul__(n)
 
 
 class AdditiveSemigroup[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[AdditiveSemigroupElement[H]]]] = AdditiveSemigroupElement[H]
 
     def __init__(
         self,
         add: Callable[[H, H], H],
-    ):
+    ) -> None:
         super().__init__()
         self._add = add
+        self._elements: NaturalMapping[H, AdditiveSemigroupElement[H]] = dict()
+
+    def __call__(self, rep: H) -> AdditiveSemigroupElement[H]:
+        """
+        Add the unique element to the additive semigroup with a given rep.
+ 
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+ 
+        """
+        return self._elements.setdefault(rep, AdditiveSemigroupElement(rep, self))

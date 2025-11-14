@@ -49,15 +49,14 @@ class MagmaElement[H: Hashable](BaseElement[H]):
 
     def __mul__(self, other: int | Self) -> Self:
         """
-        Multiply two elements of the same algebra together.
+        Multiply two elements of the same concrete magma together.
 
         .. note::
 
-            Have added some runtime type checking. Not really necessary
-            if strict typing is used, but may be useful in gradual typing
-            situations.
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
 
-        :param other: Another element within the same algebra.
+        :param other: Another element within the same magma.
         :returns: The product ``self * other``.
         :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
         :raises TypeError: If ``self`` & ``other`` are different types.
@@ -87,9 +86,9 @@ class MagmaElement[H: Hashable](BaseElement[H]):
         """
         For when left operand has no knowledge of the right operand.
 
-        :param other: The left multiplication operand.
+        :param other: Left side of the multiplication.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left operand does not know how to deal with a MagmaElement.
+        :raises TypeError: When left operand does not know how to multiply the magma element.
 
         """
         if isinstance(other, int):
@@ -97,6 +96,26 @@ class MagmaElement[H: Hashable](BaseElement[H]):
         else:
             msg = 'Left multiplication operand different type than right'
         raise TypeError(msg)
+
+    def __pow__(self, n: int) -> Self:
+        """
+        Raising magma element to a positive int power is the same as repeated multiplication.
+
+        :param n: Multiply magma element to itself n > 0 times.
+        :returns: The product of the magma element n times.
+        :raises ValueError: When n <= 0.
+        :raises ValueError: If for some reason a mult method was not defined on the magma.
+        """
+        if n > 0:
+            algebra = self._algebra
+            if (mult := algebra._mult) is None:
+                raise ValueError('Algebra has no multiplication method')
+            r = (r1 := self())
+            while n > 1:
+                r, n = mult(r1, r), n - 1
+            return cast(Self, algebra(r))
+        msg = f'For a magma n>0, but n={n} was given'
+        raise ValueError(msg)
 
 
 class Magma[H: Hashable](BaseSet[H]):

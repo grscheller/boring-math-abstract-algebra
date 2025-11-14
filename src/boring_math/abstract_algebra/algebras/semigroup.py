@@ -27,8 +27,8 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, Self, Type, cast
-from .baseset import BaseSet, BaseElement
+from typing import Self, cast
+from .baseset import BaseSet, BaseElement, NaturalMapping
 
 __all__ = ['Semigroup', 'SemigroupElement']
 
@@ -43,18 +43,17 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
     def __mul__(self, other: int | Self) -> Self:
         """
-        Multiply two elements of the same algebra together.
+        Multiply two elements of the same concrete semigroup together.
 
         .. note::
 
-            Have added some runtime type checking. Not really necessary
-            if strict typing is used, but may be useful in gradual typing
-            situations.
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
 
-        :param other: Another element within the same algebra or an int.
+        :param other: Another element within the same semigroup.
         :returns: The product ``self * other``.
-        :raises ValueError: If ``self`` & ``other`` are same type but different algebras.
-        :raises TypeError: If ``self`` & ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete semigroups.
+        :raises TypeError: If ``self`` and ``other`` are different types.
 
         """
         if isinstance(other, type(self)):
@@ -69,7 +68,10 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                 msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
 
-        msg = 'Right side of multiplication wrong type'
+        if isinstance(other, int):
+            msg = 'Multiplication by an int on right not defined since addition not defined'
+        else:
+            msg = 'Right multiplication operand not part of the same semigroup of left'
         raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
@@ -78,13 +80,24 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
         :param other: Left side of the multiplication.
         :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left operand does not know how to multiply right.
+        :raises TypeError: When left operand does not know how to multiply the semigroup element.
 
         """
-        msg = 'Left multiplication operand different type than right'
+        if isinstance(other, int):
+            msg = 'Multiplication by an int on left not defined since addition not defined'
+        else:
+            msg = 'Left multiplication operand different type than right'
         raise TypeError(msg)
 
     def __pow__(self, n: int) -> Self:
+        """
+        Raising semigroup element to a positive int power is the same as repeated multiplication.
+
+        :param n: Multiply semigroup element to itself n > 0 times.
+        :returns: The product of the semigroup element n times.
+        :raises ValueError: When n <= 0.
+        :raises ValueError: If for some reason a mult method was not defined on the semigroup.
+        """
         if n > 0:
             algebra = self._algebra
             if (mult := algebra._mult) is None:
@@ -93,16 +106,26 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             while n > 1:
                 r, n = mult(r1, r), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a semi-group n>0, but n={n} was given'
+        msg = f'For a semigroup n>0, but n={n} was given'
         raise ValueError(msg)
 
 
 class Semigroup[H: Hashable](BaseSet[H]):
-    _Element: ClassVar[Final[Type[SemigroupElement[H]]]] = SemigroupElement[H]
 
     def __init__(
         self,
         mult: Callable[[H, H], H],
-    ):
+    ) -> None:
         super().__init__()
         self._mult = mult
+        self._elements: NaturalMapping[H, SemigroupElement[H]] = dict()
+
+    def __call__(self, rep: H) -> SemigroupElement[H]:
+        """
+        Add the unique element to the semigroup with a given rep.
+ 
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+ 
+        """
+        return self._elements.setdefault(rep, SemigroupElement(rep, self))

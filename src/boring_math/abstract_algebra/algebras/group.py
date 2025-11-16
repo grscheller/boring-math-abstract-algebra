@@ -103,7 +103,6 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 
 
 class Group[H: Hashable](Monoid[H]):
-
     def __init__(
         self,
         mult: Callable[[H, H], H],
@@ -124,12 +123,15 @@ class Group[H: Hashable](Monoid[H]):
     def __call__(self, rep: H) -> GroupElement[H]:
         """
         Add the unique element to the group with a given rep.
- 
+
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.
- 
+
         """
-        return cast(GroupElement[H], self._elements.setdefault(
-            rep,
-            GroupElement(rep, self),
-        ))
+        return cast(
+            GroupElement[H],
+            self._elements.setdefault(
+                rep,
+                GroupElement(rep, self),
+            ),
+        )

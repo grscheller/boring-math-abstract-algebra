@@ -33,7 +33,7 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, cast, Self, Type
+from typing import Self, cast
 from .additive_monoid import AdditiveMonoid, AdditiveMonoidElement
 
 __all__ = ['AbelianGroup', 'AbelianGroupElement']
@@ -48,6 +48,18 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
         super().__init__(rep, algebra)
 
     def negate(self) -> Self:
+        """
+        Negate the group element.
+
+        .. note::
+
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
+
+        :returns: The unique additive inverse element to ``self``.
+        :raises ValueError: If algebra fails to have additive inverses.
+
+        """
         algebra = self._algebra
         if (negate := algebra._neg) is None:
             raise ValueError('Algebra addition not negatable')
@@ -57,13 +69,22 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
         )
 
     def __mul__(self, n: Self | int) -> Self:
+        """
+        Multiplying additive group element by an integer ``n>=0``
+        is the same as repeated addition.
+
+        :param n: Add abelian group element to itself ``n > 0`` times.
+        :returns: The sum of the group element n times.
+        :raises TypeError: if given another element instead of an ``int``.
+        :raises ValueError: If for some reason an add method was not defined on the group.
+        """
         if isinstance(n, int):
             if n >= 0:
                 algebra = self._algebra
                 if (add := algebra._add) is None:
-                    raise ValueError('Algebra has no multiplication method')
+                    raise ValueError('Algebra has no addition method')
                 if (zero := algebra._zero) is None:
-                    raise ValueError('Algebra has no multiplicative identity')
+                    raise ValueError('Algebra has no additive identity')
                 r, r1 = zero, self()
                 while n > 0:
                     r, n = add(r, r1), n - 1
@@ -73,14 +94,13 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
                 while n < -1:
                     g, n = g + g_neg, n + 1
                 return g
-        raise ValueError('Element multiplication not defined on algebra')
+        raise TypeError('Element multiplication not defined on algebra')
 
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)
 
 
 class AbelianGroup[H: Hashable](AdditiveMonoid[H]):
-    _Element: ClassVar[Final[Type[AbelianGroupElement[H]]]] = AbelianGroupElement[H]
 
     def __init__(
         self,
@@ -89,10 +109,26 @@ class AbelianGroup[H: Hashable](AdditiveMonoid[H]):
         negate: Callable[[H], H],
     ):
         """
-        :param add: Associative function ``H X H -> H`` on representations.
-        :param zero: Representation for multiplicative identity.
+        :param add: Commutative and associative function ``H X H -> H`` on representations.
+        :param zero: Representation for additive identity.
         :param negate: Function ``H -> H`` mapping element representation to
                        the representation of corresponding negated element.
         """
         super().__init__(add, zero)
         self._neg = negate
+
+    def __call__(self, rep: H) -> AbelianGroupElement[H]:
+        """
+        Add the unique element to the abelian group with a given rep.
+
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+
+        """
+        return cast(
+            AbelianGroupElement[H],
+            self._elements.setdefault(
+                rep,
+                AbelianGroupElement(rep, self),
+            ),
+        )

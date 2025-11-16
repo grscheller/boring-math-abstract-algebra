@@ -30,7 +30,7 @@
 """
 
 from collections.abc import Callable, Hashable
-from typing import ClassVar, Final, Self, Type, cast
+from typing import Self, cast
 from .additive_semigroup import AdditiveSemigroup, AdditiveSemigroupElement
 
 __all__ = ['AdditiveMonoid', 'AdditiveMonoidElement']
@@ -45,13 +45,28 @@ class AdditiveMonoidElement[H: Hashable](AdditiveSemigroupElement[H]):
         super().__init__(rep, algebra)
 
     def __mul__(self, n: int | Self) -> Self:
+        """
+        Repeatedly add a additive monoid element ``n>=0`` times.
+
+        .. note::
+
+            Have added some runtime type checking so that developers
+            do not have to totally depend on their typing tooling.
+
+        :param n: The number of times to add the element to itself.
+        :returns: The element added to its additive identity ``n`` times.
+        :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
+        :raises ValueError: If algebra fails to have an additive identity element.
+
+        """
         if isinstance(n, int):
             if n >= 0:
                 algebra = self._algebra
                 if (add := algebra._add) is None:
-                    raise ValueError('Algebra has no multiplication method')
+                    raise ValueError('Algebra has no add method')
                 if (zero := algebra._zero) is None:
-                    raise ValueError('Algebra has no multiplicative identity')
+                    raise ValueError('Algebra has no additive identity')
                 r, r1 = zero, self()
                 while n > 0:
                     r, n = add(r, r1), n - 1
@@ -62,12 +77,33 @@ class AdditiveMonoidElement[H: Hashable](AdditiveSemigroupElement[H]):
 
 
 class AdditiveMonoid[H: Hashable](AdditiveSemigroup[H]):
-    _Element: ClassVar[Final[Type[AdditiveMonoidElement[H]]]] = AdditiveMonoidElement[H]
 
     def __init__(
         self,
         add: Callable[[H, H], H],
         zero: H,
     ):
+        """
+        :param add: Commutative and associative function ``H X H -> H`` on representations.
+        :param one: Representation for additive identity.
+        :returns: A commutative monoid algebra.
+
+        """
         super().__init__(add=add)
         self._zero = zero
+
+    def __call__(self, rep: H) -> AdditiveMonoidElement[H]:
+        """
+        Add the unique element to the monoid with a given rep.
+
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+
+        """
+        return cast(
+            AdditiveMonoidElement[H],
+            self._elements.setdefault(
+                rep,
+                AdditiveMonoidElement(rep, self),
+            ),
+        )

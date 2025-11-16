@@ -257,7 +257,7 @@ class TestGroupAdd:
 
         try:
             bad = I54 * I54
-        except ValueError as err:
+        except TypeError as err:
             assert True
             assert str(err) == 'Element multiplication not defined on algebra'
         else:
@@ -266,7 +266,7 @@ class TestGroupAdd:
 
         try:
             bad = I54 * J54
-        except ValueError as err:
+        except TypeError as err:
             assert True
             assert str(err) == 'Element multiplication not defined on algebra'
         else:

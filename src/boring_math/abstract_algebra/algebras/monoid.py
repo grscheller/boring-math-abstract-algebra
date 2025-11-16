@@ -75,7 +75,6 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
 
 
 class Monoid[H: Hashable](Semigroup[H]):
-
     def __init__(
         self,
         mult: Callable[[H, H], H],
@@ -93,12 +92,15 @@ class Monoid[H: Hashable](Semigroup[H]):
     def __call__(self, rep: H) -> MonoidElement[H]:
         """
         Add the unique element to the monoid with a given rep.
- 
+
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.
- 
+
         """
-        return cast(MonoidElement[H], self._elements.setdefault(
-            rep,
-            MonoidElement(rep, self),
-        ))
+        return cast(
+            MonoidElement[H],
+            self._elements.setdefault(
+                rep,
+                MonoidElement(rep, self),
+            ),
+        )

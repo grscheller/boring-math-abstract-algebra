@@ -15,7 +15,7 @@
 import numpy as np
 import numpy.typing as npt
 from typing import Annotated, Any, Literal
-from boring_math.abstract_algebra.algebras.additive_semigroup import AdditiveSemigroup
+from boring_math.abstract_algebra.algebras.commutative_semigroup import CommutativeSemigroup
 
 ## Infrastructure setup
 
@@ -59,7 +59,7 @@ def matrix_mult(left: I64_3x3, right: I64_3x3) -> I64_3x3:
     return HashableNDArrayWrapper(left() + right())
 
 
-m3x3 = AdditiveSemigroup[I64_3x3](add=matrix_mult)
+m3x3 = CommutativeSemigroup[I64_3x3](add=matrix_mult)
 
 np_eye = HashableNDArrayWrapper(np.eye(3, dtype=np.int64))
 np_zero = HashableNDArrayWrapper(np.zeros((3, 3), dtype=np.int64))

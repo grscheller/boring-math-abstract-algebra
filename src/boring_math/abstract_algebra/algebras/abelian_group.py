@@ -15,8 +15,8 @@
 """
 .. admonition:: Abelian Group
 
-    Mathematically an Abelian Group is a Monoid **G** all of whose
-    elements have additive inverses.
+    Mathematically an Abelian Group is a Commutative Monoid **G** all of
+    whose elements have additive inverses.
 
 .. note::
 
@@ -27,19 +27,19 @@
     **Contract:** AbelianGroup initializer parameters must have
 
     - **add** closed, associative and commutative on reps
-    - **zero** additive identity on reps, ``rep*one == rep == one*rep``
+    - **zero** additive identity on reps, ``rep.add(zero) == rep == zero.add(rep)``
     - **negate** must me idempotent: ``neg(neg(rep)) == rep``
 
 """
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
-from .additive_monoid import AdditiveMonoid, AdditiveMonoidElement
+from .commutative_monoid import CommutativeMonoid, CommutativeMonoidElement
 
 __all__ = ['AbelianGroup', 'AbelianGroupElement']
 
 
-class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
+class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     def __init__(
         self,
         rep: H,
@@ -75,7 +75,7 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
 
         :param n: Add abelian group element to itself ``n > 0`` times.
         :returns: The sum of the group element n times.
-        :raises TypeError: if given another element instead of an ``int``.
+        :raises TypeError: if given an element instead of an ``int``.
         :raises ValueError: If for some reason an add method was not defined on the group.
         """
         if isinstance(n, int):
@@ -100,7 +100,7 @@ class AbelianGroupElement[H: Hashable](AdditiveMonoidElement[H]):
         return self.__mul__(n)
 
 
-class AbelianGroup[H: Hashable](AdditiveMonoid[H]):
+class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
 
     def __init__(
         self,

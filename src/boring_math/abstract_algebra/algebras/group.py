@@ -21,7 +21,7 @@
 .. caution::
 
     No assumptions are made whether or not the group is Abelian.
-    See **AdditiveGroup**.
+    See **CommunitiveGroup**.
 
 .. important::
 

@@ -30,14 +30,14 @@ from collections.abc import Callable, Hashable
 from typing import Self, cast
 from .baseset import BaseSet, BaseElement, NaturalMapping
 
-__all__ = ['AdditiveSemigroup', 'AdditiveSemigroupElement']
+__all__ = ['CommutativeSemigroup', 'CommutativeSemigroupElement']
 
 
-class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
+class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
     def __init__(
         self,
         rep: H,
-        algebra: 'AdditiveSemigroup[H]',
+        algebra: 'CommutativeSemigroup[H]',
     ) -> None:
         super().__init__(rep, algebra)
 
@@ -110,7 +110,7 @@ class AdditiveSemigroupElement[H: Hashable](BaseElement[H]):
         return self.__mul__(n)
 
 
-class AdditiveSemigroup[H: Hashable](BaseSet[H]):
+class CommutativeSemigroup[H: Hashable](BaseSet[H]):
 
     def __init__(
         self,
@@ -118,9 +118,9 @@ class AdditiveSemigroup[H: Hashable](BaseSet[H]):
     ) -> None:
         super().__init__()
         self._add = add
-        self._elements: NaturalMapping[H, AdditiveSemigroupElement[H]] = dict()
+        self._elements: NaturalMapping[H, CommutativeSemigroupElement[H]] = dict()
 
-    def __call__(self, rep: H) -> AdditiveSemigroupElement[H]:
+    def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """
         Add the unique element to the additive semigroup with a given rep.
  
@@ -128,4 +128,4 @@ class AdditiveSemigroup[H: Hashable](BaseSet[H]):
         :returns: The unique element with that representation.
  
         """
-        return self._elements.setdefault(rep, AdditiveSemigroupElement(rep, self))
+        return self._elements.setdefault(rep, CommutativeSemigroupElement(rep, self))

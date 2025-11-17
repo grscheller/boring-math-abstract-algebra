@@ -13,16 +13,16 @@
 # limitations under the License.
 
 """
-.. admonition:: Additive Monoid
+.. admonition:: Commutative Monoid
 
-    Mathematically an additive Monoid is a Semigroup **M** along with
+    Mathematically a commutative Monoid is a Semigroup **M** along with
     an identity element u, that is (∃u ∈ M) => (∀m ∈ M)(u+m = m+u = m).
 
     When such an identity element u exists, it is necessarily unique.
 
 .. important::
 
-    **Contract:** Additive Monoid initializer parameters must have
+    **Contract:** Commutative Monoid initializer parameters must have
 
     - **add** closed commutative and associative on reps
     - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
@@ -31,22 +31,22 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
-from .additive_semigroup import AdditiveSemigroup, AdditiveSemigroupElement
+from .commutative_semigroup import CommutativeSemigroup, CommutativeSemigroupElement
 
-__all__ = ['AdditiveMonoid', 'AdditiveMonoidElement']
+__all__ = ['CommutativeMonoid', 'CommutativeMonoidElement']
 
 
-class AdditiveMonoidElement[H: Hashable](AdditiveSemigroupElement[H]):
+class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
     def __init__(
         self,
         rep: H,
-        algebra: 'AdditiveMonoid[H]',
+        algebra: 'CommutativeMonoid[H]',
     ) -> None:
         super().__init__(rep, algebra)
 
     def __mul__(self, n: int | Self) -> Self:
         """
-        Repeatedly add a additive monoid element ``n>=0`` times.
+        Repeatedly add a commutative monoid element ``n>=0`` times.
 
         .. note::
 
@@ -71,12 +71,12 @@ class AdditiveMonoidElement[H: Hashable](AdditiveSemigroupElement[H]):
                 while n > 0:
                     r, n = add(r, r1), n - 1
                 return cast(Self, algebra(r))
-            msg = f'For an Additive Monoid n>=0, but n={n} was given'
+            msg = f'For an Commutative Monoid n>=0, but n={n} was given'
             raise ValueError(msg)
         raise ValueError('Element multiplication not defined on algebra')
 
 
-class AdditiveMonoid[H: Hashable](AdditiveSemigroup[H]):
+class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
 
     def __init__(
         self,
@@ -92,7 +92,7 @@ class AdditiveMonoid[H: Hashable](AdditiveSemigroup[H]):
         super().__init__(add=add)
         self._zero = zero
 
-    def __call__(self, rep: H) -> AdditiveMonoidElement[H]:
+    def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
         """
         Add the unique element to the monoid with a given rep.
 
@@ -101,9 +101,9 @@ class AdditiveMonoid[H: Hashable](AdditiveSemigroup[H]):
 
         """
         return cast(
-            AdditiveMonoidElement[H],
+            CommutativeMonoidElement[H],
             self._elements.setdefault(
                 rep,
-                AdditiveMonoidElement(rep, self),
+                CommutativeMonoidElement(rep, self),
             ),
         )

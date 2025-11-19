@@ -44,6 +44,9 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        return f'CommutativeMonoid({str(self._rep)})'
+
     def __mul__(self, n: int | Self) -> Self:
         """
         Repeatedly add a commutative monoid element ``n>=0`` times.

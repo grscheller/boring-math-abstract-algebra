@@ -44,6 +44,9 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
     ) -> None:
         super().__init__(rep, cast(Semigroup[H], algebra))
 
+    def __str__(self) -> str:
+        return f'MonoidElement[[{str(self._rep)}]]'
+
     def __pow__(self, n: int) -> Self:
         """
         Raise the group element to power to the power of ``n>=0``.

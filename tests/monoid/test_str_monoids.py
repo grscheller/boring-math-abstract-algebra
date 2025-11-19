@@ -23,9 +23,11 @@ from boring_math.abstract_algebra.algebras.monoid import Monoid
 
 class AB:
     def __init__(self, ab: str):
-        self._pat = (pat := re.compile('[ab]*'))
+        pat = re.compile('[ab]*')
         if pat.fullmatch(ab) is None:
-            msg = f"Representation string {ab} contains characters other than 'a' or 'b'"
+            msg = (
+                f"Representation string {ab} contains characters other than 'a' or 'b'"
+            )
             raise ValueError(msg)
         rep = ''
         r0, r1 = '0', '1'
@@ -33,7 +35,7 @@ class AB:
         try:
             it = iter(ab)
             r0 = next(it)
-            while (r1 := next(it)):
+            while r1 := next(it):
                 if r0 == r1:
                     n += 1
                     continue
@@ -119,13 +121,15 @@ class TestMonoidAB:
         assert str(ab_alg(AB('bbbabbbbbaaa'))) == "MonoidElement[[AB('baba')]]"
 
         assert ab_alg(AB('baba')) * ab_alg(AB('')) == ab_alg(AB('bbbabbbbbaaa'))
-        assert ab_alg(AB('baaa')) * ab_alg(AB('aabb')) * ab_alg(AB('b')) == ab_alg(AB('bab'))
+        assert ab_alg(AB('baaa')) * ab_alg(AB('aabb')) * ab_alg(AB('b')) == ab_alg(
+            AB('bab')
+        )
         assert ab_alg(AB('')) * ab_alg(AB('')) is ab_alg(AB(''))
         assert ab_alg(AB('')) * ab_alg(AB('abab')) is ab_alg(AB('abab'))
         assert ab_alg(AB('baba')) * ab_alg(AB('')) is ab_alg(AB('bbbabaaa'))
         assert ab_alg(AB('baaa')) * ab_alg(AB('aaababbb')) is ab_alg(AB('ab'))
 
-    def test_mult_int(self) -> None:
+    def test_pow_int(self) -> None:
         zero = ab_alg(AB(''))
         a = ab_alg(AB('a'))
         b = ab_alg(AB('b'))
@@ -138,19 +142,19 @@ class TestMonoidAB:
         assert a**3 == a
 
         assert a() == AB('a')
-        
+
         assert (a * b)() == AB('ab')
 
         assert str(a) == "MonoidElement[[AB('a')]]"
         assert str(ab) == "MonoidElement[[AB('ab')]]"
-        assert str(a*b) == "MonoidElement[[AB('ab')]]"
-        assert str(ab*a) == "MonoidElement[[AB('aba')]]"
+        assert str(a * b) == "MonoidElement[[AB('ab')]]"
+        assert str(ab * a) == "MonoidElement[[AB('aba')]]"
         assert str(ab**2) == "MonoidElement[[AB('abab')]]"
         assert str(ab**0) == "MonoidElement[[AB('')]]"
 
-        assert (a*b)**4 == ab**4
-        assert (a*b)**5 == ab**5
-        assert str((a**3)*(b**2)) == "MonoidElement[[AB('a')]]"
-        assert str(a**3*b**2) == "MonoidElement[[AB('a')]]"
-        assert (a**3)*(b**5) == ab
-        assert b*ab**2 == ba**2 * b == b*a*b*a*b
+        assert (a * b) ** 4 == ab**4
+        assert (a * b) ** 5 == ab**5
+        assert str((a**3) * (b**2)) == "MonoidElement[[AB('a')]]"
+        assert str(a**3 * b**2) == "MonoidElement[[AB('a')]]"
+        assert (a**3) * (b**5) == ab
+        assert b * ab**2 == ba**2 * b == b * a * b * a * b

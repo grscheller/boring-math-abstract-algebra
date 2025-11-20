@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-**Laws for groups.**
+**Actions on groups.**
 
 """
 

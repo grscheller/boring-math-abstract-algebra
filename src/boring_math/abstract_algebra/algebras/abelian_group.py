@@ -73,10 +73,11 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         Multiplying additive group element by an integer ``n>=0``
         is the same as repeated addition.
 
-        :param n: Add abelian group element to itself ``n > 0`` times.
+        :param n: Add abelian group element to itself ``n >= 0`` times.
         :returns: The sum of the group element n times.
         :raises TypeError: if given an element instead of an ``int``.
-        :raises ValueError: If for some reason an add method was not defined on the group.
+        :raises ValueError: If add method was not defined on the group.
+
         """
         if isinstance(n, int):
             if n >= 0:
@@ -109,10 +110,11 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         negate: Callable[[H], H],
     ):
         """
-        :param add: Commutative and associative function ``H X H -> H`` on representations.
+        :param add: Closed, commutative and associative function on reps.
         :param zero: Representation for additive identity.
-        :param negate: Function ``H -> H`` mapping element representation to
-                       the representation of corresponding negated element.
+        :param negate: Function mapping element representation to the
+                       representation of corresponding negated element.
+
         """
         super().__init__(add, zero)
         self._neg = negate

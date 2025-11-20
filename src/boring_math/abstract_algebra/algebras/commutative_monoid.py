@@ -59,7 +59,7 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
         :param n: The number of times to add the element to itself.
         :returns: The element added to its additive identity ``n`` times.
         :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
+        :raises ValueError: If ``self`` and ``other`` are same type but different concrete algebras.
         :raises ValueError: If algebra fails to have an additive identity element.
 
         """
@@ -87,8 +87,8 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         zero: H,
     ):
         """
-        :param add: Commutative and associative function ``H X H -> H`` on representations.
-        :param one: Representation for additive identity.
+        :param add: Closed commutative and associative function reps.
+        :param zero: Representation for additive identity.
         :returns: A commutative monoid algebra.
 
         """

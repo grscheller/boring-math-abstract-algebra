@@ -41,7 +41,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, other: int | Self) -> Self:
+    def __mul__(self, other: object) -> Self:
         """
         Multiply two elements of the same concrete semigroup together.
 
@@ -70,24 +70,24 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
         if isinstance(other, int):
             msg = 'Multiplication by an int on right not defined since addition not defined'
-        else:
-            msg = 'Right multiplication operand not part of the same semigroup of left'
-        raise TypeError(msg)
+            raise TypeError(msg)
+
+        return NotImplemented
 
     def __rmul__(self, other: object) -> Self:
         """
         When left side of multiplication does not know how to multiply right side.
 
         :param other: Left side of the multiplication.
-        :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left side does not know how to multiply the semigroup element.
+        :returns: NotImplemented, otherwise ``left.__mul__(right)`` would have worked.
+        :raises TypeError: When multiplying on left by an int.
 
         """
         if isinstance(other, int):
             msg = 'Multiplication by an int on left not defined since addition not defined'
-        else:
-            msg = 'Left multiplication operand different type than right'
-        raise TypeError(msg)
+            raise TypeError(msg)
+
+        return NotImplemented
 
     def __pow__(self, n: int) -> Self:
         """

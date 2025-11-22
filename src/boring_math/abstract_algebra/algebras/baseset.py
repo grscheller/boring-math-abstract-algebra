@@ -69,10 +69,14 @@ class BaseElement[H: Hashable]:
     def __mul__(self, other: int | Self) -> Self | NotImplementedType:
         return NotImplemented
 
+    def __neg__(self) -> Self:
+        msg = 'Negation not defined on the algebra'
+        raise TypeError(msg)
+
     def __pow__(self, n: int) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __sub__(self) -> Self | NotImplementedType:
+    def __sub__(self, other: Self) -> Self | NotImplementedType:
         return NotImplemented
 
     def __truediv__(self, other: Self) -> Self | NotImplementedType:
@@ -88,6 +92,7 @@ class BaseSet[H: Hashable](ABC):
         self._zero: H | None = None
         self._inv: Callable[[H], H] | None = None
         self._neg: Callable[[H], H] | None = None
+        self._sub: Callable[[H], H] | None = None
 
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]: ...

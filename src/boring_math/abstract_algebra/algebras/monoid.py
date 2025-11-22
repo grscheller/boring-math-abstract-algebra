@@ -51,11 +51,6 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
         """
         Raise the group element to power to the power of ``n>=0``.
 
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
         :param n: The ``int`` power to raise the element to.
         :returns: The element (or its inverse) raised to an ``int`` power.
         :raises TypeError: If ``self`` and ``other`` are different types.

@@ -51,11 +51,6 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
         """
         Repeatedly add a commutative monoid element ``n>=0`` times.
 
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
         :param n: The number of times to add the element to itself.
         :returns: The element added to its additive identity ``n`` times.
         :raises TypeError: If ``self`` and ``other`` are different types.

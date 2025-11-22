@@ -42,7 +42,6 @@ rint = Ring[int](
 # Test above infrastructure
 
 class TestInt:
-    # ints pretend to be singletons
     m: int = 4
     n: int = 5
     assert m == 4
@@ -50,6 +49,7 @@ class TestInt:
     assert m is 3 + 1
     assert n is 6 - 1
 
+    # ints pretend to be singletons
     m = 2*(10000 + 21)
     n = 42 + 2*10000
     assert m == 20042
@@ -63,12 +63,15 @@ class TestRingInt:
         one = rint(1)
         two = rint(2)
         five = rint(5)
+        high_five = rint(5)
 
         assert zero == zero
         assert one == one
         assert five == five
+        assert five == high_five
         assert zero != one
         assert one != five
+        assert five is high_five
 
         big1 = rint(40000 + 42)
         big2 = rint(40040 + 2)
@@ -88,3 +91,57 @@ class TestRingInt:
         assert (two*big4 + two) is big1
         assert (big4 * two) is big3
 
+    def test_ring_operations(self) -> None:
+        neg_one = rint(-1)
+        zero = rint(0)
+        one = rint(1)
+        two = rint(2)
+        three = rint(3)
+        four = rint(4)
+        five = rint(5)
+        nine = rint(9)
+        ten = rint(10)
+
+        x = five + (three * two + neg_one)
+        assert x == ten
+        assert x is ten
+
+        ix = five*two - one
+        assert ix == nine
+        assert ix is nine
+
+        eight = three*four + two*(-two)
+        assert eight == two * four
+        assert eight is two*(one + one)*two + zero
+
+        assert five*five - five == ten*two
+
+    def test_ring_int_operations(self) -> None:
+        zero = rint(0)
+        one = rint(1)
+        two = rint(2)
+        three = rint(3)
+        four = rint(4)
+        five = rint(5)
+        six = rint(6)
+        eight = rint(8)
+        nine = rint(9)
+        ten = rint(10)
+
+        assert 0 * zero is zero
+        assert 0 * three is zero
+        assert 0 * nine is zero
+        assert 42 * zero is zero
+        assert 3 * two is six
+        assert zero * 0 is zero
+        assert ten * 0 is zero
+        assert four * 2 is eight
+        assert four * 1 is four
+
+        assert zero**16 is zero
+        assert five**2 is 5*five
+        assert five**2 is 5*five
+        assert one**42 is one
+
+        assert six**2 - five**2 == three*4 - one
+        assert three**2 + (-four)**2 == five**2

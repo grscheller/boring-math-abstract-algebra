@@ -47,27 +47,6 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def negate(self) -> Self:
-        """
-        Negate the group element.
-
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
-        :returns: The unique additive inverse element to ``self``.
-        :raises ValueError: If algebra fails to have additive inverses.
-
-        """
-        algebra = self._algebra
-        if (negate := algebra._neg) is None:
-            raise ValueError('Algebra addition not negatable')
-        return type(self)(
-            negate(self()),
-            cast(AbelianGroup[H], algebra),
-        )
-
     def __mul__(self, n: Self | int) -> Self:
         """
         Multiplying additive group element by an integer ``n>=0``
@@ -91,7 +70,7 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
                     r, n = add(r, r1), n - 1
                 return cast(Self, algebra(r))
             else:
-                g = (g_neg := self.negate())
+                g = (g_neg := -self)
                 while n < -1:
                     g, n = g + g_neg, n + 1
                 return g
@@ -100,6 +79,27 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)
 
+    def __neg__(self) -> Self:
+        """
+        Negate the abelian group element.
+
+        :returns: The unique additive inverse element to ``self``.
+        :raises ValueError: If algebra fails to have additive inverses.
+
+        """
+        algebra = self._algebra
+        if (negate := algebra._neg) is None:
+            raise ValueError('Algebra addition not negatable')
+        return type(self)(
+            negate(self()),
+            cast(AbelianGroup[H], algebra),
+        )
+
+    def __sub__(self, other: Self) -> Self:
+        if not isinstance(other, type(self)):
+            msg = 'Subtraction defined only between elements of the algebra'
+            raise TypeError(msg)
+        return self + (-other)
 
 class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
 

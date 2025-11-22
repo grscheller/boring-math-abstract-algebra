@@ -45,11 +45,6 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
         """
         Multiply two elements of the same concrete semigroup together.
 
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
         :param other: Another element within the same semigroup.
         :returns: The product ``self * other``.
         :raises TypeError: If ``self`` and ``other`` are different types.

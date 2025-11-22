@@ -45,11 +45,6 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         """
         Add two elements of the same concrete additive semigroup together.
 
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
         :param other: Another element within the same additive semigroup or an ``int``.
         :returns: The sum ``self + other``.
         :raises ValueError: If ``self`` and ``other`` are same type but different concrete additive semigroups.

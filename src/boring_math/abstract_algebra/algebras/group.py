@@ -73,11 +73,6 @@ class GroupElement[H: Hashable](MonoidElement[H]):
         """
         Raise the group element to the power of ``n``.
 
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
         :param n: The ``int`` power to raise the element to.
         :returns: The element (or its inverse) raised to an ``int`` power.
         :raises TypeError: If ``self`` and ``other`` are different types.

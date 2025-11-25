@@ -18,7 +18,6 @@
 =============================== ======================================
 Module                          Description
 =============================== ======================================
-``laws.magmas``                 Laws for magmas.
 ``laws.semigroups``             Laws for semigroups.
 ``laws.commutative_semigroups`` Laws for semigroups.
 ``laws.monoids``                Laws for monoids.

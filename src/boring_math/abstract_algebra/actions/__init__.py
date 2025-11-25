@@ -18,7 +18,6 @@
 ================================== ========================================
 Module                             Description
 ================================== ========================================
-``actions.magmas``                 Actions on magmas.
 ``actions.semigroups``             Actions on semigroups.
 ``actions.commutative_semigroups`` Actions on semigroups.
 ``actions.monoids``                Actions on monoids.

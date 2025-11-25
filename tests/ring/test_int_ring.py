@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Self
 from boring_math.abstract_algebra.algebras.ring import Ring
 
 ## Ring of integers
@@ -136,6 +135,7 @@ class TestRingInt:
         assert zero * 0 is zero
         assert ten * 0 is zero
         assert four * 2 is eight
+        assert four * 3 is ten + two
         assert four * 1 is four
 
         assert zero**16 is zero

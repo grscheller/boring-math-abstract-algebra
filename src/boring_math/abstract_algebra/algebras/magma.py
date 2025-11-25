@@ -123,10 +123,10 @@ class Magma[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         mult: Callable[[H, H], H],
+        process: Callable[[H], H] = lambda h: h,
     ) -> None:
-        super().__init__()
+        super().__init__(process)
         self._mult = mult
-        self._elements: NaturalMapping[H, MagmaElement[H]] = dict()
 
     def __call__(self, rep: H) -> MagmaElement[H]:
         """
@@ -136,4 +136,11 @@ class Magma[H: Hashable](BaseSet[H]):
         :returns: The element with that representation.
  
         """
-        return self._elements.setdefault(rep, MagmaElement(rep, self))
+        rep = self._process(rep)
+        return cast(
+            MagmaElement[H],
+            self._elements.setdefault(
+                rep,
+                MagmaElement(rep, self),
+            ),
+        )

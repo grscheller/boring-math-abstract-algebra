@@ -110,10 +110,10 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         add: Callable[[H, H], H],
+        process: Callable[[H], H] = lambda h: h,
     ) -> None:
-        super().__init__()
+        super().__init__(process=process)
         self._add = add
-        self._elements: NaturalMapping[H, CommutativeSemigroupElement[H]] = dict()
 
     def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """
@@ -123,4 +123,11 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
         :returns: The unique element with that representation.
  
         """
-        return self._elements.setdefault(rep, CommutativeSemigroupElement(rep, self))
+        rep = self._process(rep)
+        return cast(
+            CommutativeSemigroupElement[H],
+            self._elements.setdefault(
+                rep,
+                CommutativeSemigroupElement(rep, self),
+            )
+        )

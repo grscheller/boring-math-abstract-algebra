@@ -48,50 +48,31 @@ class GroupElement[H: Hashable](MonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def invert(self) -> Self:
-        """
-        Invert the group element.
-
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
-
-        :returns: The unique inverse element to ``self``.
-        :raises ValueError: If algebra fails to have invertible elements.
-
-        """
-        algebra = self._algebra
-        if (invert := algebra._inv) is None:
-            raise ValueError('Algebra not invertable')
-        return type(self)(
-            invert(self()),
-            cast(Group[H], algebra),
-        )
-
     def __pow__(self, n: int) -> Self:
         """
         Raise the group element to the power of ``n``.
 
         :param n: The ``int`` power to raise the element to.
         :returns: The element (or its inverse) raised to an ``int`` power.
-        :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises ValueError: If element's algebra 
         :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
         :raises ValueError: If algebra fails to have an identity or elements not invertible.
 
         """
+        algebra = self._algebra
+        if (mult := algebra._mult) is None:
+            raise ValueError('Algebra has no multiplication method')
+        if (one := algebra._one) is None:
+            raise ValueError('Algebra has no multiplicative identity')
+        if (invert := algebra._inv) is None:
+            raise ValueError('Algebra not invertable')
         if n >= 0:
-            algebra = self._algebra
-            if (mult := algebra._mult) is None:
-                raise ValueError('Algebra has no multiplication method')
-            if (one := algebra._one) is None:
-                raise ValueError('Algebra has no multiplicative identity')
             r, r1 = one, self()
             while n > 0:
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
         else:
-            g = (g_inv := self.invert())
+            g = (g_inv := type(self)(invert(self()), cast(Group[H], algebra)))
             while n < -1:
                 g, n = g * g_inv, n + 1
             return g
@@ -103,6 +84,7 @@ class Group[H: Hashable](Monoid[H]):
         mult: Callable[[H, H], H],
         one: H,
         invert: Callable[[H], H],
+        process: Callable[[H], H] = lambda h: h,
     ):
         """
         :param mult: Associative function ``H X H -> H`` on representations.
@@ -112,7 +94,7 @@ class Group[H: Hashable](Monoid[H]):
         :returns: A group algebra.
 
         """
-        super().__init__(mult, one)
+        super().__init__(mult=mult, one=one, process=process)
         self._inv = invert
 
     def __call__(self, rep: H) -> GroupElement[H]:
@@ -123,6 +105,7 @@ class Group[H: Hashable](Monoid[H]):
         :returns: The unique element with that representation.
 
         """
+        rep = self._process(rep)
         return cast(
             GroupElement[H],
             self._elements.setdefault(

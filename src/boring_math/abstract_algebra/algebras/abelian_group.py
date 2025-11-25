@@ -44,6 +44,7 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         self,
         rep: H,
         algebra: 'AbelianGroup[H]',
+        process: Callable[[H], H] = lambda h: h,
     ) -> None:
         super().__init__(rep, algebra)
 
@@ -90,10 +91,7 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         algebra = self._algebra
         if (negate := algebra._neg) is None:
             raise ValueError('Algebra addition not negatable')
-        return type(self)(
-            negate(self()),
-            cast(AbelianGroup[H], algebra),
-        )
+        return cast(Self, algebra(negate(self())))
 
     def __sub__(self, other: Self) -> Self:
         if not isinstance(other, type(self)):
@@ -108,6 +106,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         add: Callable[[H, H], H],
         zero: H,
         negate: Callable[[H], H],
+        process: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed, commutative and associative function on reps.
@@ -116,7 +115,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
                        representation of corresponding negated element.
 
         """
-        super().__init__(add, zero)
+        super().__init__(add=add, zero=zero, process=process)
         self._neg = negate
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
@@ -127,6 +126,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         :returns: The unique element with that representation.
 
         """
+        rep = self._process(rep)
         return cast(
             AbelianGroupElement[H],
             self._elements.setdefault(

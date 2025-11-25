@@ -111,14 +111,14 @@ class Semigroup[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         mult: Callable[[H, H], H],
+        process: Callable[[H], H] = lambda h: h,
     ) -> None:
         """
         :param mult: Associative function ``H X H -> H`` on representations.
         :returns: A semigroup algebra.
         """
-        super().__init__()
+        super().__init__(process=process)
         self._mult = mult
-        self._elements: NaturalMapping[H, SemigroupElement[H]] = dict()
 
     def __call__(self, rep: H) -> SemigroupElement[H]:
         """
@@ -128,4 +128,10 @@ class Semigroup[H: Hashable](BaseSet[H]):
         :returns: The unique element with that representation.
  
         """
-        return self._elements.setdefault(rep, SemigroupElement(rep, self))
+        rep = self._process(rep)
+        return cast(
+            SemigroupElement[H],
+            self._elements.setdefault(
+                rep, SemigroupElement(rep, self),
+            ),
+        )

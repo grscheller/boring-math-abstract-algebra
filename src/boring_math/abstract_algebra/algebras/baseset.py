@@ -38,14 +38,13 @@ class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol)
     def __getitem__(self, key: K) -> V: ...
     def setdefault(self, key: K, default: V) -> V: ...
 
-
 class BaseElement[H: Hashable]:
     def __init__(
         self,
         rep: H,
         algebra: 'BaseSet[H]',
     ) -> None:
-        self._rep = rep
+        self._rep = algebra._process(rep)
         self._algebra = algebra
 
     def __call__(self) -> H:
@@ -85,14 +84,15 @@ class BaseElement[H: Hashable]:
 
 class BaseSet[H: Hashable](ABC):
 
-    def __init__(self) -> None:
+    def __init__(self, process: Callable[[H], H] = lambda h: h) -> None:
         self._mult: Callable[[H, H], H] | None = None
         self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
         self._zero: H | None = None
-        self._inv: Callable[[H], H] | None = None
         self._neg: Callable[[H], H] | None = None
-        self._sub: Callable[[H], H] | None = None
+        self._inv: Callable[[H], H] | None = None
+        self._process: Callable[[H], H] = process
+        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
 
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]: ...
@@ -111,3 +111,6 @@ class BaseSet[H: Hashable](ABC):
         if isinstance(other, type(self)):
             return self is other
         return NotImplemented
+
+    def process(self, rep: H) -> H:
+        return self._process(rep)

@@ -13,89 +13,46 @@
 # limitations under the License.
 
 """
-.. admonition:: Ring
+.. admonition:: Field
 
-    Mathematically a Ring is an abelian group under addition and a
-    Monoid under multiplication. The additive and multiplicative
-    identities are denoted ``one`` and ``zero`` respectfully.
+    Mathematically a Field is a Commutative Ring all whose non-zero elements
+    have multiplicative inverses.
 
     By convention ``one != zero``, otherwise the algebra consists
     of just one unique element.
 
 .. important::
 
-    **Contract:** Ring initializer parameters must have
+    **Contract:** Field initializer parameters must have
 
     - **add** closed, commutative and associative on reps
-    - **mult** closed and associative on reps
+    - **mult** closed, commutative and associative on reps
     - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
     - **one** an identity on reps, ``rep*one == rep == one*rep``
+    - **inv** is the mult inverse function on all non-zero reps
     - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
-    - **zero** ``!=`` **one**
+    - **invert** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
+    - **zero** ``!=`` **one** (by convention)
 
 """
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
-from .abelian_group import AbelianGroup, AbelianGroupElement
+from .ring import Ring, RingElement
 
 __all__ = ['Ring', 'RingElement']
 
 
-class RingElement[H: Hashable](AbelianGroupElement[H]):
+class FieldElement[H: Hashable](RingElement[H]):
     def __init__(
         self,
         rep: H,
-        algebra: 'Ring[H]',
+        algebra: 'Field[H]',
     ) -> None:
-        super().__init__(rep, cast(AbelianGroup[H], algebra))
+        super().__init__(rep, cast(Ring[H], algebra))
 
     def __str__(self) -> str:
-        return f'RingElement[[{str(self._rep)}]]'
-
-    def __mul__(self, other: object) -> Self:
-        """
-        TODO: Fix docstring!
-
-        Multiplying ring element by an integer ``n>=0`` is the
-        same as repeated addition.
-
-        :param n: Add abelian group element to itself ``n >= 0`` times.
-        :returns: The sum of the group element n times.
-        :raises TypeError: if given an element instead of an ``int``.
-        :raises ValueError: If add method was not defined on the group.
-
-        """
-        if isinstance(other, int):
-            return super().__mul__(other)
-
-        if isinstance(other, type(self)):
-            algebra = self._algebra
-            if algebra is other._algebra:
-                if (mult := algebra._mult) is not None:
-                    return cast(Self, algebra(mult(self(), other())))
-                else:
-                    msg = 'Multiplication not defined on the algebra of the elements'
-                    raise ValueError(msg)
-            else:
-                msg = 'Multiplication must be between elements of the same concrete algebra'
-                raise ValueError(msg)
-
-        return NotImplemented
-
-    def __rmul__(self, other: object) -> Self:
-        """
-        When left side of multiplication does not know how to multiply right side.
-
-        :param other: Left side of the multiplication.
-        :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left side does not know how to multiply the semigroup element.
-
-        """
-        if isinstance(other, int):
-            return self.__mul__(other)
-
-        return NotImplemented
+        return f'FieldElement[[{str(self._rep)}]]'
 
     def __pow__(self, n: int) -> Self:
         """
@@ -113,28 +70,34 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
         :raises ValueError: If algebra fails to have an identity element.
 
         """
+        algebra = self._algebra
+        if (mult := algebra._mult) is None:
+            raise ValueError('Algebra has no multiplication method')
+        if (one := algebra._one) is None:
+            raise ValueError('Algebra has no multiplicative identity')
+        if (invert := algebra._inv) is None:
+            raise ValueError('Algebra not invertable')
         if n >= 0:
-            algebra = self._algebra
-            if (mult := algebra._mult) is None:
-                raise ValueError('Algebra has no multiplication method')
-            if (one := algebra._one) is None:
-                raise ValueError('Algebra has no multiplicative identity')
             r, r1 = one, self()
             while n > 0:
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
-        msg = f'For a Ring n>=0, but n={n} was given'
-        raise ValueError(msg)
+        else:
+            g = (g_inv := type(self)(invert(self()), cast(Field[H], algebra)))
+            while n < -1:
+                g, n = g * g_inv, n + 1
+            return g
 
 
-class Ring[H: Hashable](AbelianGroup[H]):
+class Field[H: Hashable](Ring[H]):
     def __init__(
         self,
-        add: Callable[[H, H], H],
         mult: Callable[[H, H], H],
+        add: Callable[[H, H], H],
         one: H,
         zero: H,
         negate: Callable[[H], H],
+        invert: Callable[[H], H],
         process: Callable[[H], H] = lambda h: h,
     ):
         """
@@ -144,13 +107,21 @@ class Ring[H: Hashable](AbelianGroup[H]):
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
+        :param invert: Function mapping non-zero element representations
+                       to their multiplicative inverses.
 
         """
-        super().__init__(add=add, zero=zero, negate=negate, process=process)
-        self._mult = mult
-        self._one = one
+        super().__init__(
+            mult=mult,
+            add=add,
+            one=one,
+            zero=zero,
+            negate=negate,
+            process=process,
+        )
+        self._inv = invert
 
-    def __call__(self, rep: H) -> RingElement[H]:
+    def __call__(self, rep: H) -> FieldElement[H]:
         """
         Add the unique element to the ring with a given rep.
 
@@ -160,9 +131,9 @@ class Ring[H: Hashable](AbelianGroup[H]):
         """
         rep = self._process(rep)
         return cast(
-            RingElement[H],
+            FieldElement[H],
             self._elements.setdefault(
                 rep,
-                RingElement(rep, self),
+                FieldElement(rep, self),
             ),
         )

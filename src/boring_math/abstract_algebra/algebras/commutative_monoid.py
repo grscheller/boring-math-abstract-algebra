@@ -58,9 +58,9 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
         :raises ValueError: If algebra fails to have an additive identity element.
 
         """
+        algebra = self._algebra
         if isinstance(n, int):
             if n >= 0:
-                algebra = self._algebra
                 if (add := algebra._add) is None:
                     raise ValueError('Algebra has no add method')
                 if (zero := algebra._zero) is None:
@@ -71,7 +71,10 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
                 return cast(Self, algebra(r))
             msg = f'For an Commutative Monoid n>=0, but n={n} was given'
             raise ValueError(msg)
-        raise ValueError('Element multiplication not defined on algebra')
+        if isinstance(n, type(self)):
+            if algebra._mult is None:
+                raise ValueError('Element multiplication not defined on algebra')
+        return NotImplemented
 
 
 class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
@@ -80,6 +83,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         self,
         add: Callable[[H, H], H],
         zero: H,
+        process: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -87,7 +91,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         :returns: A commutative monoid algebra.
 
         """
-        super().__init__(add=add)
+        super().__init__(add=add, process=process)
         self._zero = zero
 
     def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
@@ -98,6 +102,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         :returns: The unique element with that representation.
 
         """
+        rep = self._process(rep)
         return cast(
             CommutativeMonoidElement[H],
             self._elements.setdefault(

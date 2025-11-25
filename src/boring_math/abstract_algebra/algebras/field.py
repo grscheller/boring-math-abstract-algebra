@@ -15,8 +15,8 @@
 """
 .. admonition:: Field
 
-    Mathematically a Field is a Commutative Ring all whose non-zero elements
-    have multiplicative inverses.
+    Mathematically a Field is a Commutative Ring all whose non-zero
+    elements have multiplicative inverses.
 
     By convention ``one != zero``, otherwise the algebra consists
     of just one unique element.
@@ -38,18 +38,18 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
-from .ring import Ring, RingElement
+from .commutative_ring import CommutativeRing, CommutativeRingElement
 
-__all__ = ['Ring', 'RingElement']
+__all__ = ['Field', 'FieldElement']
 
 
-class FieldElement[H: Hashable](RingElement[H]):
+class FieldElement[H: Hashable](CommutativeRingElement[H]):
     def __init__(
         self,
         rep: H,
         algebra: 'Field[H]',
     ) -> None:
-        super().__init__(rep, cast(Ring[H], algebra))
+        super().__init__(rep, cast(CommutativeRing[H], algebra))
 
     def __str__(self) -> str:
         return f'FieldElement[[{str(self._rep)}]]'
@@ -84,7 +84,7 @@ class FieldElement[H: Hashable](RingElement[H]):
             return g
 
 
-class Field[H: Hashable](Ring[H]):
+class Field[H: Hashable](CommutativeRing[H]):
     def __init__(
         self,
         mult: Callable[[H, H], H],

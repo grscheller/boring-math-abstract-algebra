@@ -28,7 +28,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
-from .baseset import BaseSet, BaseElement, NaturalMapping
+from .baseset import BaseSet, BaseElement
 
 __all__ = ['Semigroup', 'SemigroupElement']
 

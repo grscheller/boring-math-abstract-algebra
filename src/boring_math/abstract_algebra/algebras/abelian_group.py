@@ -75,6 +75,7 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
                 while n < -1:
                     g, n = g + g_neg, n + 1
                 return g
+
         raise TypeError('Element multiplication not defined on algebra')
 
     def __rmul__(self, n: int) -> Self:

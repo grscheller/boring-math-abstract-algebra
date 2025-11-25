@@ -28,8 +28,8 @@
 
     - **add** closed, commutative and associative on reps
     - **mult** closed and associative on reps
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
     - **one** an identity on reps, ``rep*one == rep == one*rep``
+    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
     - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
     - **zero** ``!=`` **one**
 
@@ -55,15 +55,16 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
     def __mul__(self, other: object) -> Self:
         """
-        TODO: Fix docstring!
+        Multiplication ``*`` operator.
 
-        Multiplying ring element by an integer ``n>=0`` is the
-        same as repeated addition.
+        - Multiplying element by an integer ``n>=0`` is repeated addition.
+        - Algebra mult if ``other`` is a member of the same concrete algebra.
+        - Otherwise return ``NotImplemented`` (for a right action)
 
-        :param n: Add abelian group element to itself ``n >= 0`` times.
-        :returns: The sum of the group element n times.
-        :raises TypeError: if given an element instead of an ``int``.
-        :raises ValueError: If add method was not defined on the group.
+        :param other: Add element to itself ``n >= 0`` times.
+        :returns: The sum of the element n times.
+        :raises ValueError: if given an element instead of an ``int``.
+        :raises ValueError: If add method was not defined on the algebra.
 
         """
         if isinstance(other, int):
@@ -75,7 +76,7 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
                 if (mult := algebra._mult) is not None:
                     return cast(Self, algebra(mult(self(), other())))
                 else:
-                    msg = 'Multiplication not defined on the algebra of the elements'
+                    msg = 'Multiplication not defined on the algebra'
                     raise ValueError(msg)
             else:
                 msg = 'Multiplication must be between elements of the same concrete algebra'
@@ -87,9 +88,9 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
         """
         When left side of multiplication does not know how to multiply right side.
 
-        :param other: Left side of the multiplication.
-        :returns: Never returns, otherwise ``left.__mul__(right)`` would have worked.
-        :raises TypeError: When left side does not know how to multiply the semigroup element.
+        - Multiplying element by an integer ``n>=0`` is repeated addition.
+        - If ``other`` not member of same concrete algebra or left mult would of worked.
+        - Otherwise return ``NotImplemented`` (for a left action)
 
         """
         if isinstance(other, int):
@@ -99,18 +100,13 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise the group element to power to the power of ``n>=0``.
-
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
+        Raise element to power to the ``int`` power of ``n>=0``.
 
         :param n: The ``int`` power to raise the element to.
-        :returns: The element (or its inverse) raised to an ``int`` power.
-        :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete algebras.
-        :raises ValueError: If algebra fails to have an identity element.
+        :returns: The element  raised to a non-negative ``int`` power.
+        :raises ValueError: If algebra is not multiplicative.
+        :raises ValueError: If algebra does not have a multiplicative identity element.
+        :raises ValueError: If ``n < 0``.
 
         """
         if n >= 0:
@@ -123,6 +119,7 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
             while n > 0:
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
+
         msg = f'For a Ring n>=0, but n={n} was given'
         raise ValueError(msg)
 

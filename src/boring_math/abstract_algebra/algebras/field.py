@@ -27,11 +27,11 @@
 
     - **add** closed, commutative and associative on reps
     - **mult** closed, commutative and associative on reps
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
     - **one** an identity on reps, ``rep*one == rep == one*rep``
+    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
     - **inv** is the mult inverse function on all non-zero reps
-    - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
-    - **invert** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
+    - **negate** function to negate all proper rep values
+    - **invert** function to invert all proper rep values
     - **zero** ``!=`` **one** (by convention)
 
 """
@@ -56,18 +56,13 @@ class FieldElement[H: Hashable](RingElement[H]):
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise the group element to power to the power of ``n>=0``.
-
-        .. note::
-
-            Have added some runtime type checking so that developers
-            do not have to totally depend on their typing tooling.
+        Raise the element to the ``int`` power of ``n``.
 
         :param n: The ``int`` power to raise the element to.
         :returns: The element (or its inverse) raised to an ``int`` power.
-        :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete algebras.
-        :raises ValueError: If algebra fails to have an identity element.
+        :raises ValueError: If algebra is not multiplicative.
+        :raises ValueError: If algebra does not have a multiplicative identity element.
+        :raises ValueError: If algebra is not mult invertible.
 
         """
         algebra = self._algebra

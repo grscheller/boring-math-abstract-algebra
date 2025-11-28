@@ -14,61 +14,27 @@
 
 import numpy as np
 import numpy.typing as npt
-from typing import Annotated, Any, Literal
+from typing import Annotated, Literal
 from boring_math.abstract_algebra.algebras.commutative_semigroup import CommutativeSemigroup
+from pythonic_fp.numpy.hwrap import HWrapNDArray
 
-## Infrastructure setup
-
-
-class HashableNDArrayWrapper:
-    __slots__ = '_ndarray', '_array', '_hash', '_shape'
-
-    def __init__(self, ndarray: npt.NDArray[Any]) -> None:
-        self._ndarray = np.array(ndarray, copy=True)
-        self._ndarray.setflags(write=False)
-        self._hash = hash(
-            (
-                self._ndarray.tobytes(),
-                hash((self._ndarray.shape, self._ndarray.dtype)),
-            )
-        )
-
-    def __call__(self) -> npt.NDArray[Any]:
-        return np.array(self._ndarray, copy=True)
-
-    def __hash__(self) -> int:
-        return self._hash
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, HashableNDArrayWrapper):
-            return NotImplemented
-        if (
-            self._ndarray.shape != other._ndarray.shape
-            or self._ndarray.dtype != other._ndarray.dtype
-        ):
-            return False
-        return np.array_equal(self._ndarray, other._ndarray)
-
-
-## Implementation
-
-type I64_3x3 = Annotated[HashableNDArrayWrapper[npt.NDArray[np.int64]], Literal[3, 3]]
+type I64_3x3 = Annotated[HWrapNDArray[npt.NDArray[np.int64]], Literal[3, 3]]
 
 
 def matrix_mult(left: I64_3x3, right: I64_3x3) -> I64_3x3:
-    return HashableNDArrayWrapper(left() + right())
+    return HWrapNDArray(left() + right())
 
 
 m3x3 = CommutativeSemigroup[I64_3x3](add=matrix_mult)
 
-np_eye = HashableNDArrayWrapper(np.eye(3, dtype=np.int64))
-np_zero = HashableNDArrayWrapper(np.zeros((3, 3), dtype=np.int64))
-np_A = HashableNDArrayWrapper(np.array([[5, -1, 0], [0, 2, 1], [1, 3, 1]], dtype=np.int64))
-np_B = HashableNDArrayWrapper(np.array([[2, -1, 1], [1, 2 ,0], [2, 3, -1]], dtype=np.int64))
-np_C = HashableNDArrayWrapper(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
-np_D = HashableNDArrayWrapper(np.array([[2, -1, 0], [-1, 0, 0], [0, 0, 0]], dtype=np.int64))
-np_E = HashableNDArrayWrapper(np.array([[-1, 1, 0], [1, 1, 0], [0, 0, 1]], dtype=np.int64))
-np_F = HashableNDArrayWrapper(np.array([[7, -2, 1], [1, 4, 1], [3, 6, 0]], dtype=np.int64))
+np_eye = HWrapNDArray(np.eye(3, dtype=np.int64))
+np_zero = HWrapNDArray(np.zeros((3, 3), dtype=np.int64))
+np_A = HWrapNDArray(np.array([[5, -1, 0], [0, 2, 1], [1, 3, 1]], dtype=np.int64))
+np_B = HWrapNDArray(np.array([[2, -1, 1], [1, 2 ,0], [2, 3, -1]], dtype=np.int64))
+np_C = HWrapNDArray(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
+np_D = HWrapNDArray(np.array([[2, -1, 0], [-1, 0, 0], [0, 0, 0]], dtype=np.int64))
+np_E = HWrapNDArray(np.array([[-1, 1, 0], [1, 1, 0], [0, 0, 1]], dtype=np.int64))
+np_F = HWrapNDArray(np.array([[7, -2, 1], [1, 4, 1], [3, 6, 0]], dtype=np.int64))
 
 
 Eye = m3x3(np_eye)
@@ -102,7 +68,7 @@ class Test_bool3:
         assert A + B is F
 
     def test_create(self) -> None:
-        np_see = HashableNDArrayWrapper(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
+        np_see = HWrapNDArray(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
         See = m3x3(np_see)
         assert See == C
         assert See is C

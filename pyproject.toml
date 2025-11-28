@@ -32,6 +32,7 @@ Source = "https://github.com/grscheller/boring-math-abstract-algebra"
 test = [
   "pytest>=8.4.1",
   "numpy>=2.3.4",
+  "pythonic-fp-numpy>=0.1.0",
 ]
 
 [build-system]

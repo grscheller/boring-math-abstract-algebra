@@ -15,24 +15,24 @@
 import numpy as np
 import numpy.typing as npt
 from boring_math.abstract_algebra.algebras.semigroup import Semigroup
-from pythonic_fp.numpy.hwrap import HWrapNDArray
+from pythonic_fp.numpy.hashable_wrapped_ndarray import HWrapNDArrayNumber as HWrap
 
-type I32_2x2 = HWrapNDArray[npt.NDArray[np.int32]]
+type I32_2x2 = HWrap[npt.NDArray[np.int32]]
 
 
 def matrix_mult(left: I32_2x2, right: I32_2x2) -> I32_2x2:
-    return HWrapNDArray(left() @ right())
+    return HWrap(left() @ right())
 
 
 m2x2 = Semigroup[I32_2x2](mult=matrix_mult)
 
-np_eye = HWrapNDArray(np.eye(2, dtype=np.int32))
-np_zero = HWrapNDArray(np.zeros((2, 2), dtype=np.int32))
-np_A = HWrapNDArray(np.array([[5, -1], [0, 2]], dtype=np.int32))
-np_B = HWrapNDArray(np.array([[2, -1], [-1, 2]], dtype=np.int32))
-np_C = HWrapNDArray(np.array([[1, 1], [1, 1]], dtype=np.int32))
-np_D = HWrapNDArray(np.array([[0, 1], [1, 0]], dtype=np.int32))
-np_E = HWrapNDArray(np.array([[11, -7], [-2, 4]], dtype=np.int32))
+np_eye = HWrap(np.eye(2, dtype=np.int32))
+np_zero = HWrap(np.zeros((2, 2), dtype=np.int32))
+np_A = HWrap(np.array([[5, -1], [0, 2]], dtype=np.int32))
+np_B = HWrap(np.array([[2, -1], [-1, 2]], dtype=np.int32))
+np_C = HWrap(np.array([[1, 1], [1, 1]], dtype=np.int32))
+np_D = HWrap(np.array([[0, 1], [1, 0]], dtype=np.int32))
+np_E = HWrap(np.array([[11, -7], [-2, 4]], dtype=np.int32))
 
 
 Eye = m2x2(np_eye)
@@ -66,7 +66,7 @@ class Test_bool3:
         assert A * B is E
 
     def test_create(self) -> None:
-        np_see = HWrapNDArray(np.array([[1, 1], [1, 1]], dtype=np.int32))
+        np_see = HWrap(np.array([[1, 1], [1, 1]], dtype=np.int32))
         See = m2x2(np_see)
         assert See == C
         assert See is C

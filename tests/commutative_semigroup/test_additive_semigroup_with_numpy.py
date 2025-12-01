@@ -15,25 +15,25 @@
 import numpy as np
 import numpy.typing as npt
 from boring_math.abstract_algebra.algebras.commutative_semigroup import CommutativeSemigroup
-from pythonic_fp.numpy.hwrap import HWrapNDArrayFloat64
+from pythonic_fp.numpy.hashable_wrapped_ndarray import HWrapNDArrayNumber as HWrap
 
-type I64_3x3 = HWrapNDArrayFloat64[npt.NDArray[np.int64]]
+type I64_3x3 = HWrap[npt.NDArray[np.int64]]
 
 
 def matrix_add(left: I64_3x3, right: I64_3x3) -> I64_3x3:
-    return HWrapNDArrayFloat64(left() + right())
+    return HWrap(left() + right())
 
 
 m3x3 = CommutativeSemigroup[I64_3x3](add=matrix_add)
 
-np_eye = HWrapNDArrayFloat64(np.eye(3, dtype=np.int64))
-np_zero = HWrapNDArrayFloat64(np.zeros((3, 3), dtype=np.int64))
-np_A = HWrapNDArrayFloat64(np.array([[5, -1, 0], [0, 2, 1], [1, 3, 1]], dtype=np.int64))
-np_B = HWrapNDArrayFloat64(np.array([[2, -1, 1], [1, 2 ,0], [2, 3, -1]], dtype=np.int64))
-np_C = HWrapNDArrayFloat64(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
-np_D = HWrapNDArrayFloat64(np.array([[2, -1, 0], [-1, 0, 0], [0, 0, 0]], dtype=np.int64))
-np_E = HWrapNDArrayFloat64(np.array([[-1, 1, 0], [1, 1, 0], [0, 0, 1]], dtype=np.int64))
-np_F = HWrapNDArrayFloat64(np.array([[7, -2, 1], [1, 4, 1], [3, 6, 0]], dtype=np.int64))
+np_eye = HWrap(np.eye(3, dtype=np.int64))
+np_zero = HWrap(np.zeros((3, 3), dtype=np.int64))
+np_A = HWrap(np.array([[5, -1, 0], [0, 2, 1], [1, 3, 1]], dtype=np.int64))
+np_B = HWrap(np.array([[2, -1, 1], [1, 2 ,0], [2, 3, -1]], dtype=np.int64))
+np_C = HWrap(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
+np_D = HWrap(np.array([[2, -1, 0], [-1, 0, 0], [0, 0, 0]], dtype=np.int64))
+np_E = HWrap(np.array([[-1, 1, 0], [1, 1, 0], [0, 0, 1]], dtype=np.int64))
+np_F = HWrap(np.array([[7, -2, 1], [1, 4, 1], [3, 6, 0]], dtype=np.int64))
 
 
 Eye = m3x3(np_eye)
@@ -67,7 +67,7 @@ class Test_bool3:
         assert A + B is F
 
     def test_create(self) -> None:
-        np_see = HWrapNDArrayFloat64(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
+        np_see = HWrap(np.array([[1, 1, -4], [1, 1, 5], [42, 0, -2]], dtype=np.int64))
         See = m3x3(np_see)
         assert See == C
         assert See is C

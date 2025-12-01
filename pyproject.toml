@@ -6,7 +6,6 @@ requires-python = ">=3.13"
 license = { file = "LICENSE" }
 authors = [{ name = "Geoffrey R. Scheller", email = "geoffrey@scheller.com" }]
 keywords = [
-  "protocols",
   "algebra",
   "abstract algebra",
 ]

@@ -14,6 +14,10 @@ See [Semantic Versioning 2.0.0](https://semver.org).
 
 ## Releases and Important Milestones
 
+### Released PyPI version 0.1.0 - 2025-12-01
+
+Suspect I am off with my test dependencies in pyproject.toml
+
 ### Update - 2025-11-08
 
 - elements

@@ -34,6 +34,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
+from pythonic_fp.fptools.function import compose
 from .commutative_monoid import CommutativeMonoid, CommutativeMonoidElement
 
 __all__ = ['AbelianGroup', 'AbelianGroupElement']
@@ -44,7 +45,6 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         self,
         rep: H,
         algebra: 'AbelianGroup[H]',
-        process: Callable[[H], H] = lambda h: h,
     ) -> None:
         super().__init__(rep, algebra)
 
@@ -107,7 +107,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         add: Callable[[H, H], H],
         zero: H,
         negate: Callable[[H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed, commutative and associative function on reps.
@@ -116,8 +116,8 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
                        representation of corresponding negated element.
 
         """
-        super().__init__(add=add, zero=zero, process=process)
-        self._neg = negate
+        super().__init__(add=add, zero=zero, narrow=narrow)
+        self._neg = compose(negate, narrow)
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
         """
@@ -127,7 +127,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             AbelianGroupElement[H],
             self._elements.setdefault(

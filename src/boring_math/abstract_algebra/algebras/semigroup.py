@@ -28,6 +28,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
+from pythonic_fp.fptools.function import compose, partial
 from .baseset import BaseSet, BaseElement
 
 __all__ = ['Semigroup', 'SemigroupElement']
@@ -111,14 +112,14 @@ class Semigroup[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         mult: Callable[[H, H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ) -> None:
         """
         :param mult: Associative function ``H X H -> H`` on representations.
         :returns: A semigroup algebra.
         """
-        super().__init__(process=process)
-        self._mult = mult
+        super().__init__(narrow=narrow)
+        self._mult = lambda left, right: compose(partial(mult, left), narrow)(right)
 
     def __call__(self, rep: H) -> SemigroupElement[H]:
         """
@@ -128,7 +129,7 @@ class Semigroup[H: Hashable](BaseSet[H]):
         :returns: The unique element with that representation.
  
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             SemigroupElement[H],
             self._elements.setdefault(

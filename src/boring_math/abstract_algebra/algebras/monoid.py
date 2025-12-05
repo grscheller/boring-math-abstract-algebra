@@ -77,7 +77,7 @@ class Monoid[H: Hashable](Semigroup[H]):
         self,
         mult: Callable[[H, H], H],
         one: H,
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param mult: Associative function ``H X H -> H`` on representations.
@@ -85,8 +85,8 @@ class Monoid[H: Hashable](Semigroup[H]):
         :returns: A monoid algebra.
 
         """
-        super().__init__(mult=mult, process=process)
-        self._one = one
+        super().__init__(mult=mult, narrow=narrow)
+        self._one = narrow(one)
 
     def __call__(self, rep: H) -> MonoidElement[H]:
         """
@@ -96,7 +96,7 @@ class Monoid[H: Hashable](Semigroup[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             MonoidElement[H],
             self._elements.setdefault(

@@ -38,13 +38,14 @@ class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol)
     def __getitem__(self, key: K) -> V: ...
     def setdefault(self, key: K, default: V) -> V: ...
 
+
 class BaseElement[H: Hashable]:
     def __init__(
         self,
         rep: H,
         algebra: 'BaseSet[H]',
     ) -> None:
-        self._rep = algebra._process(rep)
+        self._rep = algebra._narrow(rep)
         self._algebra = algebra
 
     def __call__(self) -> H:
@@ -54,12 +55,27 @@ class BaseElement[H: Hashable]:
         return self._rep
 
     def __eq__(self, other: object) -> bool:
+        """
+        Compares if two elements, not necessarily in the same concrete
+        algebra, contain the same narrowed representations.
+
+        .. warning::
+
+            Any sort of difference in rep narrowing is not taken into
+            consideration.
+
+        :param other: Object to be compared with.
+        :returns: True if both are elements and the reps compare as equal
+                  and are of the same invariant type.
+
+        """
         if not isinstance(other, type(self)):
             return False
         if self is other:
             return True
-        if self() == other():
-            return True
+        if (rep_self := self()) == (rep_other := other()):
+            if type(rep_self) is type(rep_other):
+                return True
         return False
 
     def __add__(self, other: Self) -> Self | NotImplementedType:
@@ -68,12 +84,12 @@ class BaseElement[H: Hashable]:
     def __mul__(self, other: int | Self) -> Self | NotImplementedType:
         return NotImplemented
 
+    def __pow__(self, n: int) -> Self | NotImplementedType:
+        return NotImplemented
+
     def __neg__(self) -> Self:
         msg = 'Negation not defined on the algebra'
         raise TypeError(msg)
-
-    def __pow__(self, n: int) -> Self | NotImplementedType:
-        return NotImplemented
 
     def __sub__(self, other: Self) -> Self | NotImplementedType:
         return NotImplemented
@@ -83,34 +99,31 @@ class BaseElement[H: Hashable]:
 
 
 class BaseSet[H: Hashable](ABC):
-
-    def __init__(self, process: Callable[[H], H] = lambda h: h) -> None:
+    def __init__(self, narrow: Callable[[H], H] = lambda h: h) -> None:
+        self._narrow: Callable[[H], H] = narrow
+        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
         self._mult: Callable[[H, H], H] | None = None
         self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
         self._zero: H | None = None
         self._neg: Callable[[H], H] | None = None
         self._inv: Callable[[H], H] | None = None
-        self._process: Callable[[H], H] = process
-        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
 
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]: ...
 
     def __eq__(self, other: object) -> bool:
         """
-        .. warning::
-
-            API subject to change. Might want to make this
-            some sort of comparison.
+        Compare if two algebras are the same concrete algebra.
 
         :param other: Object being compared to.
-        :returns: ``self is other`` if other same type of algebra, otherwise NotImplemented.
+        :returns: True only if other is same concrete algebra, False if
+                  a different concrete algebra, otherwise NotImplemented.
 
         """
         if isinstance(other, type(self)):
             return self is other
         return NotImplemented
 
-    def process(self, rep: H) -> H:
-        return self._process(rep)
+    def narrow(self, rep: H) -> H:
+        return self._narrow(rep)

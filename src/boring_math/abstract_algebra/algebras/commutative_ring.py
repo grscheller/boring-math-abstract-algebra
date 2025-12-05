@@ -58,7 +58,7 @@ class CommutativeRing[H: Hashable](Ring[H]):
         one: H,
         zero: H,
         negate: Callable[[H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -70,7 +70,7 @@ class CommutativeRing[H: Hashable](Ring[H]):
 
         """
         super().__init__(
-            add=add, mult=mult, one=one, zero=zero, negate=negate, process=process
+            add=add, mult=mult, one=one, zero=zero, negate=negate, narrow=narrow
         )
 
     def __call__(self, rep: H) -> CommutativeRingElement[H]:
@@ -81,7 +81,7 @@ class CommutativeRing[H: Hashable](Ring[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             CommutativeRingElement[H],
             self._elements.setdefault(

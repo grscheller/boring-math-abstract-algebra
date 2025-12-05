@@ -37,6 +37,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
+from pythonic_fp.fptools.function import compose, partial
 from .abelian_group import AbelianGroup, AbelianGroupElement
 
 __all__ = ['Ring', 'RingElement']
@@ -132,7 +133,7 @@ class Ring[H: Hashable](AbelianGroup[H]):
         one: H,
         zero: H,
         negate: Callable[[H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -143,9 +144,9 @@ class Ring[H: Hashable](AbelianGroup[H]):
                        representation of corresponding negated element.
 
         """
-        super().__init__(add=add, zero=zero, negate=negate, process=process)
-        self._mult = mult
-        self._one = one
+        super().__init__(add=add, zero=zero, negate=negate, narrow=narrow)
+        self._mult = lambda left, right: compose(partial(mult, left), narrow)(right)
+        self._one = narrow(one)
 
     def __call__(self, rep: H) -> RingElement[H]:
         """
@@ -155,7 +156,7 @@ class Ring[H: Hashable](AbelianGroup[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             RingElement[H],
             self._elements.setdefault(

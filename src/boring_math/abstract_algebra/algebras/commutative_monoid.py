@@ -83,7 +83,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         self,
         add: Callable[[H, H], H],
         zero: H,
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -91,8 +91,8 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         :returns: A commutative monoid algebra.
 
         """
-        super().__init__(add=add, process=process)
-        self._zero = zero
+        super().__init__(add=add, narrow=narrow)
+        self._zero = narrow(zero)
 
     def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
         """
@@ -102,7 +102,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             CommutativeMonoidElement[H],
             self._elements.setdefault(

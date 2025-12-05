@@ -28,6 +28,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
+from pythonic_fp.fptools.function import compose, partial
 from .baseset import BaseSet, BaseElement
 
 __all__ = ['CommutativeSemigroup', 'CommutativeSemigroupElement']
@@ -106,28 +107,27 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
 
 
 class CommutativeSemigroup[H: Hashable](BaseSet[H]):
-
     def __init__(
         self,
         add: Callable[[H, H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ) -> None:
-        super().__init__(process=process)
-        self._add = add
+        super().__init__(narrow=narrow)
+        self._add = lambda left, right: compose(partial(add, left), narrow)(right)
 
     def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """
         Add the unique element to the additive semigroup with a given rep.
- 
+
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.
- 
+
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             CommutativeSemigroupElement[H],
             self._elements.setdefault(
                 rep,
                 CommutativeSemigroupElement(rep, self),
-            )
+            ),
         )

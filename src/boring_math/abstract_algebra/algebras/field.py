@@ -38,6 +38,7 @@
 
 from collections.abc import Callable, Hashable
 from typing import Self, cast
+from pythonic_fp.fptools.function import compose
 from .commutative_ring import CommutativeRing, CommutativeRingElement
 
 __all__ = ['Field', 'FieldElement']
@@ -93,7 +94,7 @@ class Field[H: Hashable](CommutativeRing[H]):
         zero: H,
         negate: Callable[[H], H],
         invert: Callable[[H], H],
-        process: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] = lambda h: h,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -112,9 +113,9 @@ class Field[H: Hashable](CommutativeRing[H]):
             one=one,
             zero=zero,
             negate=negate,
-            process=process,
+            narrow=narrow,
         )
-        self._inv = invert
+        self._inv = compose(invert, narrow)
 
     def __call__(self, rep: H) -> FieldElement[H]:
         """
@@ -124,7 +125,7 @@ class Field[H: Hashable](CommutativeRing[H]):
         :returns: The unique element with that representation.
 
         """
-        rep = self._process(rep)
+        rep = self._narrow(rep)
         return cast(
             FieldElement[H],
             self._elements.setdefault(

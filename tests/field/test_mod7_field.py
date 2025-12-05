@@ -17,7 +17,7 @@ from boring_math.abstract_algebra.algebras.field import Field
 ## Finite field of seven elements
 
 # Restricts int type to just {0, 1, 2, 3, 4, 5, 6}
-def process(m: int) -> int:
+def narrow(m: int) -> int:
     return m % 7
 
 
@@ -64,7 +64,7 @@ class TestFieldMod7:
             zero=0,
             negate=negate,
             invert=invert,
-            process=process,
+            narrow=narrow,
         )
 
         zero = fmod7(0)
@@ -108,7 +108,7 @@ class TestFieldMod7:
             zero=0,
             negate=negate,
             invert=invert,
-            process=process,
+            narrow=narrow,
         )
 
         zero = fmod7(0)
@@ -144,7 +144,7 @@ class TestFieldMod7:
             zero=0,
             negate=negate,
             invert=invert,
-            process=process,
+            narrow=narrow,
         )
 
         zero = fmod7(0)

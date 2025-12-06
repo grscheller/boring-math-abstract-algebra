@@ -42,6 +42,12 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = CommutativeSemigroupElement<rep>
+        """
+        return f'CommutativeSemigroupElement<{str(self._rep)}>'
+
     def __add__(self, other: int | Self) -> Self:
         """
         Add two elements of the same concrete additive semigroup together.
@@ -112,6 +118,12 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
         add: Callable[[H, H], H],
         narrow: Callable[[H], H] = lambda h: h,
     ) -> None:
+        """
+        :param add: Closed commutative and associative function reps.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
+
+        """
         super().__init__(narrow=narrow)
         self._add = lambda left, right: compose(partial(add, left), narrow)(right)
 

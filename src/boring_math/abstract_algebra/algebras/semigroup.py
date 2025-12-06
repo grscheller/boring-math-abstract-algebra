@@ -42,6 +42,13 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = SemigroupElement<rep>
+
+        """
+        return f'SemigroupElement<{str(self._rep)}>'
+
     def __mul__(self, other: object) -> Self:
         """
         Multiply two elements of the same concrete semigroup together.
@@ -116,7 +123,9 @@ class Semigroup[H: Hashable](BaseSet[H]):
     ) -> None:
         """
         :param mult: Associative function ``H X H -> H`` on representations.
-        :returns: A semigroup algebra.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
+
         """
         super().__init__(narrow=narrow)
         self._mult = lambda left, right: compose(partial(mult, left), narrow)(right)

@@ -52,7 +52,11 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
         super().__init__(rep, cast(AbelianGroup[H], algebra))
 
     def __str__(self) -> str:
-        return f'RingElement[[{str(self._rep)}]]'
+        """
+        :returns: str(self) = RingElement<rep>
+
+        """
+        return f'RingElement<{str(self._rep)}>'
 
     def __mul__(self, other: object) -> Self:
         """
@@ -142,6 +146,8 @@ class Ring[H: Hashable](AbelianGroup[H]):
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(add=add, zero=zero, negate=negate, narrow=narrow)

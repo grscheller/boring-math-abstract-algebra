@@ -45,7 +45,11 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
         super().__init__(rep, algebra)
 
     def __str__(self) -> str:
-        return f'CommutativeMonoid({str(self._rep)})'
+        """
+        :returns: str(self) = CommutativeMonoidElement<rep>
+
+        """
+        return f'CommutativeMonoidElement<{str(self._rep)}>'
 
     def __mul__(self, n: int | Self) -> Self:
         """
@@ -78,7 +82,6 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
 
 
 class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
-
     def __init__(
         self,
         add: Callable[[H, H], H],
@@ -88,7 +91,8 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         """
         :param add: Closed commutative and associative function reps.
         :param zero: Representation for additive identity.
-        :returns: A commutative monoid algebra.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(add=add, narrow=narrow)

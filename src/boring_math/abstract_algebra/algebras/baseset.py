@@ -39,7 +39,7 @@ class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol)
     def setdefault(self, key: K, default: V) -> V: ...
 
 
-class BaseElement[H: Hashable]:
+class BaseElement[H: Hashable](ABC):
     def __init__(
         self,
         rep: H,
@@ -48,16 +48,28 @@ class BaseElement[H: Hashable]:
         self._rep = algebra._narrow(rep)
         self._algebra = algebra
 
+    @abstractmethod
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = AlgebraElement<rep>
+        """
+        ...
+
     def __call__(self) -> H:
         """
-        :returns: The representation wrapped by the element.
+        .. warning::
+
+            A trade is being made between encapsulation and efficiency.
+
+        :returns: The narrowed representation wrapped within the element.
+
         """
         return self._rep
 
     def __eq__(self, other: object) -> bool:
         """
         Compares if two elements, not necessarily in the same concrete
-        algebra, contain the same narrowed representations.
+        algebra, contain the same representations.
 
         .. warning::
 
@@ -103,14 +115,18 @@ class BaseSet[H: Hashable](ABC):
         self._narrow: Callable[[H], H] = narrow
         self._elements: NaturalMapping[H, BaseElement[H]] = dict()
         self._mult: Callable[[H, H], H] | None = None
-        self._add: Callable[[H, H], H] | None = None
         self._one: H | None = None
+        self._inv: Callable[[H], H] | None = None
+        self._add: Callable[[H, H], H] | None = None
         self._zero: H | None = None
         self._neg: Callable[[H], H] | None = None
-        self._inv: Callable[[H], H] | None = None
 
     @abstractmethod
-    def __call__(self, rep: H) -> BaseElement[H]: ...
+    def __call__(self, rep: H) -> BaseElement[H]:
+        """
+        Add the unique element in the algebra with a given rep.
+        """
+        ...
 
     def __eq__(self, other: object) -> bool:
         """

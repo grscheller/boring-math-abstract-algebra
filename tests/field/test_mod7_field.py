@@ -129,8 +129,8 @@ class TestFieldMod7:
         assert six * one is six
 
         assert six - two is four
-        assert str(five) =='FieldElement[[5]]'
-        assert str(-five) =='FieldElement[[2]]'
+        assert str(five) =='FieldElement<5>'
+        assert str(-five) =='FieldElement<2>'
         assert -five == two
         assert (-five) is two
         assert -two is five

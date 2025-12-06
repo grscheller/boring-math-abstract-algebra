@@ -48,6 +48,13 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = AbelianGroupElement<rep>
+
+        """
+        return f'AbelianGroupElement<{str(self._rep)}>'
+
     def __mul__(self, n: Self | int) -> Self:
         """
         Multiplying additive group element by an integer ``n>=0``
@@ -114,6 +121,8 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(add=add, zero=zero, narrow=narrow)

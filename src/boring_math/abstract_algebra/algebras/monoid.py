@@ -45,7 +45,11 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
         super().__init__(rep, cast(Semigroup[H], algebra))
 
     def __str__(self) -> str:
-        return f'MonoidElement[[{str(self._rep)}]]'
+        """
+        :returns: str(self) = MonoidElement<rep>
+
+        """
+        return f'MonoidElement<{str(self._rep)}>'
 
     def __pow__(self, n: int) -> Self:
         """
@@ -82,7 +86,8 @@ class Monoid[H: Hashable](Semigroup[H]):
         """
         :param mult: Associative function ``H X H -> H`` on representations.
         :param one: Representation for multiplicative identity.
-        :returns: A monoid algebra.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(mult=mult, narrow=narrow)

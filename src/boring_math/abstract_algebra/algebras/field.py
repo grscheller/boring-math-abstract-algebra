@@ -53,7 +53,11 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
         super().__init__(rep, cast(CommutativeRing[H], algebra))
 
     def __str__(self) -> str:
-        return f'FieldElement[[{str(self._rep)}]]'
+        """
+        :returns: str(self) = FieldElement<rep>
+
+        """
+        return f'FieldElement<{str(self._rep)}>'
 
     def __pow__(self, n: int) -> Self:
         """
@@ -97,14 +101,16 @@ class Field[H: Hashable](CommutativeRing[H]):
         narrow: Callable[[H], H] = lambda h: h,
     ):
         """
-        :param add: Closed commutative and associative function reps.
         :param mult: Closed associative function reps.
+        :param add: Closed commutative and associative function reps.
         :param one: Representation for multiplicative identity.
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
         :param invert: Function mapping non-zero element representations
                        to their multiplicative inverses.
+        :narrow: Narrow the rep type, many to one function, like choosing
+                 an element from a coset of a group,
 
         """
         super().__init__(

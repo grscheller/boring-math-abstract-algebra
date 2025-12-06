@@ -49,6 +49,12 @@ class GroupElement[H: Hashable](MonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = GroupElement<rep>
+        """
+        return f'GroupElement<{str(self._rep)}>'
+
     def __pow__(self, n: int) -> Self:
         """
         Raise the group element to the power of ``n``.
@@ -92,7 +98,8 @@ class Group[H: Hashable](Monoid[H]):
         :param one: Representation for multiplicative identity.
         :param invert: Function ``H -> H`` mapping element representation to
                        the representation of corresponding inverse element.
-        :returns: A group algebra.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(mult=mult, one=one, narrow=narrow)

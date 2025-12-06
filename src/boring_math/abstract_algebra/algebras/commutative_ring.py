@@ -47,7 +47,10 @@ class CommutativeRingElement[H: Hashable](RingElement[H]):
         super().__init__(rep, cast(Ring[H], algebra))
 
     def __str__(self) -> str:
-        return f'CommutativeRingElement[[{str(self._rep)}]]'
+        """
+        :returns: str(self) = CommutativeRingElement<rep>
+        """
+        return f'CommutativeRingElement<{str(self._rep)}>'
 
 
 class CommutativeRing[H: Hashable](Ring[H]):
@@ -67,6 +70,8 @@ class CommutativeRing[H: Hashable](Ring[H]):
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
+        :param narrow: Narrow the rep type, many-to-one function. Like
+                       choosing an element from a coset of a group.
 
         """
         super().__init__(

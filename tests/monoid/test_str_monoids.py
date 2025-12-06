@@ -114,11 +114,11 @@ class TestMonoidAB:
         assert ab_alg(AB('')) * ab_alg(AB('')) == ab_alg(AB(''))
         assert ab_alg(AB('')) * ab_alg(AB('abab')) == ab_alg(AB('abab'))
 
-        assert str(ab_alg(AB('baba'))) == "MonoidElement[[AB('baba')]]"
-        assert str(ab_alg(AB(''))) == "MonoidElement[[AB('')]]"
-        assert str(ab_alg(AB('baba')) * ab_alg(AB(''))) == "MonoidElement[[AB('baba')]]"
-        assert str(ab_alg(AB('baaa'))) == "MonoidElement[[AB('ba')]]"
-        assert str(ab_alg(AB('bbbabbbbbaaa'))) == "MonoidElement[[AB('baba')]]"
+        assert str(ab_alg(AB('baba'))) == "MonoidElement<AB('baba')>"
+        assert str(ab_alg(AB(''))) == "MonoidElement<AB('')>"
+        assert str(ab_alg(AB('baba')) * ab_alg(AB(''))) == "MonoidElement<AB('baba')>"
+        assert str(ab_alg(AB('baaa'))) == "MonoidElement<AB('ba')>"
+        assert str(ab_alg(AB('bbbabbbbbaaa'))) == "MonoidElement<AB('baba')>"
 
         assert ab_alg(AB('baba')) * ab_alg(AB('')) == ab_alg(AB('bbbabbbbbaaa'))
         assert ab_alg(AB('baaa')) * ab_alg(AB('aabb')) * ab_alg(AB('b')) == ab_alg(
@@ -145,16 +145,16 @@ class TestMonoidAB:
 
         assert (a * b)() == AB('ab')
 
-        assert str(a) == "MonoidElement[[AB('a')]]"
-        assert str(ab) == "MonoidElement[[AB('ab')]]"
-        assert str(a * b) == "MonoidElement[[AB('ab')]]"
-        assert str(ab * a) == "MonoidElement[[AB('aba')]]"
-        assert str(ab**2) == "MonoidElement[[AB('abab')]]"
-        assert str(ab**0) == "MonoidElement[[AB('')]]"
+        assert str(a) == "MonoidElement<AB('a')>"
+        assert str(ab) == "MonoidElement<AB('ab')>"
+        assert str(a * b) == "MonoidElement<AB('ab')>"
+        assert str(ab * a) == "MonoidElement<AB('aba')>"
+        assert str(ab**2) == "MonoidElement<AB('abab')>"
+        assert str(ab**0) == "MonoidElement<AB('')>"
 
         assert (a * b) ** 4 == ab**4
         assert (a * b) ** 5 == ab**5
-        assert str((a**3) * (b**2)) == "MonoidElement[[AB('a')]]"
-        assert str(a**3 * b**2) == "MonoidElement[[AB('a')]]"
+        assert str((a**3) * (b**2)) == "MonoidElement<AB('a')>"
+        assert str(a**3 * b**2) == "MonoidElement<AB('a')>"
         assert (a**3) * (b**5) == ab
         assert b * ab**2 == ba**2 * b == b * a * b * a * b

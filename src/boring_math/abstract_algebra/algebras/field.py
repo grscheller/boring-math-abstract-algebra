@@ -109,8 +109,8 @@ class Field[H: Hashable](CommutativeRing[H]):
                        representation of corresponding negated element.
         :param invert: Function mapping non-zero element representations
                        to their multiplicative inverses.
-        :narrow: Narrow the rep type, many to one function, like choosing
-                 an element from a coset of a group,
+        :param narrow: Narrow the rep type, many to one function, like choosing
+                       an element from a coset of a group,
 
         """
         super().__init__(

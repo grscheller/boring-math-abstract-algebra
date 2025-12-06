@@ -59,7 +59,9 @@ class BaseElement[H: Hashable](ABC):
         """
         .. warning::
 
-            A trade is being made between encapsulation and efficiency.
+            A trade off is being made in favor of efficiency over
+            encapsulation. An actual reference to the wrapped ``rep``
+            is returned to eliminate the overhead of a copy.
 
         :returns: The narrowed representation wrapped within the element.
 

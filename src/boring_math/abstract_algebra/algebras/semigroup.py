@@ -15,8 +15,8 @@
 """
 .. admonition:: Semigroup
 
-    Mathematically a Semigroup is a set **S** along with an associative
-    binary operation **mult: S X S -> S**.
+    Mathematically a Semigroup is a set **S** along with an
+    associative binary operation **mult: S X S -> S**.
 
 .. important::
 
@@ -42,21 +42,15 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = SemigroupElement<rep>
-
-        """
-        return f'SemigroupElement<{str(self._rep)}>'
-
     def __mul__(self, other: object) -> Self:
         """
-        Multiply two elements of the same concrete semigroup together.
+        Multiply two elements of the same concrete algebra together.
 
-        :param other: Another element within the same semigroup.
+        :param other: Another element within the same concrete algebra.
         :returns: The product ``self * other``.
         :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete semigroups.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
 
         """
         if isinstance(other, type(self)):
@@ -75,32 +69,34 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             msg = 'Multiplication by an int on right not defined since addition not defined'
             raise TypeError(msg)
 
-        return NotImplemented
+        msg = 'Multiplications only defined between elements and ints.'
+        raise TypeError(msg)
 
     def __rmul__(self, other: object) -> Self:
         """
         When left side of multiplication does not know how to multiply right side.
 
         :param other: Left side of the multiplication.
-        :returns: NotImplemented, otherwise ``left.__mul__(right)`` would have worked.
+        :returns: Never returns, otherwise ``left.__mul__(right)``
+                  would have worked.
         :raises TypeError: When multiplying on left by an int.
 
         """
         if isinstance(other, int):
-            msg = 'Multiplication by an int on left not defined since addition not defined'
+            msg = 'Multiplication by an int not defined since addition not defined'
             raise TypeError(msg)
 
         return NotImplemented
 
     def __pow__(self, n: int) -> Self:
         """
-        Raising semigroup element to a positive ``int`` power is
-        the same as repeated multiplication.
+        Raising element to a positive ``int`` power is the same as
+        repeated multiplication.
 
-        :param n: Multiply semigroup element to itself ``n > 0`` times.
-        :returns: The product of the semigroup element n times.
+        :param n: Multiply element to itself ``n > 0`` times.
+        :returns: The product of the element n times.
         :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If for some reason a mult method was not defined on the semigroup.
+        :raises ValueError: If algebra does not have a mult attribute.
         """
         if n > 0:
             algebra = self._algebra
@@ -113,6 +109,13 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
         msg = f'For a semigroup n>0, but n={n} was given'
         raise ValueError(msg)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = SemigroupElement<rep>
+
+        """
+        return f'SemigroupElement<{str(self._rep)}>'
+
 
 class Semigroup[H: Hashable](BaseSet[H]):
 
@@ -122,7 +125,7 @@ class Semigroup[H: Hashable](BaseSet[H]):
         narrow: Callable[[H], H] = lambda h: h,
     ) -> None:
         """
-        :param mult: Associative function ``H X H -> H`` on representations.
+        :param mult: Associative function ``H X H -> H`` on reps.
         :param narrow: Narrow the rep type, many-to-one function. Like
                        choosing an element from a coset of a group.
 

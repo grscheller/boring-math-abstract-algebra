@@ -42,19 +42,14 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = CommutativeSemigroupElement<rep>
-        """
-        return f'CommutativeSemigroupElement<{str(self._rep)}>'
-
     def __add__(self, other: int | Self) -> Self:
         """
-        Add two elements of the same concrete additive semigroup together.
+        Add two elements of the same concrete algebra together.
 
-        :param other: Another element within the same additive semigroup or an ``int``.
+        :param other: Another element within the same algebra or an ``int``.
         :returns: The sum ``self + other``.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete additive semigroups.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
         :raises TypeError: If ``self`` and ``other`` are different types.
 
         """
@@ -78,8 +73,10 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         When left side of addition does not know how to add right side.
 
         :param other: Left side of the addition.
-        :returns: Never returns, otherwise ``left.__add__(right)`` would have worked.
-        :raises TypeError: When left side does not know how to add the additive semigroup element.
+        :returns: Never returns, otherwise ``left.__add__(right)``
+                  would have worked.
+        :raises TypeError: When right side does not know how to add
+                the left side to itself.
 
         """
         msg = 'Left addition operand different type than right'
@@ -93,7 +90,7 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         :param n: Add additive semigroup element to itself ``n > 0`` times.
         :returns: The sum of the semigroup element n times.
         :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If for some reason an add method was not defined on the semigroup.
+        :raises ValueError: If add method not defined on the algebra.
         """
         if isinstance(n, int):
             if n > 0:
@@ -110,6 +107,12 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
 
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)
+
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = CommutativeSemigroupElement<rep>
+        """
+        return f'CommutativeSemigroupElement<{str(self._rep)}>'
 
 
 class CommutativeSemigroup[H: Hashable](BaseSet[H]):

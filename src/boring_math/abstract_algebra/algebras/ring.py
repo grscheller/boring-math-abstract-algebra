@@ -51,13 +51,6 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
     ) -> None:
         super().__init__(rep, cast(AbelianGroup[H], algebra))
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = RingElement<rep>
-
-        """
-        return f'RingElement<{str(self._rep)}>'
-
     def __mul__(self, other: object) -> Self:
         """
         Multiplication ``*`` operator.
@@ -108,9 +101,11 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
         Raise element to power to the ``int`` power of ``n>=0``.
 
         :param n: The ``int`` power to raise the element to.
-        :returns: The element  raised to a non-negative ``int`` power.
+        :returns: The element  raised to the non-negative integer
+                  ``n`` power.
         :raises ValueError: If algebra is not multiplicative.
-        :raises ValueError: If algebra does not have a multiplicative identity element.
+        :raises ValueError: If algebra does not have a multiplicative
+                            identity element.
         :raises ValueError: If ``n < 0``.
 
         """
@@ -127,6 +122,13 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
         msg = f'For a Ring n>=0, but n={n} was given'
         raise ValueError(msg)
+
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = RingElement<rep>
+
+        """
+        return f'RingElement<{str(self._rep)}>'
 
 
 class Ring[H: Hashable](AbelianGroup[H]):

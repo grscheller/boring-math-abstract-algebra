@@ -52,13 +52,6 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
     ) -> None:
         super().__init__(rep, cast(CommutativeRing[H], algebra))
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = FieldElement<rep>
-
-        """
-        return f'FieldElement<{str(self._rep)}>'
-
     def __pow__(self, n: int) -> Self:
         """
         Raise the element to the ``int`` power of ``n``.
@@ -67,7 +60,7 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
         :returns: The element (or its inverse) raised to an ``int`` power.
         :raises ValueError: If algebra is not multiplicative.
         :raises ValueError: If algebra does not have a multiplicative identity element.
-        :raises ValueError: If algebra is not mult invertible.
+        :raises ValueError: If algebra does not have multiplicative inverses.
 
         """
         algebra = self._algebra
@@ -87,6 +80,13 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
             while n < -1:
                 g, n = g * g_inv, n + 1
             return g
+
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = FieldElement<rep>
+
+        """
+        return f'FieldElement<{str(self._rep)}>'
 
 
 class Field[H: Hashable](CommutativeRing[H]):
@@ -109,8 +109,8 @@ class Field[H: Hashable](CommutativeRing[H]):
                        representation of corresponding negated element.
         :param invert: Function mapping non-zero element representations
                        to their multiplicative inverses.
-        :param narrow: Narrow the rep type, many to one function, like choosing
-                       an element from a coset of a group,
+        :param narrow: Narrow the rep type, many to one function, like
+                       choosing an element from a coset of a group,
 
         """
         super().__init__(

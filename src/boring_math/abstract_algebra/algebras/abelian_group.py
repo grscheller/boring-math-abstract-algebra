@@ -48,22 +48,15 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = AbelianGroupElement<rep>
-
-        """
-        return f'AbelianGroupElement<{str(self._rep)}>'
-
     def __mul__(self, n: Self | int) -> Self:
         """
-        Multiplying additive group element by an integer ``n>=0``
+        Multiplying an algebra element by an integer ``n>=0``
         is the same as repeated addition.
 
-        :param n: Add abelian group element to itself ``n >= 0`` times.
-        :returns: The sum of the group element n times.
+        :param n: Add the element to itself ``n >= 0`` times.
+        :returns: The sum of the group element ``n`` times.
         :raises TypeError: if given an element instead of an ``int``.
-        :raises ValueError: If add method was not defined on the group.
+        :raises ValueError: If add method was not defined on the algebra.
 
         """
         if isinstance(n, int):
@@ -90,7 +83,7 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
 
     def __neg__(self) -> Self:
         """
-        Negate the abelian group element.
+        Negate the element.
 
         :returns: The unique additive inverse element to ``self``.
         :raises ValueError: If algebra fails to have additive inverses.
@@ -107,8 +100,15 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
             raise TypeError(msg)
         return self + (-other)
 
-class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = AbelianGroupElement<rep>
 
+        """
+        return f'AbelianGroupElement<{str(self._rep)}>'
+
+
+class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
     def __init__(
         self,
         add: Callable[[H, H], H],

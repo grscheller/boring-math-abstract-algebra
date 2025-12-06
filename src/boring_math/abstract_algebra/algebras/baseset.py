@@ -48,13 +48,6 @@ class BaseElement[H: Hashable](ABC):
         self._rep = algebra._narrow(rep)
         self._algebra = algebra
 
-    @abstractmethod
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = AlgebraElement<rep>
-        """
-        ...
-
     def __call__(self) -> H:
         """
         .. warning::
@@ -130,6 +123,9 @@ class BaseSet[H: Hashable](ABC):
         """
         ...
 
+    def narrow(self, rep: H) -> H:
+        return self._narrow(rep)
+
     def __eq__(self, other: object) -> bool:
         """
         Compare if two algebras are the same concrete algebra.
@@ -142,6 +138,3 @@ class BaseSet[H: Hashable](ABC):
         if isinstance(other, type(self)):
             return self is other
         return NotImplemented
-
-    def narrow(self, rep: H) -> H:
-        return self._narrow(rep)

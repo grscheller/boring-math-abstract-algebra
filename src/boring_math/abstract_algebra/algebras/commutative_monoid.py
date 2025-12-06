@@ -44,13 +44,6 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = CommutativeMonoidElement<rep>
-
-        """
-        return f'CommutativeMonoidElement<{str(self._rep)}>'
-
     def __mul__(self, n: int | Self) -> Self:
         """
         Repeatedly add a commutative monoid element ``n>=0`` times.
@@ -58,8 +51,10 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
         :param n: The number of times to add the element to itself.
         :returns: The element added to its additive identity ``n`` times.
         :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete algebras.
-        :raises ValueError: If algebra fails to have an additive identity element.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
+        :raises ValueError: If algebra fails to have an additive identity
+                            element.
 
         """
         algebra = self._algebra
@@ -79,6 +74,13 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
             if algebra._mult is None:
                 raise ValueError('Element multiplication not defined on algebra')
         return NotImplemented
+
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = CommutativeMonoidElement<rep>
+
+        """
+        return f'CommutativeMonoidElement<{str(self._rep)}>'
 
 
 class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):

@@ -49,18 +49,12 @@ class GroupElement[H: Hashable](MonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = GroupElement<rep>
-        """
-        return f'GroupElement<{str(self._rep)}>'
-
     def __pow__(self, n: int) -> Self:
         """
-        Raise the group element to the power of ``n``.
+        Raise the element to the power of ``n``.
 
         :param n: The ``int`` power to raise the element to.
-        :returns: The element (or its inverse) raised to an ``int`` power.
+        :returns: The element (or its inverse) raised to the integer``n`` power.
         :raises ValueError: If element's algebra 
         :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
         :raises ValueError: If algebra fails to have an identity or elements not invertible.
@@ -83,6 +77,12 @@ class GroupElement[H: Hashable](MonoidElement[H]):
             while n < -1:
                 g, n = g * g_inv, n + 1
             return g
+
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = GroupElement<rep>
+        """
+        return f'GroupElement<{str(self._rep)}>'
 
 
 class Group[H: Hashable](Monoid[H]):

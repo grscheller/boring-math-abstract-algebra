@@ -51,50 +51,52 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
     ) -> None:
         super().__init__(rep, cast(AbelianGroup[H], algebra))
 
-    def __mul__(self, other: object) -> Self:
+    def __mul__(self, right: object) -> Self:
         """
-        Multiplication ``*`` operator.
+        Left multiplication for ``*`` operator.
 
-        - Multiplying element by an integer ``n>=0`` is repeated addition.
-        - Algebra mult if ``other`` is a member of the same concrete algebra.
-        - Otherwise return ``NotImplemented`` (for a right action)
-
-        :param other: Add element to itself ``n >= 0`` times.
-        :returns: The sum of the element n times.
-        :raises ValueError: if given an element instead of an ``int``.
-        :raises ValueError: If add method was not defined on the algebra.
+        :param right: Object ``left`` should be an element of same
+                      concrete algebra or an ``int``.
+        :returns: Algebra product, the sum of the element ``right`` times,
+                  or ``NotImplemented``.
+        :raises ValueError: If either right not an element of the same
+                            concrete algebra  or ``right: int < 0``.
+        :raises TypeError: Multiplication nor defined on the algebra
+                           that ``self`` is a member of.
 
         """
-        if isinstance(other, int):
-            return super().__mul__(other)
+        if isinstance(right, int):
+            return super().__mul__(right)
 
-        if isinstance(other, type(self)):
+        if isinstance(right, type(self)):
             algebra = self._algebra
-            if algebra is other._algebra:
+            if algebra is right._algebra:
                 if (mult := algebra._mult) is not None:
-                    return cast(Self, algebra(mult(self(), other())))
+                    return cast(Self, algebra(mult(self(), right())))
                 else:
                     msg = 'Multiplication not defined on the algebra'
-                    raise ValueError(msg)
+                    raise TypeError(msg)
             else:
                 msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
 
         return NotImplemented
 
-    def __rmul__(self, other: object) -> Self:
+    def __rmul__(self, left: object) -> Self:
         """
-        When left side of multiplication does not know how to multiply right side.
+        Right multiplication for ``*`` operator.
 
-        - Multiplying element by an integer ``n>=0`` is repeated addition.
-        - If ``other`` not member of same concrete algebra or left mult would of worked.
-        - Otherwise return ``NotImplemented`` (for a left action)
+        :param left: Object ``left`` should be an ``int``.
+        :returns: The sum of the element ``left`` times.
+        :raises TypeError: If object on left does not act
+                           on object on right
 
         """
-        if isinstance(other, int):
-            return self.__mul__(other)
+        if isinstance(left, int):
+            return self.__mul__(left)
 
-        return NotImplemented
+        msg = 'Object on left does not act on object on right.'
+        raise TypeError(msg)
 
     def __pow__(self, n: int) -> Self:
         """

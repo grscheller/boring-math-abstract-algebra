@@ -31,7 +31,7 @@ class PartialOrder[O](Protocol):
 
     """
 
-    def __le__(self, other: Self) -> bool: ...
+    def __le__(self, right: Self) -> bool: ...
 
 
 class TotalOrder[O](PartialOrder[O], Protocol):
@@ -43,11 +43,11 @@ class TotalOrder[O](PartialOrder[O], Protocol):
 
     """
 
-    def __lt__(self, other: Self) -> bool:
-        return self <= other and self != other
+    def __lt__(self, right: Self) -> bool:
+        return self <= right and self != right
 
-    def __ge__(self, other: Self) -> bool:
-        return not self < other
+    def __ge__(self, right: Self) -> bool:
+        return not self < right
 
-    def __gt__(self, other: Self) -> bool:
-        return not self <= other
+    def __gt__(self, right: Self) -> bool:
+        return not self <= right

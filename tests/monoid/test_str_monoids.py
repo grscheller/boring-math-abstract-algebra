@@ -60,17 +60,17 @@ class AB:
     def __str__(self) -> str:
         return f"AB('{str(self._rep)}')"
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
+    def __eq__(self, right: object) -> bool:
+        if not isinstance(right, type(self)):
             return NotImplemented
-        if self._rep == other._rep:
+        if self._rep == right._rep:
             return True
         return False
 
-    def __mul__(self, other: Self) -> 'AB':
-        if len(self) > 0 and len(other) > 0 and self._rep[-1] == other._rep[0]:
-            return AB(self._rep[0:-1]) * AB(other._rep[1:])
-        return AB(self._rep + other._rep)
+    def __mul__(self, right: Self) -> 'AB':
+        if len(self) > 0 and len(right) > 0 and self._rep[-1] == right._rep[0]:
+            return AB(self._rep[0:-1]) * AB(right._rep[1:])
+        return AB(self._rep + right._rep)
 
 
 def ab_mult(left: AB, right: AB) -> AB:

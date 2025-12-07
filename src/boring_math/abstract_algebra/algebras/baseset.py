@@ -61,10 +61,11 @@ class BaseElement[H: Hashable](ABC):
         """
         return self._rep
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, right: object) -> bool:
         """
         Compares if two elements, not necessarily in the same concrete
-        algebra, contain the same representations.
+        algebra, contain equal representations of the same hashable
+        type.
 
         .. warning::
 
@@ -76,12 +77,12 @@ class BaseElement[H: Hashable](ABC):
                   and are of the same invariant type.
 
         """
-        if not isinstance(other, type(self)):
+        if not isinstance(right, type(self)):
             return False
-        if self is other:
+        if self is right:
             return True
-        if (rep_self := self()) == (rep_other := other()):
-            if type(rep_self) is type(rep_other):
+        if (rep_self := self()) == (rep_right := right()):
+            if type(rep_self) is type(rep_right):
                 return True
         return False
 
@@ -126,15 +127,12 @@ class BaseSet[H: Hashable](ABC):
     def narrow(self, rep: H) -> H:
         return self._narrow(rep)
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, right: object) -> bool:
         """
         Compare if two algebras are the same concrete algebra.
 
-        :param other: Object being compared to.
-        :returns: True only if other is same concrete algebra, False if
-                  a different concrete algebra, otherwise NotImplemented.
+        :param right: Object being compared to.
+        :returns: True only if ``right`` is the same concrete algebra. False otherwise.
 
         """
-        if isinstance(other, type(self)):
-            return self is other
-        return NotImplemented
+        return self is right

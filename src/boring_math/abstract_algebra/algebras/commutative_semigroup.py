@@ -68,7 +68,7 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         msg = 'Right side of addition wrong type'
         raise TypeError(msg)
 
-    def __radd__(self, other: object) -> Self:
+    def __radd__(self, left: object) -> Self:
         """
         When left side of addition does not know how to add right side.
 

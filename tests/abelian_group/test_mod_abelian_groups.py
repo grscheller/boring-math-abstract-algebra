@@ -40,20 +40,20 @@ class ModRep:
     def __hash__(self) -> int:
         return self._hash
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
+    def __eq__(self, right: object) -> bool:
+        if not isinstance(right, type(self)):
             return NotImplemented
-        if self._mod != other._mod:
+        if self._mod != right._mod:
             return False
-        if self._num == other._num:
+        if self._num == right._num:
             return True
         return False
 
-    def __add__(self, other: Self) -> 'ModRep':
-        if (mod := self._mod) != (omod := other._mod):
+    def __add__(self, right: Self) -> 'ModRep':
+        if (mod := self._mod) != (omod := right._mod):
             msg = f'The prime moduli differ, {mod} != {omod})'
             raise ValueError(msg)
-        return ModRep((self._num + other._num), mod)
+        return ModRep((self._num + right._num), mod)
 
 
 def mod_add(left: ModRep, right: ModRep) -> ModRep:

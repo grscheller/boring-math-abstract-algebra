@@ -32,15 +32,15 @@ class Tup53:
     def __str__(self) -> str:
         return f'Tup53({str(self._rep[0])}, {str(self._rep[1])})'
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, type(self)):
+    def __eq__(self, right: object) -> bool:
+        if not isinstance(right, type(self)):
             return NotImplemented
-        if self._rep == other._rep:
+        if self._rep == right._rep:
             return True
         return False
 
-    def __add__(self, other: Self) -> 'Tup53':
-        return Tup53(self._rep[0] + other._rep[0], self._rep[1] + other._rep[1])
+    def __add__(self, right: Self) -> 'Tup53':
+        return Tup53(self._rep[0] + right._rep[0], self._rep[1] + right._rep[1])
 
 
 def add53(left: Tup53, right: Tup53) -> Tup53:

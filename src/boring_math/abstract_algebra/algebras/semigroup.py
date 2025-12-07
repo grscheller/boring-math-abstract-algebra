@@ -42,22 +42,21 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, other: object) -> Self:
+    def __mul__(self, right: object) -> Self:
         """
         Multiply two elements of the same concrete algebra together.
 
-        :param other: Another element within the same concrete algebra.
-        :returns: The product ``self * other``.
-        :raises TypeError: If ``self`` and ``other`` are different types.
+        :param right: An element within the same concrete algebra or a right action.
+        :returns: The product ``self * right`` otherwise ``NotImplemented``.
         :raises ValueError: If ``self`` and ``other`` are same type but
                             different concrete algebras.
 
         """
-        if isinstance(other, type(self)):
+        if isinstance(right, type(self)):
             algebra = self._algebra
-            if algebra is other._algebra:
+            if algebra is right._algebra:
                 if (mult := algebra._mult) is not None:
-                    return cast(Self, algebra(mult(self(), other())))
+                    return cast(Self, algebra(mult(self(), right())))
                 else:
                     msg = 'Multiplication not defined on the algebra of the elements'
                     raise ValueError(msg)
@@ -65,24 +64,24 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
                 msg = 'Multiplication must be between elements of the same concrete algebra'
                 raise ValueError(msg)
 
-        if isinstance(other, int):
+        if isinstance(right, int):
             msg = 'Multiplication by an int on right not defined since addition not defined'
             raise TypeError(msg)
 
         msg = 'Multiplications only defined between elements and ints.'
         raise TypeError(msg)
 
-    def __rmul__(self, other: object) -> Self:
+    def __rmul__(self, left: object) -> Self:
         """
         When left side of multiplication does not know how to multiply right side.
 
-        :param other: Left side of the multiplication.
+        :param left: Left side of the multiplication.
         :returns: Never returns, otherwise ``left.__mul__(right)``
                   would have worked.
         :raises TypeError: When multiplying on left by an int.
 
         """
-        if isinstance(other, int):
+        if isinstance(left, int):
             msg = 'Multiplication by an int not defined since addition not defined'
             raise TypeError(msg)
 

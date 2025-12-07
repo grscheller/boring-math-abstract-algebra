@@ -48,6 +48,9 @@ class BaseElement[H: Hashable](ABC):
         self._rep = algebra._narrow(rep)
         self._algebra = algebra
 
+    @abstractmethod
+    def __str__(self) -> str: ...
+
     def __call__(self) -> H:
         """
         .. warning::
@@ -72,7 +75,7 @@ class BaseElement[H: Hashable](ABC):
             Any sort of difference in rep narrowing is not taken into
             consideration.
 
-        :param other: Object to be compared with.
+        :param right: Object to be compared with.
         :returns: True if both are elements and the reps compare as equal
                   and are of the same invariant type.
 
@@ -86,10 +89,10 @@ class BaseElement[H: Hashable](ABC):
                 return True
         return False
 
-    def __add__(self, other: Self) -> Self | NotImplementedType:
+    def __add__(self, right: Self) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __mul__(self, other: int | Self) -> Self | NotImplementedType:
+    def __mul__(self, right: int | Self) -> Self | NotImplementedType:
         return NotImplemented
 
     def __pow__(self, n: int) -> Self | NotImplementedType:
@@ -99,10 +102,10 @@ class BaseElement[H: Hashable](ABC):
         msg = 'Negation not defined on the algebra'
         raise TypeError(msg)
 
-    def __sub__(self, other: Self) -> Self | NotImplementedType:
+    def __sub__(self, right: Self) -> Self | NotImplementedType:
         return NotImplemented
 
-    def __truediv__(self, other: Self) -> Self | NotImplementedType:
+    def __truediv__(self, right: Self) -> Self | NotImplementedType:
         return NotImplemented
 
 
@@ -123,12 +126,13 @@ class BaseSet[H: Hashable](ABC):
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]:
         """
-        Add the unique element in the algebra with a given rep.
+        Add an element to concrete element to the concrete algbra.
+
+        :param rep: Representation to narrow.
+        :returns: The unique element with that narrowed representation.
+
         """
         ...
-
-    def narrow(self, rep: H) -> H:
-        return self._narrow(rep)
 
     def __eq__(self, right: object) -> bool:
         """
@@ -139,3 +143,13 @@ class BaseSet[H: Hashable](ABC):
 
         """
         return self is right
+
+    def narrow_type(self, rep: H) -> H:
+        """
+        Narrow the type with the concrete algebra's narrowing function. 
+
+        :param rep: Representation to narrow.
+        :returns: The narrowed representation.
+
+        """
+        return self._narrow(rep)

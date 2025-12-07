@@ -16,6 +16,7 @@ from boring_math.abstract_algebra.algebras.field import Field
 
 ## Finite field of seven elements
 
+
 # Restricts int type to just {0, 1, 2, 3, 4, 5, 6}
 def narrow(m: int) -> int:
     return m % 7
@@ -34,7 +35,7 @@ def negate(m: int) -> int:
 
 
 def invert(m: int) -> int:
-    match m:
+    match m % 7:
         case 1:
             return 1
         case 2:
@@ -47,9 +48,10 @@ def invert(m: int) -> int:
             return 3
         case 6:
             return 6
-        case _:
+        case 0:
             raise ValueError('0 is not invertable!')
-
+        case _:
+            raise RuntimeError(f'Unexpected value: {(m % 7)!s}')
 
 
 # Test above infrastructure
@@ -99,7 +101,6 @@ class TestFieldMod7:
         assert six is neg_one
         assert forty_two is zero
 
-
     def test_field_operations(self) -> None:
         fmod7 = Field[int](
             add=add,
@@ -125,17 +126,25 @@ class TestFieldMod7:
         assert one + one is two
 
         assert three * four is five
+        assert two * two is four
         assert zero * five is zero
         assert six * one is six
+        assert four * two is one
+        assert three * five is one
 
         assert six - two is four
-        assert str(five) =='FieldElement<5>'
-        assert str(-five) =='FieldElement<2>'
+        assert str(five) == 'FieldElement<5>'
+        assert str(-five) == 'FieldElement<2>'
         assert -five == two
         assert (-five) is two
         assert -two is five
         assert (-one) * (-one) is one
 
+        assert five / five is  one
+        assert two / four is four
+        assert six*six is six/six is one
+        assert (two + three)*4 is six
+ 
     def test_field_int_operations(self) -> None:
         fmod7 = Field[int](
             add=add,
@@ -155,17 +164,42 @@ class TestFieldMod7:
         five = fmod7(5)
         six = fmod7(6)
 
-        one*2 is two
-        4*five is six
+        assert one * 2 is two
+        assert 4 * five is six
 
-        three**3 is six
-        two**5 is four
-        zero**14 is zero
-        one**11 is one
+        assert three**3 is six
+        assert two**5 is four
+        assert zero**14 is zero
+        assert one**11 is one
+        assert six**2 is one
+        assert 2*six is five
+        assert six*2 is five
 
-        six**(-1) is six
-        one**(-1) is one
-        one**(-1) is one
-        two**(-1) is two
-        four**(-1) is two
-        two**(-3) is five
+        assert six ** (-1) is six
+        assert one ** (-1) is one
+        assert one ** (-1) is one
+        assert two ** (-1) is four
+        assert four ** (-1) is two
+        assert two ** (-3) is one
+
+        assert one**1 is one
+        assert one**0 is one
+        assert four**0 is one
+        assert two**1 is two
+        assert two**2 is four
+        assert two**3 is one
+
+        assert one**-3 is one
+        assert one**-2 is one
+        assert one**-1 is one
+        assert six**-1 is six
+        assert two**-1 is four
+        assert four**-1 is two
+        assert three**-1 is five
+
+        try:
+            assert zero**-1 is zero
+        except ValueError:
+            assert True
+        else:
+            assert False

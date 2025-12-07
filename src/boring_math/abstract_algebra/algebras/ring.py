@@ -51,6 +51,13 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
     ) -> None:
         super().__init__(rep, cast(AbelianGroup[H], algebra))
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = RingElement<rep>
+
+        """
+        return f'RingElement<{str(self._rep)}>'
+
     def __mul__(self, right: object) -> Self:
         """
         Left multiplication for ``*`` operator.
@@ -111,12 +118,12 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
         :raises ValueError: If ``n < 0``.
 
         """
+        algebra = self._algebra
+        if (mult := algebra._mult) is None:
+            raise ValueError('Algebra has no multiplication method')
+        if (one := algebra._one) is None:
+            raise ValueError('Algebra has no multiplicative identity')
         if n >= 0:
-            algebra = self._algebra
-            if (mult := algebra._mult) is None:
-                raise ValueError('Algebra has no multiplication method')
-            if (one := algebra._one) is None:
-                raise ValueError('Algebra has no multiplicative identity')
             r, r1 = one, self()
             while n > 0:
                 r, n = mult(r, r1), n - 1
@@ -124,13 +131,6 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
         msg = f'For a Ring n>=0, but n={n} was given'
         raise ValueError(msg)
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = RingElement<rep>
-
-        """
-        return f'RingElement<{str(self._rep)}>'
 
 
 class Ring[H: Hashable](AbelianGroup[H]):
@@ -155,8 +155,8 @@ class Ring[H: Hashable](AbelianGroup[H]):
 
         """
         super().__init__(add=add, zero=zero, negate=negate, narrow=narrow)
-        self._mult = lambda left, right: compose(partial(mult, left), self._narrow)(right)
         self._one = self._narrow(one)
+        self._mult = lambda left, right: compose(partial(mult, left), self._narrow)(right)
 
     def __call__(self, rep: H) -> RingElement[H]:
         """

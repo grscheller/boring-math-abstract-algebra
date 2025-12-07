@@ -44,43 +44,48 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __mul__(self, n: int | Self) -> Self:
-        """
-        Repeatedly add a commutative monoid element ``n>=0`` times.
-
-        :param n: The number of times to add the element to itself.
-        :returns: The element added to its additive identity ``n`` times.
-        :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises ValueError: If algebra fails to have an additive identity
-                            element.
-
-        """
-        algebra = self._algebra
-        if isinstance(n, int):
-            if n >= 0:
-                if (add := algebra._add) is None:
-                    raise ValueError('Algebra has no add method')
-                if (zero := algebra._zero) is None:
-                    raise ValueError('Algebra has no additive identity')
-                r, r1 = zero, self()
-                while n > 0:
-                    r, n = add(r, r1), n - 1
-                return cast(Self, algebra(r))
-            msg = f'For an Commutative Monoid n>=0, but n={n} was given'
-            raise ValueError(msg)
-        if isinstance(n, type(self)):
-            if algebra._mult is None:
-                raise ValueError('Element multiplication not defined on algebra')
-        return NotImplemented
-
     def __str__(self) -> str:
         """
         :returns: str(self) = CommutativeMonoidElement<rep>
 
         """
         return f'CommutativeMonoidElement<{str(self._rep)}>'
+
+    def __mul__(self, n: object) -> Self:
+        """
+        Repeatedly add an element to itself ``n >= 0`` times.
+
+        :param n: Object, usually a non-negative ``int`` or action.
+        :returns: If ``n: int`` then self added to itself n times
+                  else NotImplemented.
+        :raises ValueError: When ``n < 0``.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
+        :raises TypeError: If algebra fails to have an additive
+                           identity element or an addition method.
+
+        """
+        algebra = self._algebra
+        if isinstance(n, int):
+            if n >= 0:
+                if (zero := algebra._zero) is None:
+                    raise TypeError('Algebra has no additive identity')
+                if (add := algebra._add) is None:
+                    raise TypeError('Algebra has no add method')
+                r, r1 = zero, self()
+                while n > 0:
+                    r, n = add(r, r1), n - 1
+                return cast(Self, algebra(r))
+            msg = f'For an commutative monoid n>=0, but n={n} was given'
+            raise ValueError(msg)
+        if isinstance(n, type(self)):
+            msg = 'Element multiplication not defined on algebra'
+            raise ValueError(msg)
+        return NotImplemented
+
+    def __rmul__(self, n: int) -> Self:
+        """Repeatedly add an element to itself ``n > 0`` times."""
+        return self.__mul__(n)
 
 
 class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):

@@ -44,6 +44,13 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
     ) -> None:
         super().__init__(rep, cast(Semigroup[H], algebra))
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = MonoidElement<rep>
+
+        """
+        return f'MonoidElement<{str(self._rep)}>'
+
     def __pow__(self, n: int) -> Self:
         """
         Raise the element to power to the power of ``n>=0``.
@@ -69,13 +76,6 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
             return cast(Self, algebra(r))
         msg = f'For a Monoid n>=0, but n={n} was given'
         raise ValueError(msg)
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = MonoidElement<rep>
-
-        """
-        return f'MonoidElement<{str(self._rep)}>'
 
 
 class Monoid[H: Hashable](Semigroup[H]):

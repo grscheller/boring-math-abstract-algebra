@@ -56,16 +56,16 @@ class CommutativeRingElement[H: Hashable](RingElement[H]):
 class CommutativeRing[H: Hashable](Ring[H]):
     def __init__(
         self,
-        add: Callable[[H, H], H],
         mult: Callable[[H, H], H],
+        add: Callable[[H, H], H],
         one: H,
         zero: H,
         negate: Callable[[H], H],
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param add: Closed commutative and associative function reps.
         :param mult: Closed associative function reps.
+        :param add: Closed commutative and associative function reps.
         :param one: Representation for multiplicative identity.
         :param zero: Representation for additive identity.
         :param negate: Function mapping element representation to the
@@ -75,7 +75,7 @@ class CommutativeRing[H: Hashable](Ring[H]):
 
         """
         super().__init__(
-            add=add, mult=mult, one=one, zero=zero, negate=negate, narrow=narrow
+            mult=mult, add=add, one=one, zero=zero, negate=negate, narrow=narrow
         )
 
     def __call__(self, rep: H) -> CommutativeRingElement[H]:

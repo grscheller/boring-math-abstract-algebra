@@ -42,25 +42,32 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
-    def __add__(self, other: int | Self) -> Self:
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = CommutativeSemigroupElement<rep>
+        """
+        return f'CommutativeSemigroupElement<{str(self._rep)}>'
+
+    def __add__(self, right: Self) -> Self:
         """
         Add two elements of the same concrete algebra together.
 
-        :param other: Another element within the same algebra or an ``int``.
+        :param other: Another element within the same algebra.
         :returns: The sum ``self + other``.
         :raises ValueError: If ``self`` and ``other`` are same type but
                             different concrete algebras.
-        :raises TypeError: If ``self`` and ``other`` are different types.
+        :raises TypeError: If Addition not defined on the algebra of the elements.
+        :raises TypeError: If ``self`` and ``right`` are different types.
 
         """
-        if isinstance(other, type(self)):
+        if isinstance(right, type(self)):
             algebra = self._algebra
-            if algebra is other._algebra:
+            if algebra is right._algebra:
                 if (add := algebra._add) is not None:
-                    return cast(Self, algebra(add(self(), other())))
+                    return cast(Self, algebra(add(self(), right())))
                 else:
                     msg = 'Addition not defined on the algebra of the elements'
-                    raise ValueError(msg)
+                    raise TypeError(msg)
             else:
                 msg = 'Addition must be between elements of the same concrete algebra'
                 raise ValueError(msg)
@@ -68,51 +75,51 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         msg = 'Right side of addition wrong type'
         raise TypeError(msg)
 
-    def __radd__(self, left: object) -> Self:
+    def __radd__(self, left: Self) -> Self:
         """
         When left side of addition does not know how to add right side.
 
         :param other: Left side of the addition.
         :returns: Never returns, otherwise ``left.__add__(right)``
                   would have worked.
-        :raises TypeError: When right side does not know how to add
-                the left side to itself.
+        :raises TypeError: When right side does not know how to
+                add the left side to itself.
 
         """
         msg = 'Left addition operand different type than right'
         raise TypeError(msg)
 
-    def __mul__(self, n: int | Self) -> Self:
+    def __mul__(self, n: object) -> Self:
         """
-        Multiplying additive semigroup element by a positive ``int`` is
-        the same as repeated addition.
+        Repeatedly add an element to itself ``n > 0`` times.
 
-        :param n: Add additive semigroup element to itself ``n > 0`` times.
-        :returns: The sum of the semigroup element n times.
+        :param n: Object, usually a positive ``int`` or action.
+        :returns: If ``n: int`` then self added to itself n times
+                  else NotImplemented.
         :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If add method not defined on the algebra.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
+        :raises TypeError: If algebra fails to have an addition method.
         """
+        algebra = self._algebra
         if isinstance(n, int):
             if n > 0:
-                algebra = self._algebra
                 if (add := algebra._add) is None:
-                    raise ValueError('Algebra has no addition method')
+                    raise TypeError('Algebra has no addition method')
                 r = (r1 := self())
                 while n > 1:
                     r, n = add(r1, r), n - 1
                 return cast(Self, algebra(r))
-            msg = f'For an additive semigroup n>0, but n={n} was given'
+            msg = f'For an commutative semigroup n>0, but n={n} was given'
             raise ValueError(msg)
-        raise ValueError('Element multiplication not defined on algebra')
+        if isinstance(n, type(self)):
+            msg = 'Element multiplication not defined on algebra'
+            raise ValueError(msg)
+        return NotImplemented
 
     def __rmul__(self, n: int) -> Self:
+        """Repeatedly add an element to itself ``n > 0`` times."""
         return self.__mul__(n)
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = CommutativeSemigroupElement<rep>
-        """
-        return f'CommutativeSemigroupElement<{str(self._rep)}>'
 
 
 class CommutativeSemigroup[H: Hashable](BaseSet[H]):

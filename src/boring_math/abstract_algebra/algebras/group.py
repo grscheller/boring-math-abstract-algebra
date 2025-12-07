@@ -49,6 +49,12 @@ class GroupElement[H: Hashable](MonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = GroupElement<rep>
+        """
+        return f'GroupElement<{str(self._rep)}>'
+
     def __pow__(self, n: int) -> Self:
         """
         Raise the element to the power of ``n``.
@@ -77,12 +83,6 @@ class GroupElement[H: Hashable](MonoidElement[H]):
             while n < -1:
                 g, n = g * g_inv, n + 1
             return g
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = GroupElement<rep>
-        """
-        return f'GroupElement<{str(self._rep)}>'
 
 
 class Group[H: Hashable](Monoid[H]):

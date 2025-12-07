@@ -48,6 +48,13 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = AbelianGroupElement<rep>
+
+        """
+        return f'AbelianGroupElement<{str(self._rep)}>'
+
     def __mul__(self, n: Self | int) -> Self:
         """
         Multiplying an algebra element by an integer ``n>=0``
@@ -94,18 +101,11 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
             raise ValueError('Algebra addition not negatable')
         return cast(Self, algebra(negate(self())))
 
-    def __sub__(self, other: Self) -> Self:
-        if not isinstance(other, type(self)):
+    def __sub__(self, right: Self) -> Self:
+        if not isinstance(right, type(self)):
             msg = 'Subtraction defined only between elements of the algebra'
             raise TypeError(msg)
-        return self + (-other)
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = AbelianGroupElement<rep>
-
-        """
-        return f'AbelianGroupElement<{str(self._rep)}>'
+        return self + (-right)
 
 
 class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
@@ -129,13 +129,6 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         self._neg = compose(negate, self._narrow)
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
-        """
-        Add the unique element to the abelian group with a given rep.
-
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
-
-        """
         rep = self._narrow(rep)
         return cast(
             AbelianGroupElement[H],

@@ -42,13 +42,20 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
     ) -> None:
         super().__init__(rep, algebra)
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = SemigroupElement<rep>
+
+        """
+        return f'SemigroupElement<{str(self._rep)}>'
+
     def __mul__(self, right: object) -> Self:
         """
         Multiply two elements of the same concrete algebra together.
 
         :param right: An element within the same concrete algebra or a right action.
         :returns: The product ``self * right`` otherwise ``NotImplemented``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
+        :raises ValueError: If ``self`` and ``right`` are same type but
                             different concrete algebras.
 
         """
@@ -107,13 +114,6 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
             return cast(Self, algebra(r))
         msg = f'For a semigroup n>0, but n={n} was given'
         raise ValueError(msg)
-
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = SemigroupElement<rep>
-
-        """
-        return f'SemigroupElement<{str(self._rep)}>'
 
 
 class Semigroup[H: Hashable](BaseSet[H]):

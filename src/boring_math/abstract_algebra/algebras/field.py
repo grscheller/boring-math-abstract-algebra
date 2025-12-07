@@ -52,6 +52,13 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
     ) -> None:
         super().__init__(rep, cast(CommutativeRing[H], algebra))
 
+    def __str__(self) -> str:
+        """
+        :returns: str(self) = FieldElement<rep>
+
+        """
+        return f'FieldElement<{str(self._rep)}>'
+
     def __pow__(self, n: int) -> Self:
         """
         Raise the element to the ``int`` power of ``n``.
@@ -76,17 +83,15 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
                 r, n = mult(r, r1), n - 1
             return cast(Self, algebra(r))
         else:
-            g = (g_inv := type(self)(invert(self()), cast(Field[H], algebra)))
+            r_inv = invert(self())
+            r, r1 = r_inv, r_inv
             while n < -1:
-                g, n = g * g_inv, n + 1
-            return g
+                r, n = mult(r, r1), n + 1
+            return cast(Self, algebra(r))
 
-    def __str__(self) -> str:
-        """
-        :returns: str(self) = FieldElement<rep>
-
-        """
-        return f'FieldElement<{str(self._rep)}>'
+    def __truediv__(self, right: Self) -> Self:
+        """Divide self by right."""
+        return self * right**(-1)
 
 
 class Field[H: Hashable](CommutativeRing[H]):
@@ -124,13 +129,6 @@ class Field[H: Hashable](CommutativeRing[H]):
         self._inv = compose(invert, self._narrow)
 
     def __call__(self, rep: H) -> FieldElement[H]:
-        """
-        Add the unique element to the ring with a given rep.
-
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
-
-        """
         rep = self._narrow(rep)
         return cast(
             FieldElement[H],

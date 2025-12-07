@@ -144,11 +144,12 @@ class BaseSet[H: Hashable](ABC):
         """
         return self is right
 
-    def narrow_type(self, rep: H) -> H:
+    def narrow_rep_type(self, rep: H) -> H:
         """
-        Narrow the type with the concrete algebra's narrowing function. 
+        Narrow the type with a concrete algebra's many-to-one
+        type "narrowing" function. 
 
-        :param rep: Representation to narrow.
+        :param rep: Hashable value of type H.
         :returns: The narrowed representation.
 
         """

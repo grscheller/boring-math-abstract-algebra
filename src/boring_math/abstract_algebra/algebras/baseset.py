@@ -107,15 +107,18 @@ class BaseElement[H: Hashable](ABC):
 
 
 class BaseSet[H: Hashable](ABC):
-    def __init__(self, narrow: Callable[[H], H] = lambda h: h) -> None:
-        self._narrow: Callable[[H], H] = narrow
-        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
+    def __init__(self, narrow: Callable[[H], H] | None = None) -> None:
         self._mult: Callable[[H, H], H] | None = None
         self._one: H | None = None
         self._inv: Callable[[H], H] | None = None
         self._add: Callable[[H, H], H] | None = None
         self._zero: H | None = None
         self._neg: Callable[[H], H] | None = None
+        self._elements: NaturalMapping[H, BaseElement[H]] = dict()
+        if narrow is None:
+            self._narrow: Callable[[H], H] = lambda h: h
+        else:
+            self._narrow = narrow
 
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]:

@@ -98,7 +98,7 @@ class Field[H: Hashable](CommutativeRing[H]):
         zero: H,
         negate: Callable[[H], H],
         invert: Callable[[H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param mult: Closed associative function reps.
@@ -121,7 +121,7 @@ class Field[H: Hashable](CommutativeRing[H]):
             negate=negate,
             narrow=narrow,
         )
-        self._inv = compose(invert, narrow)
+        self._inv = compose(invert, self._narrow)
 
     def __call__(self, rep: H) -> FieldElement[H]:
         """

@@ -88,7 +88,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         self,
         add: Callable[[H, H], H],
         zero: H,
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -98,7 +98,7 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
 
         """
         super().__init__(add=add, narrow=narrow)
-        self._zero = narrow(zero)
+        self._zero = self._narrow(zero)
 
     def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
         """

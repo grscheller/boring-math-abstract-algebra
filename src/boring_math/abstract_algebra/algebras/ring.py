@@ -141,7 +141,7 @@ class Ring[H: Hashable](AbelianGroup[H]):
         one: H,
         zero: H,
         negate: Callable[[H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param add: Closed commutative and associative function reps.
@@ -155,8 +155,8 @@ class Ring[H: Hashable](AbelianGroup[H]):
 
         """
         super().__init__(add=add, zero=zero, negate=negate, narrow=narrow)
-        self._mult = lambda left, right: compose(partial(mult, left), narrow)(right)
-        self._one = narrow(one)
+        self._mult = lambda left, right: compose(partial(mult, left), self._narrow)(right)
+        self._one = self._narrow(one)
 
     def __call__(self, rep: H) -> RingElement[H]:
         """

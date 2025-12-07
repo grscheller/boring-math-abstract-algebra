@@ -119,7 +119,7 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         add: Callable[[H, H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ) -> None:
         """
         :param add: Closed commutative and associative function reps.
@@ -128,7 +128,7 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
 
         """
         super().__init__(narrow=narrow)
-        self._add = lambda left, right: compose(partial(add, left), narrow)(right)
+        self._add = lambda left, right: compose(partial(add, left), self._narrow)(right)
 
     def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """

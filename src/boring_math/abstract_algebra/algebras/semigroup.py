@@ -121,7 +121,7 @@ class Semigroup[H: Hashable](BaseSet[H]):
     def __init__(
         self,
         mult: Callable[[H, H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ) -> None:
         """
         :param mult: Associative function ``H X H -> H`` on reps.
@@ -130,7 +130,7 @@ class Semigroup[H: Hashable](BaseSet[H]):
 
         """
         super().__init__(narrow=narrow)
-        self._mult = lambda left, right: compose(partial(mult, left), narrow)(right)
+        self._mult = lambda left, right: compose(partial(mult, left), self._narrow)(right)
 
     def __call__(self, rep: H) -> SemigroupElement[H]:
         """

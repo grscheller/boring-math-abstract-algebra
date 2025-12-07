@@ -91,7 +91,7 @@ class Group[H: Hashable](Monoid[H]):
         mult: Callable[[H, H], H],
         one: H,
         invert: Callable[[H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param mult: Associative function ``H X H -> H`` on representations.
@@ -103,7 +103,7 @@ class Group[H: Hashable](Monoid[H]):
 
         """
         super().__init__(mult=mult, one=one, narrow=narrow)
-        self._inv = compose(invert, narrow)
+        self._inv = compose(invert, self._narrow)
 
     def __call__(self, rep: H) -> GroupElement[H]:
         """

@@ -61,7 +61,7 @@ class CommutativeRing[H: Hashable](Ring[H]):
         one: H,
         zero: H,
         negate: Callable[[H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param add: Closed commutative and associative function reps.

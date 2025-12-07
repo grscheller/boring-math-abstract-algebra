@@ -114,7 +114,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         add: Callable[[H, H], H],
         zero: H,
         negate: Callable[[H], H],
-        narrow: Callable[[H], H] = lambda h: h,
+        narrow: Callable[[H], H] | None = None,
     ):
         """
         :param add: Closed, commutative and associative function on reps.
@@ -126,7 +126,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
 
         """
         super().__init__(add=add, zero=zero, narrow=narrow)
-        self._neg = compose(negate, narrow)
+        self._neg = compose(negate, self._narrow)
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
         """

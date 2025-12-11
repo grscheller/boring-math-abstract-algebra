@@ -13,21 +13,21 @@
 # limitations under the License.
 
 """
-.. admonition:: Commutative Ring
+..admonition:: Commutative Ring
 
     Mathematically a Commutative Ring is a Ring whose
     multiplication is commutative.
 
 .. important::
 
-    **Contract:** Ring initializer parameters must have
+   **Contract:** Ring initializer parameters must have
 
-    - **add** closed, commutative and associative on reps
-    - **mult** closed, commutative and associative on reps
-    - **one** an identity on reps, ``rep*one == rep == one*rep``
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
-    - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
-    - **zero** ``!=`` **one**
+   - **add** closed, commutative and associative on reps
+   - **mult** closed, commutative and associative on reps
+   - **one** an identity on reps, ``rep*one == rep == one*rep``
+   - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
+   - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
+   - **zero** ``!=`` **one**
 
 """
 
@@ -80,7 +80,8 @@ class CommutativeRing[H: Hashable](Ring[H]):
 
     def __call__(self, rep: H) -> CommutativeRingElement[H]:
         """
-        Add the unique element to the ring with a given rep.
+        Add the unique element to the ring with a with the given,
+        perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

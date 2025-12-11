@@ -55,24 +55,40 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         """
         return f'AbelianGroupElement<{str(self._rep)}>'
 
-    def __mul__(self, n: Self | int) -> Self:
+    def __mul__(self, n: object) -> Self:
         """
+        Repeatedly add an element to itself ``n >= 0`` times.
+
+        :param n: Object, usually a non-negative ``int`` or action.
+        :returns: If ``n: int`` then self added to itself n times
+                  else NotImplemented.
+        :raises ValueError: When ``n < 0``.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
+        :raises TypeError: If algebra fails to have an addition method.
+
         Multiplying an algebra element by an integer ``n>=0``
         is the same as repeated addition.
 
-        :param n: Add the element to itself ``n >= 0`` times.
-        :returns: The sum of the group element ``n`` times.
-        :raises TypeError: if given an element instead of an ``int``.
-        :raises ValueError: If add method was not defined on the algebra.
+        :param n: Object, usually an ``int`` or action.
+        :returns: If ``n: int`` then self, or its negative, added n times
+                  else NotImplemented.
+        :raises ValueError: When ``n <= 0``.
+        :raises ValueError: If ``self`` and ``other`` are same type but
+                            different concrete algebras.
+        :raises TypeError: If an add method was not defined on the algebra.
+        :raises TypeError: If algebra does not have an additive identity.
+        :raises TypeError: Element multiplication attempted but algebra
+                           is not multiplicative.
 
         """
         if isinstance(n, int):
+            algebra = self._algebra
             if n >= 0:
-                algebra = self._algebra
                 if (add := algebra._add) is None:
-                    raise ValueError('Algebra has no addition method')
+                    raise TypeError('Algebra has no addition method')
                 if (zero := algebra._zero) is None:
-                    raise ValueError('Algebra has no additive identity')
+                    raise TypeError('Algebra has no additive identity')
                 r, r1 = zero, self()
                 while n > 0:
                     r, n = add(r, r1), n - 1
@@ -82,8 +98,10 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
                 while n < -1:
                     g, n = g + g_neg, n + 1
                 return g
-
-        raise TypeError('Element multiplication not defined on algebra')
+        if isinstance(n, type(self)):
+            msg = 'Element multiplication not defined on algebra'
+            raise TypeError(msg)
+        return NotImplemented
 
     def __rmul__(self, n: int) -> Self:
         return self.__mul__(n)
@@ -129,6 +147,14 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         self._neg = compose(negate, self._narrow)
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
+        """
+        Add the unique element to the abelian group with a with
+        the given, perhaps narrowed, ``rep``.
+
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+
+        """
         rep = self._narrow(rep)
         return cast(
             AbelianGroupElement[H],

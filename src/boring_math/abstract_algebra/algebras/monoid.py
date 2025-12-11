@@ -13,19 +13,19 @@
 # limitations under the License.
 
 """
-.. admonition:: Monoid
+**Monoid**
 
-    Mathematically a Monoid is a Semigroup **M** along with an identity
-    element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).
+Mathematically a Monoid is a Semigroup **M** along with an identity
+element u, that is (∃u ∈ M) => (∀m ∈ M)(u*m = m*u = m).
 
-    When such an identity element u exists, it is necessarily unique.
+When such an identity element u exists, it is necessarily unique.
 
 .. important::
 
-    **Contract:** Monoid initializer parameters must have
+   **Contract:** Monoid initializer parameters must have
 
-    - **mult** closed and associative on reps
-    - **one** an identity on reps, ``rep*one == rep == one*rep``
+   - **mult** closed and associative on reps
+   - **one** an identity on reps, ``rep*one == rep == one*rep``
 
 """
 
@@ -97,7 +97,8 @@ class Monoid[H: Hashable](Semigroup[H]):
 
     def __call__(self, rep: H) -> MonoidElement[H]:
         """
-        Add the unique element to the monoid with a given rep.
+        Add the unique element to the monoid with a with the given,
+        perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

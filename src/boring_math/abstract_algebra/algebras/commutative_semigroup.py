@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-.. admonition:: Additive Semigroup
+..admonition:: Additive Semigroup
 
     Mathematically an Additive Semigroup is a set **S** along with an
     associative binary operation **add: S X S -> S**.
@@ -99,7 +99,10 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
         :raises ValueError: When ``n <= 0``.
         :raises ValueError: If ``self`` and ``other`` are same type but
                             different concrete algebras.
-        :raises TypeError: If algebra fails to have an addition method.
+        :raises TypeError: If an add method was not defined on the algebra.
+        :raises TypeError: Element multiplication attempted but algebra
+                           is not multiplicative.
+
         """
         algebra = self._algebra
         if isinstance(n, int):
@@ -114,7 +117,7 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
             raise ValueError(msg)
         if isinstance(n, type(self)):
             msg = 'Element multiplication not defined on algebra'
-            raise ValueError(msg)
+            raise TypeError(msg)
         return NotImplemented
 
     def __rmul__(self, n: int) -> Self:
@@ -139,7 +142,8 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
 
     def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """
-        Add the unique element to the additive semigroup with a given rep.
+        Add the unique element to the commutative semigroup with the
+        given, perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

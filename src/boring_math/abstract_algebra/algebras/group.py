@@ -13,23 +13,23 @@
 # limitations under the License.
 
 """
-.. admonition:: Group
+**Group**
 
-    Mathematically a Group is a Monoid **G** all of whose elements
-    have multiplicative inverses.
+Mathematically a Group is a Monoid **G** all of whose elements
+have multiplicative inverses.
 
 .. caution::
 
-    No assumptions are made whether or not the group is Abelian.
-    See **CommunitiveGroup**.
+   No assumptions are made whether or not the group is Abelian.
+   See **CommunitiveGroup**.
 
 .. important::
 
-    **Contract:** Group initializer parameters must have
+   **Contract:** Group initializer parameters must have
 
-    - **mult** closed and associative on reps
-    - **one** an identity on reps, ``rep*one == rep == one*rep``
-    - **inv** must me idempotent: ``inv(inv(rep)) == rep``
+   - **mult** closed and associative on reps
+   - **one** an identity on reps, ``rep*one == rep == one*rep``
+   - **inv** must me idempotent: ``inv(inv(rep)) == rep``
 
 """
 
@@ -107,7 +107,8 @@ class Group[H: Hashable](Monoid[H]):
 
     def __call__(self, rep: H) -> GroupElement[H]:
         """
-        Add the unique element to the group with a given rep.
+        Add the unique element to the group with a with the given,
+        perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

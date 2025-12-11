@@ -46,7 +46,7 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = CommutativeMonoidElement<rep>
+         :returns: str(self) = CommutativeMonoidElement<rep>
 
         """
         return f'CommutativeMonoidElement<{str(self._rep)}>'
@@ -65,8 +65,8 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
                            identity element or an addition method.
 
         """
-        algebra = self._algebra
         if isinstance(n, int):
+            algebra = self._algebra
             if n >= 0:
                 if (zero := algebra._zero) is None:
                     raise TypeError('Algebra has no additive identity')
@@ -107,7 +107,8 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
 
     def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
         """
-        Add the unique element to the monoid with a given rep.
+        Add the unique element to the commutative monoid with the given,
+        perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

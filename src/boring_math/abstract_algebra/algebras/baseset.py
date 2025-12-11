@@ -13,10 +13,10 @@
 # limitations under the License.
 
 """
-.. admonition:: Implementation Details
+**Implementation Details**
 
-    - **BaseSet:** Base class for algebras
-    - **BaseElement:** Base class for elements of algebras.
+- **BaseSet:** Base class for algebras
+- **BaseElement:** Base class for elements of algebras.
 
 """
 
@@ -30,9 +30,11 @@ __all__ = ['BaseSet', 'BaseElement', 'NaturalMapping']
 
 @runtime_checkable
 class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
-    """Similar to the collections/abc.Mapping protocol, NaturalMapping
+    """
+    Similar to the collections/abc.Mapping protocol, NaturalMapping
     supports read-only access to dict-like objects which can be extended
     in a "natural" deterministic way.
+
     """
 
     def __getitem__(self, key: K) -> V: ...
@@ -55,9 +57,9 @@ class BaseElement[H: Hashable](ABC):
         """
         .. warning::
 
-            A trade off is being made in favor of efficiency over
-            encapsulation. An actual reference to the wrapped ``rep``
-            is returned to eliminate the overhead of a copy.
+           A trade off is being made in favor of efficiency over
+           encapsulation. An actual reference to the wrapped ``rep``
+           is returned to eliminate the overhead of a copy.
 
         :returns: The narrowed representation wrapped within the element.
 
@@ -72,8 +74,8 @@ class BaseElement[H: Hashable](ABC):
 
         .. warning::
 
-            Any sort of difference in rep narrowing is not taken into
-            consideration.
+           Any sort of difference in rep narrowing is not taken into
+           consideration.
 
         :param right: Object to be compared with.
         :returns: True if both are elements and the reps compare as equal
@@ -126,10 +128,11 @@ class BaseSet[H: Hashable](ABC):
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]:
         """
-        Add an element to concrete element to the concrete algbra.
+        Add the unique element to the concrete algebra with the given,
+        perhaps narrowed, ``rep`` in a uniquely deterministic way.
 
-        :param rep: Representation to narrow.
-        :returns: The unique element with that narrowed representation.
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
 
         """
         ...

@@ -13,25 +13,25 @@
 # limitations under the License.
 
 """
-.. admonition:: Ring
+**Ring**
 
-    Mathematically a Ring is an abelian group under addition and a
-    Monoid under multiplication. The additive and multiplicative
-    identities are denoted ``one`` and ``zero`` respectfully.
+Mathematically a Ring is an abelian group under addition and a
+Monoid under multiplication. The additive and multiplicative
+identities are denoted ``one`` and ``zero`` respectfully.
 
-    By convention ``one != zero``, otherwise the algebra consists
-    of just one unique element.
+By convention ``one != zero``, otherwise the algebra consists
+of just one unique element.
 
 .. important::
 
-    **Contract:** Ring initializer parameters must have
+   **Contract:** Ring initializer parameters must have
 
-    - **add** closed, commutative and associative on reps
-    - **mult** closed and associative on reps
-    - **one** an identity on reps, ``rep*one == rep == one*rep``
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
-    - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
-    - **zero** ``!=`` **one**
+   - **add** closed, commutative and associative on reps
+   - **mult** closed and associative on reps
+   - **one** an identity on reps, ``rep*one == rep == one*rep``
+   - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
+   - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
+   - **zero** ``!=`` **one**
 
 """
 
@@ -160,7 +160,8 @@ class Ring[H: Hashable](AbelianGroup[H]):
 
     def __call__(self, rep: H) -> RingElement[H]:
         """
-        Add the unique element to the ring with a given rep.
+        Add the unique element to the ring with a with the given,
+        perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

@@ -13,16 +13,16 @@
 # limitations under the License.
 
 """
-.. admonition:: Semigroup
+**Semigroup**
 
-    Mathematically a Semigroup is a set **S** along with an
-    associative binary operation **mult: S X S -> S**.
+Mathematically a Semigroup is a set **S** along with an
+associative binary operation **mult: S X S -> S**.
 
 .. important::
 
-    **Contract:** Semigroup initializer parameters must have
+   **Contract:** Semigroup initializer parameters must have
 
-    - **mult** closed and associative on reps
+   - **mult** closed and associative on reps
 
 """
 
@@ -134,11 +134,12 @@ class Semigroup[H: Hashable](BaseSet[H]):
 
     def __call__(self, rep: H) -> SemigroupElement[H]:
         """
-        Add the unique element to the semigroup with a given rep.
- 
+        Add the unique element to the semigroup with a with the given,
+        perhaps narrowed, ``rep``.
+
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.
- 
+
         """
         rep = self._narrow(rep)
         return cast(

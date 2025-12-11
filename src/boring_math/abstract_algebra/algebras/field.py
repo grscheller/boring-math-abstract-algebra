@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-.. admonition:: Field
+..admonition:: Field
 
     Mathematically a Field is a Commutative Ring all whose non-zero
     elements have multiplicative inverses.
@@ -129,6 +129,14 @@ class Field[H: Hashable](CommutativeRing[H]):
         self._inv = compose(invert, self._narrow)
 
     def __call__(self, rep: H) -> FieldElement[H]:
+        """
+        Add the unique element to the field with a with the given,
+        perhaps narrowed, ``rep``.
+
+        :param rep: Representation to add if not already present.
+        :returns: The unique element with that representation.
+
+        """
         rep = self._narrow(rep)
         return cast(
             FieldElement[H],

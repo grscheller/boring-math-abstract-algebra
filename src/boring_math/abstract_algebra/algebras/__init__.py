@@ -13,8 +13,8 @@
 # limitations under the License.
 
 """
-Boring Math - Abstract Algebra
-==============================
+Algebras
+========
 
 .. admonition:: Concrete representations of abstract algebras
 
@@ -52,40 +52,5 @@ Boring Math - Abstract Algebra
     - There is a one-to-one correspondence between ``rep`` values and elements.
     - Algebra operations act on the elements themselves, not on the reps.
     - Algebras know how to manipulate the representations of their elements.
-
-.. admonition:: Laws for algebras
-
-    Ensure concrete representation of abstract algebras adhere to the
-    laws (mathematical truths) of the abstract algebra.
-
-    - group laws
-
-.. admonition:: Actions on algebras
-
-    Actions can be performed from either the left or the right leveraging
-    the Python multiplication operator ``*``.
-
-.. admonition:: Additional structure on algebras
-
-    Non-algebraic properties for algebras.
-
-    **Orderings**
-
-    - Partial order
-    - Total order
-
-.. admonition:: Tools for algebras
-
-    TODO: Make separate PyPI Boring Math projects?
-
-    - groups
-
-      - Sylow tools
-
-    - rings
-    - fields
-
-      - Galois tools
-
 
 """

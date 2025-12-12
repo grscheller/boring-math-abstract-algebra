@@ -13,12 +13,13 @@
 # limitations under the License.
 
 """
-**Protocols for algebras.**
+.. admonition:: Additional structure for algebras
 
-============= ========================================
-Module        Description
-============= ========================================
-``orderings`` Partial and total orderings on algebras.
-============= ========================================
+    Non-algebraic properties for algebras.
+
+    **Orderings**
+
+    - Partial order
+    - Total order
 
 """

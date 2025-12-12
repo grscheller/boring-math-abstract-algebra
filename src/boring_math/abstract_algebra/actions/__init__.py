@@ -13,19 +13,9 @@
 # limitations under the License.
 
 """
-**Actions on algebras.**
+.. admonition:: Actions on algebras
 
-================================== ========================================
-Module                             Description
-================================== ========================================
-``actions.semigroups``             Actions on semigroups.
-``actions.commutative_semigroups`` Actions on semigroups.
-``actions.monoids``                Actions on monoids.
-``actions.commutative_monoids``    Actions on commutative monoids.
-``actions.groups``                 Actions on groups.
-``actions.abelian_groups``         Actions on Abelian groups.
-``actions.rings``                  Actions on rings.
-``actions.fields``                 Actions on fields (commutative rings).
-================================== ========================================
+    Actions can be performed from either the left or the right
+    leveraging the Python multiplication operator ``*``.
 
 """

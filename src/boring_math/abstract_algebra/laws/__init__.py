@@ -13,19 +13,11 @@
 # limitations under the License.
 
 """
-**Laws for algebras.**
+.. admonition:: Laws for algebras
 
-=============================== ======================================
-Module                          Description
-=============================== ======================================
-``laws.semigroups``             Laws for semigroups.
-``laws.commutative_semigroups`` Laws for semigroups.
-``laws.monoids``                Laws for monoids.
-``laws.commutative_monoids``    Laws for commutative monoids.
-``laws.groups``                 Laws for groups.
-``laws.abelian_groups``         Laws for commutative (Abelian) groups.
-``laws.rings``                  Laws for rings.
-``laws.fields``                 Laws for fields (commutative rings).
-=============================== ======================================
+    Ensure concrete representation of abstract algebras adhere to the
+    laws (mathematical truths) of the abstract algebra.
+
+    - group laws
 
 """

@@ -14,7 +14,7 @@
 
 import re
 from typing import Self
-from boring_math.abstract_algebra.algebras.monoid import Monoid
+from boring_math.abstract_algebra.algebras import Monoid
 
 ## First define infrastructure
 

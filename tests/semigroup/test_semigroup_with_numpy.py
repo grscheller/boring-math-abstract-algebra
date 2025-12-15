@@ -14,7 +14,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from boring_math.abstract_algebra.algebras.semigroup import Semigroup
+from boring_math.abstract_algebra.algebras import Semigroup
 from pythonic_fp.numpy.hashable_wrapped_ndarray import HWrapNDArrayNumber as HWrap
 
 type I32_2x2 = HWrap[npt.NDArray[np.int32]]

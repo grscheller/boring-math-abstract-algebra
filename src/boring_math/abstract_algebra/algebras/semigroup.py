@@ -29,7 +29,7 @@ associative binary operation **mult: S X S -> S**.
 from collections.abc import Callable, Hashable
 from typing import Self, cast
 from pythonic_fp.fptools.function import compose, partial
-from .baseset import BaseSet, BaseElement
+from . import BaseSet, BaseElement
 
 __all__ = ['Semigroup', 'SemigroupElement']
 

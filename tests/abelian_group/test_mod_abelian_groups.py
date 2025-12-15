@@ -14,7 +14,7 @@
 
 from typing import Self
 from boring_math.number_theory import is_prime
-from boring_math.abstract_algebra.algebras.abelian_group import AbelianGroup
+from boring_math.abstract_algebra.algebras import AbelianGroup
 
 ## First define infrastructure
 

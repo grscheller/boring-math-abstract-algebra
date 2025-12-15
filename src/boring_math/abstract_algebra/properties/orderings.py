@@ -31,7 +31,13 @@ class PartialOrder[O](Protocol):
 
     """
 
-    def __le__(self, right: Self) -> bool: ...
+    def __le__(self, right: Self) -> bool:
+        """
+        :param right: RHS of ``<=`` comparison
+        :returns: ``self <= right``
+
+        """
+        ...
 
 
 class TotalOrder[O](PartialOrder[O], Protocol):
@@ -44,10 +50,25 @@ class TotalOrder[O](PartialOrder[O], Protocol):
     """
 
     def __lt__(self, right: Self) -> bool:
+        """
+        :param right: RHS of ``<`` comparison
+        :returns: ``self < right``
+
+        """
         return self <= right and self != right
 
     def __ge__(self, right: Self) -> bool:
+        """
+        :param right: RHS of ``>=`` comparison
+        :returns: ``self >= right``
+
+        """
         return not self < right
 
     def __gt__(self, right: Self) -> bool:
+        """
+        :param right: RHS of ``>`` comparison
+        :returns: ``self > right``
+
+        """
         return not self <= right

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from boring_math.abstract_algebra.algebras.ring import Ring
+from boring_math.abstract_algebra.algebras import Ring
 
 ## Ring of integers
 

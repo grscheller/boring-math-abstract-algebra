@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from boring_math.abstract_algebra.algebras.field import Field
+from boring_math.abstract_algebra.algebras import Field
 
 ## Finite field of seven elements
 

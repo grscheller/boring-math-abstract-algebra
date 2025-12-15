@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from typing import Self
-from boring_math.abstract_algebra.algebras.commutative_monoid import CommutativeMonoid
+from boring_math.abstract_algebra.algebras import CommutativeMonoid
 
 ## First define infrastructure
 

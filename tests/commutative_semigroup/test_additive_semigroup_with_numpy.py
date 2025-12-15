@@ -14,7 +14,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from boring_math.abstract_algebra.algebras.commutative_semigroup import CommutativeSemigroup
+from boring_math.abstract_algebra.algebras import CommutativeSemigroup
 from pythonic_fp.numpy.hashable_wrapped_ndarray import HWrapNDArrayNumber as HWrap
 
 type I64_3x3 = HWrap[npt.NDArray[np.int64]]

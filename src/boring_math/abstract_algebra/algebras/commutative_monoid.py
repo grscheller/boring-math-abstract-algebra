@@ -15,8 +15,10 @@
 """
 .. admonition:: Commutative Monoid
 
-    Mathematically a commutative Monoid is a Semigroup **M** along with
-    an identity element u, that is (∃u ∈ M) => (∀m ∈ M)(u+m = m+u = m).
+    Mathematically a commutative Monoid is a Semigroup ``M`` along with
+    an identity element u, such that
+
+    ``(∃u ∈ M) => (∀m ∈ M)(u+m = m+u = m)``
 
     When such an identity element u exists, it is necessarily unique.
 

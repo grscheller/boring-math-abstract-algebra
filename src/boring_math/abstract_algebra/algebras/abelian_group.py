@@ -15,7 +15,7 @@
 """
 .. admonition:: Abelian Group
 
-    Mathematically an Abelian Group is a Commutative Monoid **G** all of
+    Mathematically an Abelian Group is a Commutative Monoid ``G`` all of
     whose elements have additive inverses.
 
 .. note::
@@ -58,17 +58,6 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
     def __mul__(self, n: object) -> Self:
         """
         Repeatedly add an element to itself ``n >= 0`` times.
-
-        :param n: Object, usually a non-negative ``int`` or action.
-        :returns: If ``n: int`` then self added to itself n times
-                  else NotImplemented.
-        :raises ValueError: When ``n < 0``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises TypeError: If algebra fails to have an addition method.
-
-        Multiplying an algebra element by an integer ``n>=0``
-        is the same as repeated addition.
 
         :param n: Object, usually an ``int`` or action.
         :returns: If ``n: int`` then self, or its negative, added n times
@@ -140,7 +129,7 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         :param negate: Function mapping element representation to the
                        representation of corresponding negated element.
         :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+                       choosing an element from a particular group coset.
 
         """
         super().__init__(add=add, zero=zero, narrow=narrow)
@@ -148,8 +137,8 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
         """
-        Add the unique element to the abelian group with a with
-        the given, perhaps narrowed, ``rep``.
+        Add the unique element to the abelian group with the
+        given, perhaps narrowed, ``rep``.
 
         :param rep: Representation to add if not already present.
         :returns: The unique element with that representation.

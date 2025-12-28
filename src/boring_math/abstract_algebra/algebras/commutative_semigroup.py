@@ -13,10 +13,12 @@
 # limitations under the License.
 
 """
-..admonition:: Additive Semigroup
+.. admonition:: Commutative Semigroup
 
-    Mathematically an Additive Semigroup is a set **S** along with an
-    associative binary operation **add: S X S -> S**.
+    Mathematically a Commutative Semigroup is a set ``S`` along with an
+    associative binary operation ``+`` such that
+
+    ``(∀x ∈ S)(∀y ∈ S)(∀z ∈ S) => (x+(y+z)) = ((x+y)+z)``
 
 .. important::
 

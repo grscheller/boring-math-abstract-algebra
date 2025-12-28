@@ -13,10 +13,12 @@
 # limitations under the License.
 
 """
-**Semigroup**
+.. admonition:: Semigroup
 
-Mathematically a Semigroup is a set **S** along with an
-associative binary operation **mult: S X S -> S**.
+    Mathematically a Semigroup is a set ``S`` along with an
+    associative binary operation ``*`` such that
+
+    ``(∀x ∈ S)(∀y ∈ S)(∀z ∈ S) => (x*(y*z)) = ((x*y)*z)``
 
 .. important::
 

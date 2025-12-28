@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-..admonition:: Commutative Ring
+.. admonition:: Commutative Ring
 
     Mathematically a Commutative Ring is a Ring whose
     multiplication is commutative.

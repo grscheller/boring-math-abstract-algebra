@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-..admonition:: Field
+.. admonition:: Field
 
     Mathematically a Field is a Commutative Ring all whose non-zero
     elements have multiplicative inverses.

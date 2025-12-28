@@ -13,14 +13,14 @@
 # limitations under the License.
 
 """
-**Ring**
+.. admonition:: Ring
 
-Mathematically a Ring is an abelian group under addition and a
-Monoid under multiplication. The additive and multiplicative
-identities are denoted ``one`` and ``zero`` respectfully.
+    Mathematically a Ring is an abelian group under addition and a
+    Monoid under multiplication. The additive and multiplicative
+    identities are denoted ``one`` and ``zero`` respectfully.
 
-By convention ``one != zero``, otherwise the algebra consists
-of just one unique element.
+    By convention ``one != zero``, otherwise the algebra consists
+    of just one unique element.
 
 .. important::
 

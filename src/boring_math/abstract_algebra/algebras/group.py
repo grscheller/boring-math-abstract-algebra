@@ -13,15 +13,14 @@
 # limitations under the License.
 
 """
-**Group**
+.. admonition:: Group
 
-Mathematically a Group is a Monoid **G** all of whose elements
-have multiplicative inverses.
+    Mathematically a Group is a Monoid ``G`` all of whose elements
+    have multiplicative inverses.
 
 .. caution::
 
    No assumptions are made whether or not the group is Abelian.
-   See **CommunitiveGroup**.
 
 .. important::
 

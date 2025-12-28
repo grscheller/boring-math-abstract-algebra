@@ -13,37 +13,33 @@
 # limitations under the License.
 
 """
-Algebras
-========
-
 .. admonition:: Concrete representations of abstract algebras
 
     Mathematically speaking, an **Algebra** is a **set** with a collection
-    of closed n-ary operators. Usually 1 or 2 binary operations, 0 to 2
-    (partial) functions for inverses, and nullary functions for designated
-    elements.
+    of closed n-ary operators
+
+    - Usually 1 or 2 binary operations.
+    - Zero, one, or two possibly partial functions for inverses.
+    - And nullary functions for designated elements.
 
     **Element:**
 
     - Elements know the concrete algebra to which they belong.
     - Each element wraps a hashable immutable representation, called a ``rep``.
-    - Binary operations like * and + can act on elements.
-
-    - Not their representations.
+    - Binary operations like ``*`` and ``+`` can act on elements, not on
+      their representations.
 
     **Algebra:**
 
     - Contains a dict of potential elements.
-
     - Can be used with potentially infinite or continuous algebras.
-    - The dict is "quasi-immutable".
-
-        - Elements are added in a "natural" uniquely deterministic way.
-
-    - Contain user defined functions and attributes to implement the algebra.
-
-    - Functions take ``ref`` parameters and return ``ref`` values.
-    - Attributes are ``ref`` valued.
+    - The dict is "quasi-immutable", elements are added in a "natural"
+      uniquely deterministic way.
+    - Contain user supplied functions and attributes implementing the algebra.
+    - Supplied functions take ``rep`` parameters and return ``ref`` values.
+    - Supplied attributes are ``rep`` valued.
+    - An optional many-to-one function ``narrow: rep -> rep`` to "narrow" the ``rep``
+      to a subset of its type.
 
     The idea is that
 
@@ -55,8 +51,8 @@ Algebras
 
     **Implementation Details**
 
-    - **NaturalMapping** slightly less restrictive version of collections/abc.Mapping
-    - **BaseSet:** Abstract base class for algebras
+    - **NaturalMapping** slightly less restrictive version of collections/abc.Mapping.
+    - **BaseSet:** Abstract base class for algebras.
     - **BaseElement:** Abstract base class for elements of algebras.
 
 """
@@ -209,7 +205,6 @@ from .ring import Ring, RingElement  # noqa: E402
 from .field import Field, FieldElement  # noqa: E402
 
 __all__ = [
-    'NaturalMapping',
     'Semigroup',
     'SemigroupElement',
     'Monoid',

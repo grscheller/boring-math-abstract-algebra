@@ -19,21 +19,27 @@ Abstract Algebra Library
 .. admonition:: Boring Math Abstract Algebra Library
 
     A library designed to construct concrete representations of
-    abstract algebraic systems and verify properties about and
-    between such systems. The term "algebra" will be used loosely
-    to mean either an abstract system unique up to isomorphism,
-    or a concrete representation of such a system.
+    abstract algebraic systems and additional non-algebraic properties
+    on such.
+
+    The term "algebra" will be used loosely to mean either an abstract
+    system unique up to isomorphism, or a concrete representation of
+    such a system.
 
 .. admonition:: Future Directions
 
     TODO: Make separate PyPI Boring Math projects for
 
-    - groups
+    - for groups
 
+      - group actions on sets
       - Sylow tools
 
-    - rings
-    - fields
+    - for rings
+
+      - modules
+
+    - for fields
 
       - Galois tools
 

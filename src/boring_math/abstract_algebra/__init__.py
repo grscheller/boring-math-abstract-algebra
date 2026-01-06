@@ -46,5 +46,5 @@ Abstract Algebra Library
 """
 
 __author__ = 'Geoffrey R. Scheller'
-__copyright__ = 'Copyright (c) 2025 Geoffrey R. Scheller'
+__copyright__ = 'Copyright (c) 2025-2026 Geoffrey R. Scheller'
 __license__ = 'Apache License 2.0'

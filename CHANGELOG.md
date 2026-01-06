@@ -14,6 +14,13 @@ See [Semantic Versioning 2.0.0](https://semver.org).
 
 ## Releases and Important Milestones
 
+### Released PyPI version 1.1.0 - 2025-12-01
+
+Narrowed focus to just concrete representations of algebras.
+
+Decided to take a break from abstract algebra for a while. New algebra
+efforts will likely be done in new PyPI projects.
+
 ### Released PyPI version 0.1.0 - 2025-12-01
 
 Suspect I am off with my test dependencies in pyproject.toml

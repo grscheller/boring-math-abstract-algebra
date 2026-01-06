@@ -10,9 +10,9 @@ keywords = [
   "abstract algebra",
 ]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Framework :: Pytest",
-  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3.13",

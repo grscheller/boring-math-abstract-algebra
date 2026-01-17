@@ -1,4 +1,4 @@
-# Copyright 2025 Geoffrey R. Scheller
+# Copyright 2025-2026 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
 # limitations under the License.
 
 """
+Group
+-----
+
 .. admonition:: Group
 
     Mathematically a Group is a Monoid ``G`` all of whose elements
@@ -51,6 +54,7 @@ class GroupElement[H: Hashable](MonoidElement[H]):
     def __str__(self) -> str:
         """
         :returns: str(self) = GroupElement<rep>
+
         """
         return f'GroupElement<{str(self._rep)}>'
 

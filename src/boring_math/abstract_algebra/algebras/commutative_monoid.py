@@ -1,4 +1,4 @@
-# Copyright 2025 Geoffrey R. Scheller
+# Copyright 2025-2026 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,13 @@
 # limitations under the License.
 
 """
+Commutative Monoid
+------------------
+
 .. admonition:: Commutative Monoid
 
     Mathematically a commutative Monoid is a Semigroup ``M`` along with
-    an identity element u, such that
+    an identity element ``u``, such that
 
     ``(∃u ∈ M) => (∀m ∈ M)(u+m = m+u = m)``
 

@@ -1,4 +1,4 @@
-# Copyright 2025 Geoffrey R. Scheller
+# Copyright 2025-2026 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
 # limitations under the License.
 
 """
+Semigroup
+---------
+
 .. admonition:: Semigroup
 
     Mathematically a Semigroup is a set ``S`` along with an
@@ -105,6 +108,7 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
         :returns: The product of the element n times.
         :raises ValueError: When ``n <= 0``.
         :raises ValueError: If algebra does not have a mult attribute.
+
         """
         if n > 0:
             algebra = self._algebra

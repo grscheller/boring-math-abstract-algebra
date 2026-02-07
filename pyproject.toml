@@ -1,6 +1,6 @@
 [project]
 name = "boring-math-abstract-algebra"
-version = "1.1.0"
+version = "1.1.1"
 readme = "README.rst"
 requires-python = ">=3.13"
 license = { file = "LICENSE" }
@@ -72,7 +72,10 @@ target-version = "py313"
 docstring-quotes = "double"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["C901"]
+"tests/**/*.py" = [
+  "E731",
+  "C901",
+]
 "**/*.py" = ["E741"]
 
 [tool.ruff.format]

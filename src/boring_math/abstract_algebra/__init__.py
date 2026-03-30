@@ -13,10 +13,10 @@
 # limitations under the License.
 
 """
-Abstract Algebra Library
+Abstract algebra Library
 ------------------------
 
-.. admonition:: Boring Math Abstract Algebra Library
+.. admonition:: Boring Math Abstract Algebra Representation Library
 
     A library designed to construct concrete representations of
     abstract algebraic systems and additional non-algebraic properties

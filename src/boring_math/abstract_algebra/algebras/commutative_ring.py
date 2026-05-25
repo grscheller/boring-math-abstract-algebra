@@ -21,16 +21,16 @@ Commutative Ring
     Mathematically a Commutative Ring is a Ring whose
     multiplication is commutative.
 
-.. important::
+    .. important::
 
-   **Contract:** Ring initializer parameters must have
+        **Contract:** Ring initializer parameters must have
 
-   - **add** closed, commutative and associative on reps
-   - **mult** closed, commutative and associative on reps
-   - **one** an identity on reps, ``rep*one == rep == one*rep``
-   - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
-   - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
-   - **zero** ``!=`` **one**
+        - **add** closed, commutative and associative on reps
+        - **mult** closed, commutative and associative on reps
+        - **one** an identity on reps, ``rep*one == rep == one*rep``
+        - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
+        - **negate** maps ``rep -> -rep``, ``rep + negate(rep) == zero``
+        - **zero** ``!=`` **one**
 
 """
 
@@ -51,7 +51,13 @@ class CommutativeRingElement[H: Hashable](RingElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = CommutativeRingElement<rep>
+        .. admonition:: user string
+
+            Construct string 'CommutativeRingElement<rep_str>' where
+            rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
+
         """
         return f'CommutativeRingElement<{str(self._rep)}>'
 
@@ -67,14 +73,16 @@ class CommutativeRing[H: Hashable](Ring[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param mult: Closed associative function reps.
-        :param add: Closed commutative and associative function reps.
-        :param one: Representation for multiplicative identity.
-        :param zero: Representation for additive identity.
-        :param negate: Function mapping element representation to the
-                       representation of corresponding negated element.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param mult: Closed associative function reps.
+            :param add: Closed commutative and associative function reps.
+            :param one: Representation for multiplicative identity.
+            :param zero: Representation for additive identity.
+            :param negate: Function mapping element representation to the
+                           representation of corresponding negated element.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(
@@ -83,11 +91,13 @@ class CommutativeRing[H: Hashable](Ring[H]):
 
     def __call__(self, rep: H) -> CommutativeRingElement[H]:
         """
-        Add the unique element to the ring with a with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the ring with a with the given
+            perhaps narrowed rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

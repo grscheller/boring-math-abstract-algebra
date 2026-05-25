@@ -28,52 +28,57 @@ __all__ = ['PartialOrder', 'TotalOrder']
 
 
 class PartialOrder[O](Protocol):
-    """Partially Ordered.
+    """
+    .. admonition:: Partially Ordered
 
-    .. important::
+        .. important::
 
-        Contract: Operator ``<=`` is reflexive, anti-symmetric and transitive.
+            Contract: Operator ``<=`` is reflexive, anti-symmetric and transitive.
 
     """
 
     def __le__(self, right: Self) -> bool:
         """
-        :param right: RHS of ``<=`` comparison
-        :returns: ``self <= right``
+        :param right: RHS of <= comparison
+        :returns: self <= right
 
         """
         ...
 
 
 class TotalOrder[O](PartialOrder[O], Protocol):
-    """Totally Ordered.
+    """
+    .. admonition:: Totally Ordered
 
-    .. important::
+        .. important::
 
-        Contract: Overloaded methods must still define a total order.
+            Contract: Overloaded methods must still define a total order.
 
     """
 
     def __lt__(self, right: Self) -> bool:
         """
-        :param right: RHS of ``<`` comparison
-        :returns: ``self < right``
+        .. admonition:: lt
+            :param right: RHS of < comparison
+            :returns: self < right
 
         """
         return self <= right and self != right
 
     def __ge__(self, right: Self) -> bool:
         """
-        :param right: RHS of ``>=`` comparison
-        :returns: ``self >= right``
+        .. admonition:: ge
+            :param right: RHS of ``>=`` comparison
+            :returns: ``self >= right``
 
         """
         return not self < right
 
     def __gt__(self, right: Self) -> bool:
         """
-        :param right: RHS of ``>`` comparison
-        :returns: ``self > right``
+        .. admonition:: gt
+            :param right: RHS of ``>`` comparison
+            :returns: ``self > right``
 
         """
         return not self <= right

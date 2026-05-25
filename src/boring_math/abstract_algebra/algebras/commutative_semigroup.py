@@ -23,11 +23,11 @@ Commutative Semigroup
 
     ``(∀x ∈ S)(∀y ∈ S)(∀z ∈ S) => (x+(y+z)) = ((x+y)+z)``
 
-.. important::
+    .. important::
 
-    **Contract:** Group initializer parameters must have
+        **Contract:** Group initializer parameters must have
 
-    - **add** closed, commutative and associative on reps
+        - **add** closed, commutative and associative on reps
 
 """
 
@@ -49,21 +49,28 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = CommutativeSemigroupElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'CommutativeSemigroupElement<rep_str>'
+            where rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'CommutativeSemigroupElement<{str(self._rep)}>'
 
     def __add__(self, right: Self) -> Self:
         """
-        Add two elements of the same concrete algebra together.
+        .. admonition:: add
 
-        :param other: Another element within the same algebra.
-        :returns: The sum ``self + other``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises TypeError: If Addition not defined on the algebra of the elements.
-        :raises TypeError: If ``self`` and ``right`` are different types.
+            Add two elements of the same concrete algebra together.
+
+            :param other: Another element within the same algebra.
+            :returns: The sum ``self + other``.
+            :raises ValueError: If ``self`` and ``other`` are same type but
+                                different concrete algebras.
+            :raises TypeError: If Addition not defined on the algebra of the elements.
+            :raises TypeError: If ``self`` and ``right`` are different types.
 
         """
         if isinstance(right, type(self)):
@@ -83,13 +90,15 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
 
     def __radd__(self, left: Self) -> Self:
         """
-        When left side of addition does not know how to add right side.
+        .. admonition:: radd
+                                
+            When left side of addition does not know how to add right side.
 
-        :param other: Left side of the addition.
-        :returns: Never returns, otherwise ``left.__add__(right)``
-                  would have worked.
-        :raises TypeError: When right side does not know how to
-                add the left side to itself.
+            :param other: Left side of the addition.
+            :returns: Never returns, otherwise ``left.__add__(right)``
+                      would have worked.
+            :raises TypeError: When right side does not know how to
+                               add the left side to itself.
 
         """
         msg = 'Left addition operand different type than right'
@@ -97,17 +106,19 @@ class CommutativeSemigroupElement[H: Hashable](BaseElement[H]):
 
     def __mul__(self, n: object) -> Self:
         """
-        Repeatedly add an element to itself ``n > 0`` times.
+        .. admonition:: mul
 
-        :param n: Object, usually a positive ``int`` or action.
-        :returns: If ``n: int`` then self added to itself n times
-                  else NotImplemented.
-        :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises TypeError: If an add method was not defined on the algebra.
-        :raises TypeError: Element multiplication attempted but algebra
-                           is not multiplicative.
+            Repeatedly add an element to itself n > 0 times.
+
+            :param n: Object, usually a positive int or action.
+            :returns: If n: int then self added to itself n times
+                      else NotImplemented.
+            :raises ValueError: When n <= 0.
+            :raises ValueError: If self and other are same type but
+                                different concrete algebras.
+            :raises TypeError: If an add method was not defined on the algebra.
+            :raises TypeError: Element multiplication attempted but algebra
+                               is not multiplicative.
 
         """
         algebra = self._algebra
@@ -138,9 +149,11 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
         narrow: Callable[[H], H] | None = None,
     ) -> None:
         """
-        :param add: Closed commutative and associative function reps.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param add: Closed commutative and associative function reps.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(narrow=narrow)
@@ -148,11 +161,13 @@ class CommutativeSemigroup[H: Hashable](BaseSet[H]):
 
     def __call__(self, rep: H) -> CommutativeSemigroupElement[H]:
         """
-        Add the unique element to the commutative semigroup with the
-        given, perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the commutative semigroup with the
+            given, perhaps narrowed, ``rep``.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

@@ -24,18 +24,18 @@ Field
     By convention ``one != zero``, otherwise the algebra consists
     of just one unique element.
 
-.. important::
+    .. important::
 
-    **Contract:** Field initializer parameters must have
+        **Contract:** Field initializer parameters must have
 
-    - **add** closed, commutative and associative on reps
-    - **mult** closed, commutative and associative on reps
-    - **one** an identity on reps, ``rep*one == rep == one*rep``
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
-    - **inv** is the mult inverse function on all non-zero reps
-    - **negate** function to negate all proper rep values
-    - **invert** function to invert all proper rep values
-    - **zero** ``!=`` **one** (by convention)
+        - **add** closed, commutative and associative on reps
+        - **mult** closed, commutative and associative on reps
+        - **one** an identity on reps, ``rep*one == rep == one*rep``
+        - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
+        - **inv** is the mult inverse function on all non-zero reps
+        - **negate** function to negate all proper rep values
+        - **invert** function to invert all proper rep values
+        - **zero** ``!=`` **one** (by convention)
 
 """
 
@@ -57,20 +57,27 @@ class FieldElement[H: Hashable](CommutativeRingElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = FieldElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'FieldElement<rep_str>'
+            where rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'FieldElement<{str(self._rep)}>'
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise the element to the ``int`` power of ``n``.
+        .. admonition:: pow
 
-        :param n: The ``int`` power to raise the element to.
-        :returns: The element (or its inverse) raised to an ``int`` power.
-        :raises ValueError: If algebra is not multiplicative.
-        :raises ValueError: If algebra does not have a multiplicative identity element.
-        :raises ValueError: If algebra does not have multiplicative inverses.
+            Raise the element to the integer power of ``n``.
+
+            :param n: The integer power to raise the element to.
+            :returns: The element (or its inverse) raised to the power of n.
+            :raises ValueError: If algebra is not multiplicative.
+            :raises ValueError: If algebra does not have a multiplicative identity element.
+            :raises ValueError: If algebra does not have multiplicative inverses.
 
         """
         algebra = self._algebra
@@ -109,16 +116,18 @@ class Field[H: Hashable](CommutativeRing[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param mult: Closed associative function reps.
-        :param add: Closed commutative and associative function reps.
-        :param one: Representation for multiplicative identity.
-        :param zero: Representation for additive identity.
-        :param negate: Function mapping element representation to the
-                       representation of corresponding negated element.
-        :param invert: Function mapping non-zero element representations
-                       to their multiplicative inverses.
-        :param narrow: Narrow the rep type, many to one function, like
-                       choosing an element from a coset of a group,
+        .. admonition:: init
+
+            :param mult: Closed associative function reps.
+            :param add: Closed commutative and associative function reps.
+            :param one: Representation for multiplicative identity.
+            :param zero: Representation for additive identity.
+            :param negate: Function mapping element representation to the
+                           representation of corresponding negated element.
+            :param invert: Function mapping non-zero element representations
+                           to their multiplicative inverses.
+            :param narrow: Narrow the rep type, many to one function, like
+                           choosing an element from a coset of a group,
 
         """
         super().__init__(
@@ -133,11 +142,13 @@ class Field[H: Hashable](CommutativeRing[H]):
 
     def __call__(self, rep: H) -> FieldElement[H]:
         """
-        Add the unique element to the field with a with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the field with a with the given
+            narrowed rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

@@ -25,12 +25,12 @@ Commutative Monoid
 
     When such an identity element u exists, it is necessarily unique.
 
-.. important::
+    .. important::
 
-    **Contract:** Commutative Monoid initializer parameters must have
+        **Contract:** Commutative Monoid initializer parameters must have
 
-    - **add** closed commutative and associative on reps
-    - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
+        - **add** closed commutative and associative on reps
+        - **zero** an identity on reps, ``rep+zero == rep == zero+rep``
 
 """
 
@@ -51,23 +51,30 @@ class CommutativeMonoidElement[H: Hashable](CommutativeSemigroupElement[H]):
 
     def __str__(self) -> str:
         """
-         :returns: str(self) = CommutativeMonoidElement<rep>
+        .. admonition:: user string
+
+            Construct string 'CommutativeMonoidElement<rep_str>' where
+            rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'CommutativeMonoidElement<{str(self._rep)}>'
 
     def __mul__(self, n: object) -> Self:
         """
-        Repeatedly add an element to itself ``n >= 0`` times.
+        .. admonition:: mul
 
-        :param n: Object, usually a non-negative ``int`` or action.
-        :returns: If ``n: int`` then self added to itself n times
-                  else NotImplemented.
-        :raises ValueError: When ``n < 0``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises TypeError: If algebra fails to have an additive
-                           identity element or an addition method.
+            Repeatedly add an element to itself ``n >= 0`` times.
+
+            :param n: Object, usually a non-negative ``int`` or action.
+            :returns: If ``n: int`` then self added to itself n times
+                      else NotImplemented.
+            :raises ValueError: When ``n < 0``.
+            :raises ValueError: If ``self`` and ``other`` are same type but
+                                different concrete algebras.
+            :raises TypeError: If algebra fails to have an additive
+                               identity element or an addition method.
 
         """
         if isinstance(n, int):
@@ -101,10 +108,12 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param add: Closed commutative and associative function reps.
-        :param zero: Representation for additive identity.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param add: Closed commutative and associative function reps.
+            :param zero: Representation for additive identity.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(add=add, narrow=narrow)
@@ -112,11 +121,13 @@ class CommutativeMonoid[H: Hashable](CommutativeSemigroup[H]):
 
     def __call__(self, rep: H) -> CommutativeMonoidElement[H]:
         """
-        Add the unique element to the commutative monoid with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the commutative monoid with the
+            given, perhaps narrowed, ``rep``.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that narrowed representation.
 
         """
         rep = self._narrow(rep)

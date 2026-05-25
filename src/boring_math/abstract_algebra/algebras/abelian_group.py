@@ -21,17 +21,17 @@ Abelian Group
     Mathematically an Abelian Group is a Commutative Monoid ``G`` all of
     whose elements have additive inverses.
 
-.. note::
+    .. note::
 
-    Addition is used for the group operation.
+        Addition is used for the group operation.
 
-.. important::
+    .. important::
 
-    **Contract:** AbelianGroup initializer parameters must have
+        **Contract:** AbelianGroup initializer parameters must have
 
-    - **add** closed, associative and commutative on reps
-    - **zero** additive identity on reps, ``rep.add(zero) == rep == zero.add(rep)``
-    - **negate** must me idempotent: ``neg(neg(rep)) == rep``
+        - **add** closed, associative and commutative on reps
+        - **zero** additive identity on reps, ``rep.add(zero) == rep == zero.add(rep)``
+        - **negate** must me idempotent: ``neg(neg(rep)) == rep``
 
 """
 
@@ -49,29 +49,42 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
         rep: H,
         algebra: 'AbelianGroup[H]',
     ) -> None:
+        """
+        .. admonition:: init
+
+            :param rep: Coset element to be narrowed.
+            :param algebra: Abelian group to which element belongs.
+        """
         super().__init__(rep, algebra)
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = AbelianGroupElement<rep>
+        .. admonition:: user string
+
+            Construct string 'AbelianGroupElement<rep_str>' where
+            rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'AbelianGroupElement<{str(self._rep)}>'
 
     def __mul__(self, n: object) -> Self:
         """
-        Repeatedly add an element to itself ``n >= 0`` times.
+        .. admonition:: mul
 
-        :param n: Object, usually an ``int`` or action.
-        :returns: If ``n: int`` then self, or its negative, added n times
-                  else NotImplemented.
-        :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If ``self`` and ``other`` are same type but
-                            different concrete algebras.
-        :raises TypeError: If an add method was not defined on the algebra.
-        :raises TypeError: If algebra does not have an additive identity.
-        :raises TypeError: Element multiplication attempted but algebra
-                           is not multiplicative.
+            Repeatedly add an element to itself ``n >= 0`` times.
+
+            :param n: Object, usually an ``int`` or action.
+            :returns: If n: int then self, or its negative, added n
+                      times, else NotImplemented.
+            :raises ValueError: When n <= 0.
+            :raises ValueError: If self and other are same type but
+                                different concrete algebras.
+            :raises TypeError: If an add method was not defined on the algebra.
+            :raises TypeError: If algebra does not have an additive identity.
+            :raises TypeError: Element multiplication attempted but algebra
+                               is not multiplicative.
 
         """
         if isinstance(n, int):
@@ -100,10 +113,10 @@ class AbelianGroupElement[H: Hashable](CommutativeMonoidElement[H]):
 
     def __neg__(self) -> Self:
         """
-        Negate the element.
+        .. admonition:: negate element
 
-        :returns: The unique additive inverse element to ``self``.
-        :raises ValueError: If algebra fails to have additive inverses.
+            :returns: The unique additive inverse element to ``self``.
+            :raises ValueError: If algebra fails to have additive inverses.
 
         """
         algebra = self._algebra
@@ -127,12 +140,14 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param add: Closed, commutative and associative function on reps.
-        :param zero: Representation for additive identity.
-        :param negate: Function mapping element representation to the
-                       representation of corresponding negated element.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a particular group coset.
+        .. admonition:: init
+
+            :param add: Closed, commutative and associative function on reps.
+            :param zero: Representation for additive identity.
+            :param negate: Function mapping element representation to the
+                           representation of corresponding negated element.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a particular group coset.
 
         """
         super().__init__(add=add, zero=zero, narrow=narrow)
@@ -140,11 +155,13 @@ class AbelianGroup[H: Hashable](CommutativeMonoid[H]):
 
     def __call__(self, rep: H) -> AbelianGroupElement[H]:
         """
-        Add the unique element to the abelian group with the
-        given, perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the abelian group with the
+            given, perhaps narrowed, rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

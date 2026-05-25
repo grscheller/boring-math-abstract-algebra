@@ -56,23 +56,30 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = RingElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'RingElement<rep_str>'
+            where rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'RingElement<{str(self._rep)}>'
 
     def __mul__(self, right: object) -> Self:
         """
-        Left multiplication for ``*`` operator.
+        .. admonition:: mul
 
-        :param right: Object ``left`` should be an element of same
-                      concrete algebra or an ``int``.
-        :returns: Algebra product, the sum of the element ``right`` times,
-                  or ``NotImplemented``.
-        :raises ValueError: If either right not an element of the same
-                            concrete algebra  or ``right: int < 0``.
-        :raises TypeError: Multiplication nor defined on the algebra
-                           that ``self`` is a member of.
+            Left multiplication for ``*`` operator.
+
+            :param right: Object right should be an element of same
+                          concrete algebra or an int.
+            :returns: Algebra product, the sum of the element right times,
+                      or ``NotImplemented``.
+            :raises ValueError: If either right not an element of the same
+                                concrete algebra  or ``right: int < 0``.
+            :raises TypeError: Multiplication not defined on the algebra
+                               that self is a member of.
 
         """
         if isinstance(right, int):
@@ -94,12 +101,14 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
     def __rmul__(self, left: object) -> Self:
         """
-        Right multiplication for ``*`` operator.
+        .. admonition:: rmul
 
-        :param left: Object ``left`` should be an ``int``.
-        :returns: The sum of the element ``left`` times.
-        :raises TypeError: If object on left does not act
-                           on object on right
+            Right multiplication for ``*`` operator.
+
+            :param left: Object ``left`` should be an int.
+            :returns: The sum of the element ``left`` times.
+            :raises TypeError: If object on left does not act
+                               on object on right
 
         """
         if isinstance(left, int):
@@ -110,15 +119,17 @@ class RingElement[H: Hashable](AbelianGroupElement[H]):
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise element to power to the ``int`` power of ``n>=0``.
+        .. admonition:: pow
 
-        :param n: The ``int`` power to raise the element to.
-        :returns: The element  raised to the non-negative integer
-                  ``n`` power.
-        :raises ValueError: If algebra is not multiplicative.
-        :raises ValueError: If algebra does not have a multiplicative
-                            identity element.
-        :raises ValueError: If ``n < 0``.
+            Raise element to power to the integer power of n>=0.
+
+            :param n: The ``int`` power to raise the element to.
+            :returns: The element  raised to the non-negative integer
+                      n power.
+            :raises ValueError: If algebra is not multiplicative.
+            :raises ValueError: If algebra does not have a multiplicative
+                                identity element.
+            :raises ValueError: If n < 0.
 
         """
         algebra = self._algebra
@@ -147,14 +158,16 @@ class Ring[H: Hashable](AbelianGroup[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param add: Closed commutative and associative function reps.
-        :param mult: Closed associative function reps.
-        :param one: Representation for multiplicative identity.
-        :param zero: Representation for additive identity.
-        :param negate: Function mapping element representation to the
-                       representation of corresponding negated element.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param add: Closed commutative and associative function reps.
+            :param mult: Closed associative function reps.
+            :param one: Representation for multiplicative identity.
+            :param zero: Representation for additive identity.
+            :param negate: Function mapping element representation to the
+                           representation of corresponding negated element.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(add=add, zero=zero, negate=negate, narrow=narrow)
@@ -163,11 +176,13 @@ class Ring[H: Hashable](AbelianGroup[H]):
 
     def __call__(self, rep: H) -> RingElement[H]:
         """
-        Add the unique element to the ring with a with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the ring with a with the given
+            narrowed rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

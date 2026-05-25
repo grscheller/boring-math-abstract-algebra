@@ -21,17 +21,17 @@ Group
     Mathematically a Group is a Monoid ``G`` all of whose elements
     have multiplicative inverses.
 
-.. caution::
+    .. caution::
 
-   No assumptions are made whether or not the group is Abelian.
+       No assumptions are made whether or not the group is Abelian.
 
-.. important::
+    .. important::
 
-   **Contract:** Group initializer parameters must have
+       **Contract:** Group initializer parameters must have
 
-   - **mult** closed and associative on reps
-   - **one** an identity on reps, ``rep*one == rep == one*rep``
-   - **inv** must me idempotent: ``inv(inv(rep)) == rep``
+       - **mult** closed and associative on reps
+       - **one** an identity on reps, ``rep*one == rep == one*rep``
+       - **inv** must me idempotent: ``inv(inv(rep)) == rep``
 
 """
 
@@ -53,20 +53,27 @@ class GroupElement[H: Hashable](MonoidElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = GroupElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'GroupElement<rep_str>'
+            where rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'GroupElement<{str(self._rep)}>'
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise the element to the power of ``n``.
+        .. admonition:: pow
 
-        :param n: The ``int`` power to raise the element to.
-        :returns: The element (or its inverse) raised to the integer``n`` power.
-        :raises ValueError: If element's algebra 
-        :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
-        :raises ValueError: If algebra fails to have an identity or elements not invertible.
+            Raise the element to the integer power of n.
+
+            :param n: The int power to raise the element to.
+            :returns: The element (or its inverse) raised to the integer n power.
+            :raises ValueError: If element's algebra
+            :raises ValueError: If ``self`` and ``other`` are same type but different concrete groups.
+            :raises ValueError: If algebra fails to have an identity or elements not invertible.
 
         """
         algebra = self._algebra
@@ -97,12 +104,14 @@ class Group[H: Hashable](Monoid[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param mult: Associative function ``H X H -> H`` on representations.
-        :param one: Representation for multiplicative identity.
-        :param invert: Function ``H -> H`` mapping element representation to
-                       the representation of corresponding inverse element.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param mult: Associative function ``H X H -> H`` on representations.
+            :param one: Representation for multiplicative identity.
+            :param invert: Function ``H -> H`` mapping element representation to
+                           the representation of corresponding inverse element.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(mult=mult, one=one, narrow=narrow)
@@ -110,11 +119,13 @@ class Group[H: Hashable](Monoid[H]):
 
     def __call__(self, rep: H) -> GroupElement[H]:
         """
-        Add the unique element to the group with a with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the group with a with the given,
+            perhaps narrowed, rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

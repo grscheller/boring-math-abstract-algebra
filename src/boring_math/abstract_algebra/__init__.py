@@ -14,7 +14,7 @@
 
 """
 Abstract algebra Library
-------------------------
+========================
 
 .. admonition:: Boring Math Abstract Algebra Representation Library
 

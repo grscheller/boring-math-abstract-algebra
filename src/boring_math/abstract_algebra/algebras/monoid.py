@@ -24,12 +24,12 @@ Monoid
 
     When such an identity element u exists, it is necessarily unique.
 
-.. important::
+    .. important::
 
-   **Contract:** Monoid initializer parameters must have
+       **Contract:** Monoid initializer parameters must have
 
-   - **mult** closed and associative on reps
-   - **one** an identity on reps, ``rep*one == rep == one*rep``
+       - **mult** closed and associative on reps
+       - **one** an identity on reps, ``rep*one == rep == one*rep``
 
 """
 
@@ -46,26 +46,40 @@ class MonoidElement[H: Hashable](SemigroupElement[H]):
         rep: H,
         algebra: 'Monoid[H]',
     ) -> None:
+        """
+        .. admonition:: init
+
+            :param rep: Representative to to narrow when adding element.
+            :param algebra: Monoid to add element to.
+
+        """
         super().__init__(rep, cast(Semigroup[H], algebra))
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = MonoidElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'MonoidElement<rep_str>'
+            where rep_str = str(rep>.
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'MonoidElement<{str(self._rep)}>'
 
     def __pow__(self, n: int) -> Self:
         """
-        Raise the element to power to the power of ``n>=0``.
+        .. admonition:: pow
 
-        :param n: The ``int`` power to raise the element to.
-        :returns: The element (or its inverse) raised to the
-                  integer ``n`` power.
-        :raises TypeError: If ``self`` and ``other`` are different types.
-        :raises ValueError: If ``self`` and ``other`` are same type
-                            but different concrete groups.
-        :raises ValueError: If algebra fails to have an identity element.
+            Raise the element to power to the power of ``n>=0``.
+
+            :param n: The integer power to raise the element to.
+            :returns: The element (or its inverse) raised to the
+                      integer ``n`` power.
+            :raises TypeError: If ``self`` and ``other`` are different types.
+            :raises ValueError: If ``self`` and ``other`` are same type
+                                but different concrete monoids.
+            :raises ValueError: If algebra fails to have an identity element.
 
         """
         if n >= 0:
@@ -90,10 +104,12 @@ class Monoid[H: Hashable](Semigroup[H]):
         narrow: Callable[[H], H] | None = None,
     ):
         """
-        :param mult: Associative function ``H X H -> H`` on representations.
-        :param one: Representation for multiplicative identity.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param mult: Associative function ``H X H -> H`` on representations.
+            :param one: Representation for multiplicative identity.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing an element from a coset of a group.
 
         """
         super().__init__(mult=mult, narrow=narrow)
@@ -101,11 +117,13 @@ class Monoid[H: Hashable](Semigroup[H]):
 
     def __call__(self, rep: H) -> MonoidElement[H]:
         """
-        Add the unique element to the monoid with a with the given,
-        perhaps narrowed, ``rep``.
+        .. admonition:: call
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the monoid with a with the given
+            narrowed rep.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element with that representation.
 
         """
         rep = self._narrow(rep)

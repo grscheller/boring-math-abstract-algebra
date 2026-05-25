@@ -69,9 +69,11 @@ from typing import Protocol, Self, runtime_checkable
 @runtime_checkable
 class NaturalMapping[K: Hashable, V](Sized, Iterable[K], Container[K], Protocol):
     """
-    Similar to the collections/abc.Mapping protocol, NaturalMapping
-    supports read-only access to dict-like objects which can be extended
-    in a "natural" deterministic way.
+    .. admonition:: natural mapping
+
+        Similar to the collections/abc.Mapping protocol, NaturalMapping
+        supports read-only access to dict-like objects which can be
+        extended in a "natural" deterministic way.
 
     """
 
@@ -85,6 +87,13 @@ class BaseElement[H: Hashable](ABC):
         rep: H,
         algebra: 'BaseSet[H]',
     ) -> None:
+        """
+        .. admonition:: abstract base class for algebra element
+
+            :param rep: Coset element to be narrowed to a representative.
+            :param algebra: Algebra to which element belongs
+
+        """
         self._rep = algebra._narrow(rep)
         self._algebra = algebra
 
@@ -93,31 +102,34 @@ class BaseElement[H: Hashable](ABC):
 
     def __call__(self) -> H:
         """
-        .. warning::
+        .. admonition:: call
 
-           A trade off is being made in favor of efficiency over
-           encapsulation. An actual reference to the wrapped ``rep``
-           is returned to eliminate the overhead of a copy.
+            :returns: A reference to the element's representation
 
-        :returns: The narrowed representation wrapped within the element.
+            .. warning::
+
+                A trade off is being made in favor of efficiency over
+                encapsulation. An actual reference to the wrapped rep
+                is returned to eliminate the overhead of a copy.
 
         """
         return self._rep
 
     def __eq__(self, right: object) -> bool:
         """
-        Compares if two elements, not necessarily in the same concrete
-        algebra, contain equal representations of the same hashable
-        type.
+        .. admonition:: equality comparison
 
-        .. warning::
+            :param right: Object to be compared with.
+            :returns: True if both are algebra elements and the reps
+                      compare as equal and are of the same invariant type.
 
-           Any sort of difference in rep narrowing is not taken into
-           consideration.
+            .. warning::
 
-        :param right: Object to be compared with.
-        :returns: True if both are elements and the reps compare as equal
-                  and are of the same invariant type.
+                Elements not necessarily from the same algebra.
+
+                Also, any sort of difference in rep narrowing is not
+                taken into consideration.
+
 
         """
         if not isinstance(right, type(self)):
@@ -166,32 +178,34 @@ class BaseSet[H: Hashable](ABC):
     @abstractmethod
     def __call__(self, rep: H) -> BaseElement[H]:
         """
-        Add the unique element to the concrete algebra with the given,
-        perhaps narrowed, ``rep`` in a uniquely deterministic way.
+        .. admonition:: add element
 
-        :param rep: Representation to add if not already present.
-        :returns: The unique element with that representation.
+            Add the unique element to the concrete algebra with the
+            given, perhaps narrowed, rep in a uniquely deterministic way.
+
+            :param rep: Representation to add if not already present.
+            :returns: The unique element added.
 
         """
         ...
 
     def __eq__(self, right: object) -> bool:
         """
-        Compare if two algebras are the same concrete algebra.
+        .. admonition:: equality comparison
 
-        :param right: Object being compared to.
-        :returns: True only if ``right`` is the same concrete algebra. False otherwise.
+            :param right: Object being compared to.
+            :returns: True only if right is the same concrete algebra.
 
         """
         return self is right
 
     def narrow_rep_type(self, rep: H) -> H:
         """
-        Narrow the type with a concrete algebra's many-to-one
-        type "narrowing" function.
+        .. admonition:: Narrow the rep with a concrete algebra's
+                        many-to-one "narrowing" function.
 
         :param rep: Hashable value of type H.
-        :returns: The narrowed representation.
+        :returns: The narrowed coset representative.
 
         """
         return self._narrow(rep)

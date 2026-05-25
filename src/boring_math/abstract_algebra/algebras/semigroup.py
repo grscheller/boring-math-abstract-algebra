@@ -23,11 +23,11 @@ Semigroup
 
     ``(∀x ∈ S)(∀y ∈ S)(∀z ∈ S) => (x*(y*z)) = ((x*y)*z)``
 
-.. important::
+    .. important::
 
-   **Contract:** Semigroup initializer parameters must have
+        **Contract:** Semigroup initializer parameters must have
 
-   - **mult** closed and associative on reps
+        - **mult** closed and associative on reps
 
 """
 
@@ -49,19 +49,26 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
     def __str__(self) -> str:
         """
-        :returns: str(self) = SemigroupElement<rep>
+        .. admonition:: user string
+
+            Construct the string 'SemigroupElement<rep_str>'
+            where rep_str = str(rep).
+
+            :returns: A string meaningful to an end user.
 
         """
         return f'SemigroupElement<{str(self._rep)}>'
 
     def __mul__(self, right: object) -> Self:
         """
-        Multiply two elements of the same concrete algebra together.
+        .. admonition:: mul
 
-        :param right: An element within the same concrete algebra or a right action.
-        :returns: The product ``self * right`` otherwise ``NotImplemented``.
-        :raises ValueError: If ``self`` and ``right`` are same type but
-                            different concrete algebras.
+            Multiply two elements of the same concrete algebra together.
+
+            :param right: An element within the same concrete algebra or a right action.
+            :returns: The product ``self * right`` otherwise ``NotImplemented``.
+            :raises ValueError: If ``self`` and ``right`` are same type but
+                                different concrete algebras.
 
         """
         if isinstance(right, type(self)):
@@ -85,12 +92,15 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
     def __rmul__(self, left: object) -> Self:
         """
-        When left side of multiplication does not know how to multiply right side.
+        .. admonition:: rmul
 
-        :param left: Left side of the multiplication.
-        :returns: Never returns, otherwise ``left.__mul__(right)``
-                  would have worked.
-        :raises TypeError: When multiplying on left by an int.
+            When left side of multiplication does not know how to
+            multiply right side.
+
+            :param left: Left side of the multiplication.
+            :returns: Never returns, otherwise ``left.__mul__(right)``
+                      would have worked.
+            :raises TypeError: When multiplying on left by an int.
 
         """
         if isinstance(left, int):
@@ -101,13 +111,15 @@ class SemigroupElement[H: Hashable](BaseElement[H]):
 
     def __pow__(self, n: int) -> Self:
         """
-        Raising element to a positive ``int`` power is the same as
-        repeated multiplication.
+        .. admonition:: pow
 
-        :param n: Multiply element to itself ``n > 0`` times.
-        :returns: The product of the element n times.
-        :raises ValueError: When ``n <= 0``.
-        :raises ValueError: If algebra does not have a mult attribute.
+            Raising element to a positive integer power is the same as
+            repeated multiplication.
+
+            :param n: Multiply element to itself n > 0 times.
+            :returns: The product of the element n times.
+            :raises ValueError: When n <= 0.
+            :raises ValueError: If algebra does not have a mult attribute.
 
         """
         if n > 0:
@@ -130,9 +142,11 @@ class Semigroup[H: Hashable](BaseSet[H]):
         narrow: Callable[[H], H] | None = None,
     ) -> None:
         """
-        :param mult: Associative function ``H X H -> H`` on reps.
-        :param narrow: Narrow the rep type, many-to-one function. Like
-                       choosing an element from a coset of a group.
+        .. admonition:: init
+
+            :param mult: Associative function ``H X H -> H`` on reps.
+            :param narrow: Narrow the rep type, many-to-one function. Like
+                           choosing a representative from a coset of a group.
 
         """
         super().__init__(narrow=narrow)

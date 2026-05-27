@@ -5,7 +5,7 @@ PyPI project
 `boring-math-abstract-algebra
 <https://pypi.org/project/boring-math-abstract-algebra>`_.
 
-Creating a library to create representations for abstract abstract-algebra.
+Library to create representations for abstract abstract-algebra.
 
 Part of the
 `boring-math

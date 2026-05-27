@@ -1,9 +1,12 @@
+[build-system]
+requires = ["flit_core>=3.12,<4"]
+build-backend = "flit_core.buildapi"
+
 [project]
 name = "boring-math-abstract-algebra"
 version = "1.1.1"
 readme = "README.rst"
 requires-python = ">=3.13"
-license = { file = "LICENSE" }
 authors = [{ name = "Geoffrey R. Scheller", email = "geoffrey@scheller.com" }]
 keywords = [
   "algebra",
@@ -25,8 +28,8 @@ dynamic = ["description"]
 
 [project.urls]
 Changelog = "https://github.com/grscheller/boring-math-abstract-algebra/blob/main/CHANGELOG.md"
-Documentation = "https://grscheller.github.io/boring-math/abstract-algebra"
-Homepage = "https://grscheller.github.io/boring-math"
+Documentation = "https://grscheller.github.io/boring-math/homepage/build/html/projects/abstract_algebra.html"
+Homepage = "https://grscheller.github.io/boring-math/"
 Source = "https://github.com/grscheller/boring-math-abstract-algebra"
 
 [project.optional-dependencies]
@@ -35,10 +38,6 @@ test = [
   "numpy>=2.4.4",
   "pythonic-fp-numpy>=0.1.1",
 ]
-
-[build-system]
-requires = ["flit_core>=3.12,<4"]
-build-backend = "flit_core.buildapi"
 
 [tool.flit.module]
 name = "boring_math.abstract_algebra"

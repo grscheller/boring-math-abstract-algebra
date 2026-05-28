@@ -22,7 +22,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "pythonic-fp-fptools>=5.2.0",
+  "pythonic-fp-fptools>=5.4.0",
 ]
 dynamic = ["description"]
 
@@ -36,7 +36,7 @@ Source = "https://github.com/grscheller/boring-math-abstract-algebra"
 test = [
   "pytest>=8.4.1",
   "numpy>=2.4.4",
-  "pythonic-fp-numpy>=0.1.1",
+  "pythonic-fp-numpy>=1.0.0",
 ]
 
 [tool.flit.module]

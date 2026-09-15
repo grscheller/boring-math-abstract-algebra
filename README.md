@@ -4,7 +4,6 @@ Library to create representations for abstract abstract-algebra.
 
 PyPI project
 [boring-math-abstract-algebra](https://pypi.org/project/boring-math-abstract-algebra).
-
 Part of the
 [boring-math](https://grscheller.github.io/boring-math) PyPI projects.
 

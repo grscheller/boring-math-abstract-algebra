@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "boring-math-abstract-algebra"
-version = "1.1.1"
+version = "1.2.0"
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [
@@ -30,7 +30,6 @@ description = "Abstract algebra representation library."
 
 [project.urls]
 Changelog = "https://github.com/grscheller/boring-math-abstract-algebra/blob/main/CHANGELOG.md"
-Documentation = "https://grscheller.github.io/boring-math/homepage/build/html/projects/abstract_algebra.html"
 Homepage = "https://grscheller.github.io/boring-math/"
 Source = "https://github.com/grscheller/boring-math-abstract-algebra"
 

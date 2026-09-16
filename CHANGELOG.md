@@ -39,7 +39,7 @@ Suspect I am off with my test dependencies in pyproject.toml
       - elements are added in a "natural" uniquely deterministic way
   - contain user defined functions and attributes
     - functions take representation valued parameters and return values
-    - attributes are ``ref`` valued
+    - attributes are `ref` valued
 
 ### Update - 2025-10-17
 
